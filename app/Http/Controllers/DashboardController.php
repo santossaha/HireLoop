@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vendor;
+use App\Models\VendorAttendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +17,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+        
         
         // Prepare dashboard data based on user role
         $stats = $this->getDashboardStats($user);
@@ -51,12 +54,14 @@ class DashboardController extends Controller
         if ($user->isHod()) {
             $departmentId = $user->department_id;
             $stats['pendingHodApproval'] = 0; // Add your query here
-            $stats['departmentVendors'] = $user->department ? \App\Models\Vendor::where('department_id', $user->department_id)->count() : 0;
+            $stats['departmentVendors'] = $user->department ? Vendor::whereHas('internalPoc', function ($query) use ($user) {
+                $query->where('department_id', $user->department_id);
+            })->count() : 0;
         }
         
         if ($user->isPoc()) {
             $stats['myVendors'] = \App\Models\Vendor::where('internal_poc_id', $user->id)->count();
-            $stats['pendingAttendance'] = \App\Models\VendorAttendance::whereHas('vendor', function ($query) use ($user) {
+            $stats['pendingAttendance'] = VendorAttendance::whereHas('vendor', function ($query) use ($user) {
                 $query->where('internal_poc_id', $user->id);
             })->where('status', 'pending')->count();
         }

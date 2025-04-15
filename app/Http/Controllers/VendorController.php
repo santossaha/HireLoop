@@ -24,7 +24,6 @@ class VendorController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
         // Different users see different sets of vendors
         if ($user->isAdmin() || $user->isFounder()) {
             // Admin and founder see all vendors
@@ -243,7 +242,6 @@ class VendorController extends Controller
     public function pendingApprovals()
     {
         $user = Auth::user();
-        
         if ($user->isAdmin() || $user->isFounder()) {
             // Admin and founder see all pending vendors
             $pendingVendors = Vendor::where('status', 'pending')->with('user')->paginate(10);
