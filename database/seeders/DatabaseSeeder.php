@@ -99,5 +99,8 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password123'),
             'role' => 'vendor',
         ]);
+
+        // Seed vendors
+        $this->call(VendorSeeder::class);
     }
 }
