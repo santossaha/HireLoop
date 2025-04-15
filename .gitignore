@@ -69,5 +69,5 @@ yarn-error.log
 /.idea
 /.vscode
 composer.lock
-/storage
+
 vendor
