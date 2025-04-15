@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('invoice_number');
             $table->text('notes')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

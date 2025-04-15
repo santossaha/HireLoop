@@ -272,6 +272,34 @@ class VendorController extends Controller
         return redirect()->route('vendors.index')
             ->with('success', 'Vendor deleted successfully.');
     }
-    
 
+    /**
+     * Approve the vendor's client readiness status.
+     */
+    public function approve(Request $request, Vendor $vendor)
+    {
+        $this->authorize('update', $vendor);
+        
+        $request->validate([
+            'client_ready' => 'required|boolean',
+            'communication_rating' => 'required|in:excellent,good,average,bad',
+            'technical_rating' => 'required|in:excellent,good,average,bad',
+            'notes' => 'nullable|string',
+        ]);
+
+        $vendor->update([
+            'client_ready' => $request->client_ready,
+            'communication_rating' => $request->communication_rating,
+            'technical_rating' => $request->technical_rating,
+        ]);
+
+        // Add notes if provided
+        if ($request->filled('notes')) {
+            // You can implement a notes/comment system here
+            // For now, we'll just update the vendor
+        }
+
+        return redirect()->route('vendors.show', $vendor)
+            ->with('success', 'Vendor status updated successfully.');
+    }
 }

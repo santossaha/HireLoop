@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\ApprovalRequiredNotification;
+use Yajra\DataTables\DataTables;
 
 class RequirementController extends Controller
 {
@@ -19,34 +20,67 @@ class RequirementController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Requirement::query();
-        
-        // Filter by department if user is an HOD
-        if (Auth::user()->isHod()) {
-            $query->where('department_id', Auth::user()->department_id);
-        }
-        
-        // Filter by vendor if provided
-        if ($request->has('vendor_id') && !empty($request->vendor_id)) {
-            $query->where('vendor_id', $request->vendor_id);
-        }
-        
-        // Filter by status if provided
-        if ($request->has('status') && !empty($request->status)) {
-            if ($request->status === 'pending_hod') {
-                $query->where('hod_approved', false);
-            } elseif ($request->status === 'pending_founder') {
-                $query->where('hod_approved', true)
-                      ->where('founder_approved', false);
-            } elseif ($request->status === 'approved') {
-                $query->where('hod_approved', true)
-                      ->where('founder_approved', true);
+        if ($request->ajax()) {
+            $query = Requirement::with(['vendor', 'department']);
+
+            // Filter by department if user is an HOD
+            if (Auth::user()->isHod()) {
+                $query->where('department_id', Auth::user()->department_id);
             }
+
+            // Filter by vendor if provided
+            if ($request->has('vendor_id') && !empty($request->vendor_id)) {
+                $query->where('vendor_id', $request->vendor_id);
+            }
+
+            // Filter by department if provided
+            if ($request->has('department_id') && !empty($request->department_id)) {
+                $query->where('department_id', $request->department_id);
+            }
+
+            // Filter by status if provided
+            if ($request->has('status') && !empty($request->status)) {
+                if ($request->status === 'pending_hod') {
+                    $query->where('hod_approved', false);
+                } elseif ($request->status === 'pending_founder') {
+                    $query->where('hod_approved', true)
+                          ->where('founder_approved', false);
+                } elseif ($request->status === 'approved') {
+                    $query->where('hod_approved', true)
+                          ->where('founder_approved', true);
+                } elseif ($request->status === 'rejected') {
+                    $query->where('status', 'rejected');
+                }
+            }
+
+            return DataTables::of($query)
+                ->addColumn('actions', function ($requirement) {
+                    $actions = '<div class="btn-group" role="group">';
+                    $actions .= '<a href="' . route('requirements.show', $requirement->id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>';
+                    
+                    if (!$requirement->founder_approved && !$requirement->hod_approved) {
+                        $actions .= '<a href="' . route('requirements.edit', $requirement->id) . '" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>';
+                    }
+                    
+                    $actions .= '</div>';
+                    return $actions;
+                })
+                ->addColumn('status', function ($requirement) {
+                    if ($requirement->founder_approved && $requirement->hod_approved) {
+                        return '<span class="badge bg-success">Approved</span>';
+                    } elseif ($requirement->hod_approved) {
+                        return '<span class="badge bg-warning">Pending Founder</span>';
+                    } elseif ($requirement->status === 'rejected') {
+                        return '<span class="badge bg-danger">Rejected</span>';
+                    } else {
+                        return '<span class="badge bg-secondary">Pending HOD</span>';
+                    }
+                })
+                ->rawColumns(['actions', 'status'])
+                ->make(true);
         }
-        
-        $requirements = $query->with(['vendor', 'department'])->paginate(10);
-        
-        return view('requirement.index', compact('requirements'));
+
+        return view('requirement.index');
     }
 
     /**
@@ -71,7 +105,7 @@ class RequirementController extends Controller
             'job_description' => 'required|string',
             'client_budget' => 'required|numeric|min:0',
             'proposed_budget' => 'required|numeric|min:0',
-            'cv_file' => 'required|file|mimes:pdf,doc,docx|max:5120',
+            'cv_file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,ppt,pptx,xls,xlsx|max:5120',
             'department_id' => 'required|exists:departments,id',
         ]);
 
@@ -157,7 +191,7 @@ class RequirementController extends Controller
             'job_description' => 'required|string',
             'client_budget' => 'required|numeric|min:0',
             'proposed_budget' => 'required|numeric|min:0',
-            'cv_file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'cv_file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,ppt,pptx,xls,xlsx|max:5120',
             'department_id' => 'required|exists:departments,id',
         ]);
 

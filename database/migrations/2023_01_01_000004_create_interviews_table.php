@@ -29,6 +29,7 @@ return new class extends Migration
             $table->boolean('selected_in_client')->nullable();
             $table->decimal('last_approved_budget', 10, 2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

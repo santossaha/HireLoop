@@ -30,6 +30,7 @@ return new class extends Migration
 
             // Ensure invoice number is unique per vendor
             $table->unique(['vendor_id', 'invoice_number']);
+            $table->softDeletes();
         });
     }
 

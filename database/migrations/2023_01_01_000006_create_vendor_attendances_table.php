@@ -26,6 +26,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             // Ensure only one attendance record per vendor per month
             $table->unique(['vendor_id', 'month_year']);

@@ -11,10 +11,10 @@ class ApprovalRequiredNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $type;
-    protected $id;
-    protected $title;
-    protected $message;
+    public $type;
+    public $id;
+    public $title;
+    public $message;
 
     /**
      * Create a new notification instance.

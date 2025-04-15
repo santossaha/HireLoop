@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('availability')->nullable();
             $table->string('mt_ead_status')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

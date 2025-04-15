@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/vendors/{vendor}', [VendorController::class, 'update'])->name('vendors.update');
     Route::patch('/vendors/{vendor}/status', [VendorController::class, 'updateStatus'])->name('vendors.update-status');
     Route::get('/vendor-approvals', [VendorController::class, 'pendingApprovals'])->name('vendors.pending-approvals');
+    Route::patch('/vendors/{vendor}/approve', [VendorController::class, 'approve'])->name('vendors.approve');
     
     // Client Payment routes
     Route::get('/client-payments', [ClientPaymentController::class, 'index'])->name('client-payments.index');

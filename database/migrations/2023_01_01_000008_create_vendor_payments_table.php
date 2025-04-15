@@ -35,6 +35,7 @@ return new class extends Migration
 
             // Ensure only one payment record per vendor per month
             $table->unique(['vendor_id', 'month_year']);
+            $table->softDeletes();
         });
     }
 
