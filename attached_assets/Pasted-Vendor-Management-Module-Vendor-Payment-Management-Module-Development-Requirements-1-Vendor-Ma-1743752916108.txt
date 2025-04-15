@@ -1,0 +1,64 @@
+Vendor Management Module & Vendor Payment Management Module - Development Requirements
+1. Vendor Management Module
+Vendor Registration:
+Vendor Type: Company or Freelancer
+Contact Details: Email, Contact Number, Skype, Slack, etc.
+Vendor POC Name
+Internal POC
+Budget Details per Experience Level (3 Years, 5 Years, 7+ Years, 10+ Years)
+Vendor Requirement Submission:
+Matching JD Details, Requirement Id, Approx Client Budget
+Vendor CV Upload
+Mock Interview Details
+Proposed Budget
+Interview Status: Pass/Fail
+Ratings:
+Communication: Excellent, Good, Average, Bad
+Technical Skills: Excellent, Good, Average, Bad
+Client Interview Readiness: Yes/No
+Availability: 8 hours/day
+MT/EAD
+Vendor Candidate Mock Interview Details:
+Detailed Interview Comments & Feedback
+Internal Interview Feedback
+Client Interview Feedback
+Previously Worked with Client: Yes/No
+Selected in Internal Interview: Yes/No
+Selected in Client Interview: Yes/No
+Last Approved Budget
+Budget & CV Approval Process:
+HOD Approval before sharing vendor CVs with clients
+Automated Notifications to stakeholders with vendor profile details, proposed budget, and interview results
+Founder Review: Founders can review and comment on vendor profiles
+Department-Wise HOD Approvers:
+Mobile Technology (HOD: Nikhil Solanki): iOS, Android, Flutter, React Native, Unity, Unreal, AI/ML, QA, AR/VR/MR
+Open Source (HOD: Ruchir Pandya): PHP, Laravel, React.js, Node.js, Vue.js, Next.js, SalesForce, Magento, WordPress
+.Net (HOD: Milan Shah): C#, .Net, Xamarin, SiteCore, NuGet, ASP.Net, Microsoft Azure
+2. Vendor Payment Management Module
+Client Payment Verification Dashboard:
+Real-time payment status tracker (Received, Pending, Delayed)
+Automated Notifications for pending client payments
+Client Payment Confirmation: Accounts team marks payments as "Received" to trigger vendor payments
+Historical Data Access for past client payments
+Vendor Attendance and Payment Calculation:
+Monthly attendance tracking (submitted by vendors/POCs by the 25th)
+Automated Payment Calculation based on attended days and approved budget
+Leave Approval Workflow: POCs approve/reject leave requests
+Payment Summary Report (Downloadable report with attended days, deductions, final amount)
+Vendor Invoice and Email Integration:
+Invoice Upload by vendors/POCs (with automated reminders)
+Email Integration: Automatically attach vendor correspondence to profiles
+Invoice Verification Tool: Flags discrepancies between invoices and calculated payments
+Audit Trail: Log of all invoice uploads, emails, and verification actions
+Payment Approval Workflow:
+Conditional Approval Process: Payments approved only after client payment confirmation, attendance verification, and invoice validation
+Approval Dashboard for Dilipbhai: Displays client payment status, calculated payment, invoices, and discrepancies for one-click approval
+Automated Payment Notification to accounts team upon approval
+Internal POC Accountability and Data Submission:
+Data Submission Deadline: POCs submit attendance, invoices, and emails by the 25th (reminders on 20th, 23rd, and 25th)
+POC Dashboard: Displays pending tasks, submitted data, and payment status for vendors
+Escalation Mechanism if deadlines are missed
+Vendor Payment History and Reporting:
+Searchable Payment History Log
+Monthly Payment Report summarizing vendor payments, deductions, and client payment status
+Discrepancy Tracking with resolution details
