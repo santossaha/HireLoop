@@ -24,27 +24,86 @@ class VendorController extends Controller
     public function index()
     {
         $user = Auth::user();
+        return view('vendors.index');
+    }
+
+    /**
+     * Get vendors data for DataTables
+     */
+    public function getVendorsData(Request $request)
+    {
+        $user = Auth::user();
+        $query = Vendor::query();
+
         // Different users see different sets of vendors
         if ($user->isAdmin() || $user->isFounder()) {
             // Admin and founder see all vendors
-            $vendors = Vendor::with('user')->paginate(10);
+            $query->with('user');
         } elseif ($user->isHod()) {
             // HOD sees vendors in their department
             $department = $user->department;
-            $vendors = Vendor::whereHas('requirements', function ($query) use ($department) {
-                $query->where('department_id', $department->id);
-            })->with('user')->paginate(10);
+            $query->whereHas('requirements', function ($q) use ($department) {
+                $q->where('department_id', $department->id);
+            })->with('user');
         } elseif ($user->isPoc()) {
             // POC sees vendors they're responsible for
-            $vendors = Vendor::where('internal_poc_id', $user->id)
-                ->with('user')
-                ->paginate(10);
+            $query->where('internal_poc_id', $user->id)->with('user');
         } else {
             // Other users only see their own vendor profile if they have one
-            $vendors = Vendor::where('user_id', $user->id)->with('user')->paginate(10);
+            $query->where('user_id', $user->id)->with('user');
         }
-        
-        return view('vendors.index', compact('vendors'));
+
+        // Filter by status if provided
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Search functionality
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $search = $request->search['value'];
+            $query->where(function($q) use ($search) {
+                $q->where('company_name', 'like', "%{$search}%")
+                  ->orWhere('contact_person', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhereHas('internalPoc', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Get total records count
+        $totalRecords = $query->count();
+
+        // Apply pagination
+        $vendors = $query->skip($request->start)
+                        ->take($request->length)
+                        ->get();
+
+        $data = [];
+        foreach ($vendors as $vendor) {
+            $data[] = [
+                'id' => $vendor->id,
+                'company_name' => $vendor->company_name,
+                'vendor_type' => ucfirst($vendor->vendor_type),
+                'contact_person' => $vendor->contact_person,
+                'contact_info' => [
+                    'email' => $vendor->email,
+                    'phone' => $vendor->phone
+                ],
+                'internal_poc' => $vendor->internalPoc ? $vendor->internalPoc->name : 'N/A',
+                'status' => $vendor->status,
+                'client_ready' => $vendor->client_ready,
+                'actions' => view('vendors.partials.actions', compact('vendor'))->render()
+            ];
+        }
+
+        return response()->json([
+            'draw' => $request->draw,
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $data
+        ]);
     }
 
     /**

@@ -16,13 +16,20 @@
     </div>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Vendors</h6>
-            <div class="btn-group">
-                <a href="{{ route('vendors.index', ['status' => 'all']) }}" class="btn btn-sm btn-outline-primary {{ request('status', 'all') == 'all' ? 'active' : '' }}">All</a>
-                <a href="{{ route('vendors.index', ['status' => 'approved']) }}" class="btn btn-sm btn-outline-success {{ request('status') == 'approved' ? 'active' : '' }}">Approved</a>
-                <a href="{{ route('vendors.index', ['status' => 'pending']) }}" class="btn btn-sm btn-outline-warning {{ request('status') == 'pending' ? 'active' : '' }}">Pending</a>
-                <a href="{{ route('vendors.index', ['status' => 'rejected']) }}" class="btn btn-sm btn-outline-danger {{ request('status') == 'rejected' ? 'active' : '' }}">Rejected</a>
+        <div class="card-header py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    {{-- <h6 class="m-0 font-weight-bold text-primary me-3">Vendors</h6> --}}
+                    <div class="dataTables_filter">
+                        <input type="search" class="form-control" placeholder="Search by Name, Technology, POC, Email" aria-controls="vendorsTable">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary filter-btn active" data-status="all">All</button>
+                    <button type="button" class="btn btn-sm btn-outline-success filter-btn" data-status="approved">Approved</button>
+                    <button type="button" class="btn btn-sm btn-outline-warning filter-btn" data-status="pending">Pending</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger filter-btn" data-status="rejected">Rejected</button>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -41,80 +48,104 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse($vendors as $vendor)
-                        <tr>
-                            <td>{{ $vendor->id }}</td>
-                            <td>{{ $vendor->company_name }}</td>
-                            <td>{{ ucfirst($vendor->vendor_type) }}</td>
-                            <td>{{ $vendor->contact_person }}</td>
-                            <td>
-                                <span class="d-block"><i class="fas fa-envelope me-1"></i> {{ $vendor->email }}</span>
-                                <span class="d-block"><i class="fas fa-phone me-1"></i> {{ $vendor->phone }}</span>
-                            </td>
-                            <td>{{ $vendor->internalPoc ? $vendor->internalPoc->name : 'N/A' }}</td>
-                            <td>
-                                @if($vendor->status == 'approved')
-                                    <span class="badge bg-success">Approved</span>
-                                @elseif($vendor->status == 'pending')
-                                    <span class="badge bg-warning">Pending</span>
-                                @else
-                                    <span class="badge bg-danger">Rejected</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($vendor->client_ready)
-                                    <span class="badge bg-success">Ready</span>
-                                @else
-                                    <span class="badge bg-secondary">Not Ready</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('vendors.show', $vendor->id) }}" class="btn btn-info btn-sm" title="View Details">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    @if(auth()->user()->isAdmin() || auth()->user()->isHod() || 
-                                        (auth()->user()->isPoc() && $vendor->internal_poc_id == auth()->id()))
-                                    <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-primary btn-sm" title="Edit Vendor">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    @endif
-                                    @if(auth()->user()->isAdmin() || auth()->user()->isFounder())
-                                    <form action="{{ route('vendors.destroy', $vendor->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" 
-                                                title="Delete Vendor"
-                                                onclick="return confirm('Are you sure you want to delete this vendor?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="9" class="text-center">No vendors found</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
                 </table>
-            </div>
-            
-            <div class="mt-4">
-                {{ $vendors->links() }}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .dataTables_filter {
+        margin-right: 1rem;
+    }
+    .dataTables_filter input {
+        width: 341px;
+        padding: 0.375rem 0.75rem;
+    }
+</style>
 @endsection
 
 @section('scripts')
 <script>
     $(document).ready(function() {
-        // Init other scripts for vendors page here if needed
+        var table = $('#vendorsTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('vendors.data') }}",
+                data: function(d) {
+                    d.status = $('.filter-btn.active').data('status');
+                }
+            },
+            columns: [
+                { data: 'id' },
+                { data: 'company_name' },
+                { data: 'vendor_type' },
+                { data: 'contact_person' },
+                { 
+                    data: 'contact_info',
+                    render: function(data) {
+                        return `<span class="d-block"><i class="fas fa-envelope me-1"></i> ${data.email}</span>
+                                <span class="d-block"><i class="fas fa-phone me-1"></i> ${data.phone}</span>`;
+                    }
+                },
+                { data: 'internal_poc' },
+                { 
+                    data: 'status',
+                    render: function(data) {
+                        let badgeClass = 'bg-secondary';
+                        if (data === 'approved') badgeClass = 'bg-success';
+                        else if (data === 'pending') badgeClass = 'bg-warning';
+                        else if (data === 'rejected') badgeClass = 'bg-danger';
+                        
+                        return `<span class="badge ${badgeClass}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
+                    }
+                },
+                { 
+                    data: 'client_ready',
+                    render: function(data) {
+                        return data ? 
+                            '<span class="badge bg-success">Ready</span>' : 
+                            '<span class="badge bg-secondary">Not Ready</span>';
+                    }
+                },
+                { 
+                    data: 'actions',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            order: [[0, 'desc']],
+            pageLength: 10,
+            dom: 'rtip',
+            language: {
+                search: "",
+                searchPlaceholder: "Search by Name,Technology,POC",
+                lengthMenu: "",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                infoEmpty: "Showing 0 to 0 of 0 entries",
+                infoFiltered: "(filtered from _MAX_ total entries)"
+            },
+            initComplete: function() {
+                // Hide the default search box
+               // $('.dataTables_filter').hide();
+                // Hide length menu
+                $('.dataTables_length').hide();
+            }
+        });
+
+        // Custom search input handler
+        $('.dataTables_filter input').on('keyup', function() {
+            console.log(this.value);
+            table.search(this.value).draw();
+        });
+
+        // Filter buttons click handler
+        $('.filter-btn').click(function() {
+            $('.filter-btn').removeClass('active');
+            $(this).addClass('active');
+            table.ajax.reload();
+        });
     });
 </script>
 @endsection

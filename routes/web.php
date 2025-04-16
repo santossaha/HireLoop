@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Vendor routes
     Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index');
+    Route::get('/vendors/data', [VendorController::class, 'getVendorsData'])->name('vendors.data');
     Route::get('/vendors/create', [VendorController::class, 'create'])->name('vendors.create');
     Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store');
     Route::delete('/vendors/{vendor}', [VendorController::class, 'destroy'])->name('vendors.destroy');
