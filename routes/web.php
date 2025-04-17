@@ -99,6 +99,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/requirements/{requirement}', [RequirementController::class, 'destroy'])->name('requirements.destroy');
     Route::post('/requirements/{requirement}/hod-approve', [RequirementController::class, 'hodApprove'])->name('requirements.hod-approve');
     Route::post('/requirements/{requirement}/founder-approve', [RequirementController::class, 'founderApprove'])->name('requirements.founder-approve');
+    Route::get('/requirements/data', [RequirementController::class, 'index'])->name('requirements.data');
+    Route::get('/requirements/pending-counts', [RequirementController::class, 'getPendingCounts'])->name('requirements.pending-counts');
     
     // Interview routes
     Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index');

@@ -21,23 +21,23 @@ class RequirementController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Requirement::with(['vendor', 'department']);
-
+            $query = Requirement::query();
+            
             // Filter by department if user is an HOD
             if (Auth::user()->isHod()) {
                 $query->where('department_id', Auth::user()->department_id);
             }
-
+            
             // Filter by vendor if provided
             if ($request->has('vendor_id') && !empty($request->vendor_id)) {
                 $query->where('vendor_id', $request->vendor_id);
             }
-
+            
             // Filter by department if provided
             if ($request->has('department_id') && !empty($request->department_id)) {
                 $query->where('department_id', $request->department_id);
             }
-
+            
             // Filter by status if provided
             if ($request->has('status') && !empty($request->status)) {
                 if ($request->status === 'pending_hod') {
@@ -53,34 +53,71 @@ class RequirementController extends Controller
                 }
             }
 
-            return DataTables::of($query)
-                ->addColumn('actions', function ($requirement) {
-                    $actions = '<div class="btn-group" role="group">';
-                    $actions .= '<a href="' . route('requirements.show', $requirement->id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>';
-                    
-                    if (!$requirement->founder_approved && !$requirement->hod_approved) {
-                        $actions .= '<a href="' . route('requirements.edit', $requirement->id) . '" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>';
-                    }
-                    
-                    $actions .= '</div>';
-                    return $actions;
-                })
-                ->addColumn('status', function ($requirement) {
-                    if ($requirement->founder_approved && $requirement->hod_approved) {
-                        return '<span class="badge bg-success">Approved</span>';
-                    } elseif ($requirement->hod_approved) {
-                        return '<span class="badge bg-warning">Pending Founder</span>';
-                    } elseif ($requirement->status === 'rejected') {
-                        return '<span class="badge bg-danger">Rejected</span>';
-                    } else {
-                        return '<span class="badge bg-secondary">Pending HOD</span>';
-                    }
-                })
-                ->rawColumns(['actions', 'status'])
-                ->make(true);
+            // Search functionality
+            if ($request->has('search') && !empty($request->search['value'])) {
+                $search = $request->search['value'];
+                $query->where(function($q) use ($search) {
+                    $q->where('requirement_id', 'like', "%{$search}%")
+                      ->orWhereHas('vendor', function($q) use ($search) {
+                          $q->where('company_name', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('department', function($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%");
+                      });
+                });
+            }
+
+            // Get total records count
+            $totalRecords = $query->count();
+
+            // Apply pagination
+            $requirements = $query->with(['vendor', 'department'])
+                                ->skip($request->start)
+                                ->take($request->length)
+                                ->get();
+
+            $data = [];
+            foreach ($requirements as $requirement) {
+                $data[] = [
+                    'id' => $requirement->id,
+                    'vendor' => $requirement->vendor->company_name,
+                    'requirement_id' => $requirement->requirement_id,
+                    'department' => $requirement->department->name ?? 'N/A',
+                    'client_budget' => '$' . number_format($requirement->client_budget, 2),
+                    'proposed_budget' => '$' . number_format($requirement->proposed_budget, 2),
+                    'status' => $this->getStatusBadge($requirement),
+                    'created_at' => $requirement->created_at->format('M d, Y'),
+                    'actions' => view('requirement.partials.actions', compact('requirement'))->render()
+                ];
+            }
+
+            
+
+            return response()->json([
+                'draw' => $request->draw,
+                'recordsTotal' => $totalRecords,
+                'recordsFiltered' => $totalRecords,
+                'data' => $data
+            ]);
         }
 
         return view('requirement.index');
+    }
+
+    /**
+     * Get status badge HTML
+     */
+    private function getStatusBadge($requirement)
+    {
+        if ($requirement->status == 'rejected') {
+            return '<span class="badge bg-danger">Rejected</span>';
+        } elseif ($requirement->founder_approved && $requirement->hod_approved) {
+            return '<span class="badge bg-success">Approved</span>';
+        } elseif ($requirement->hod_approved) {
+            return '<span class="badge bg-warning">HOD Approved</span>';
+        } else {
+            return '<span class="badge bg-secondary">Pending HOD</span>';
+        }
     }
 
     /**
@@ -358,4 +395,24 @@ class RequirementController extends Controller
                 ->with('success', 'Requirement has been rejected.');
         }
     }
+
+    /**
+     * Get pending counts for HOD and Founder
+     */
+    // public function getPendingCounts()
+    // {
+    //     $user = Auth::user();
+    //     $response = [];
+
+    //     if ($user->isHod()) {
+    //         $response['pending_hod'] = Requirement::pendingHodApproval()
+    //             ->forDepartment($user->department_id)
+    //             ->count();
+    //     } elseif ($user->isFounder()) {
+    //         $response['pending_founder'] = Requirement::pendingFounderApproval()
+    //             ->count();
+    //     }
+
+    //     return response()->json($response);
+    // }
 }

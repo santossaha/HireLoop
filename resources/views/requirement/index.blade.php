@@ -16,15 +16,13 @@
             <h6 class="m-0 font-weight-bold text-primary">Requirements Filter</h6>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('requirements.index') }}" class="row g-3">
+            <form id="filterForm" class="row g-3">
                 <div class="col-md-3">
                     <label for="vendor_id" class="form-label">Vendor</label>
                     <select class="form-select" id="vendor_id" name="vendor_id">
                         <option value="">All Vendors</option>
                         @foreach(App\Models\Vendor::orderBy('company_name')->get() as $vendor)
-                            <option value="{{ $vendor->id }}" {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>
-                                {{ $vendor->company_name }}
-                            </option>
+                            <option value="{{ $vendor->id }}">{{ $vendor->company_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -33,9 +31,7 @@
                     <select class="form-select" id="department_id" name="department_id">
                         <option value="">All Departments</option>
                         @foreach(App\Models\Department::orderBy('name')->get() as $department)
-                            <option value="{{ $department->id }}" {{ request('department_id') == $department->id ? 'selected' : '' }}>
-                                {{ $department->name }}
-                            </option>
+                            <option value="{{ $department->id }}">{{ $department->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -43,19 +39,19 @@
                     <label for="status" class="form-label">Status</label>
                     <select class="form-select" id="status" name="status">
                         <option value="">All Status</option>
-                        <option value="pending_hod" {{ request('status') == 'pending_hod' ? 'selected' : '' }}>Pending HOD Approval</option>
-                        <option value="pending_founder" {{ request('status') == 'pending_founder' ? 'selected' : '' }}>Pending Founder Approval</option>
-                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Fully Approved</option>
-                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        <option value="pending_hod">Pending HOD Approval</option>
+                        <option value="pending_founder">Pending Founder Approval</option>
+                        <option value="approved">Fully Approved</option>
+                        <option value="rejected">Rejected</option>
                     </select>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary me-2">
+                    <button type="button" class="btn btn-primary me-2" id="filterBtn">
                         <i class="fas fa-filter me-1"></i> Filter
                     </button>
-                    <a href="{{ route('requirements.index') }}" class="btn btn-secondary">
+                    <button type="button" class="btn btn-secondary" id="resetBtn">
                         <i class="fas fa-redo me-1"></i> Reset
-                    </a>
+                    </button>
                 </div>
             </form>
         </div>
@@ -66,9 +62,9 @@
             <h6 class="m-0 font-weight-bold text-primary">All Requirements</h6>
             
             @if(auth()->user()->isHod())
-                <span class="badge bg-warning">{{ App\Models\Requirement::pendingHodApproval()->forDepartment(auth()->user()->department_id)->count() }} pending your approval</span>
+                <span class="badge bg-warning" id="pendingHodCount"></span>
             @elseif(auth()->user()->isFounder())
-                <span class="badge bg-warning">{{ App\Models\Requirement::pendingFounderApproval()->count() }} pending your approval</span>
+                <span class="badge bg-warning" id="pendingFounderCount"></span>
             @endif
         </div>
         <div class="card-body">
@@ -87,83 +83,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse($requirements as $requirement)
-                        <tr>
-                            <td>{{ $requirement->id }}</td>
-                            <td>
-                                <a href="{{ route('vendors.show', $requirement->vendor_id) }}">
-                                    {{ $requirement->vendor->company_name }}
-                                </a>
-                            </td>
-                            <td>{{ $requirement->requirement_id }}</td>
-                            <td>{{ $requirement->department->name ?? 'N/A' }}</td>
-                            <td>${{ number_format($requirement->client_budget, 2) }}</td>
-                            <td>${{ number_format($requirement->proposed_budget, 2) }}</td>
-                            <td>
-                                @if($requirement->status == 'rejected')
-                                    <span class="badge bg-danger">Rejected</span>
-                                @elseif($requirement->founder_approved && $requirement->hod_approved)
-                                    <span class="badge bg-success">Approved</span>
-                                @elseif($requirement->hod_approved)
-                                    <span class="badge bg-warning">HOD Approved</span>
-                                @else
-                                    <span class="badge bg-secondary">Pending HOD</span>
-                                @endif
-                            </td>
-                            <td>{{ $requirement->created_at->format('M d, Y') }}</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('requirements.show', $requirement->id) }}" class="btn btn-info btn-sm">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    
-                                    @if(!$requirement->isApproved() && !($requirement->status == 'rejected'))
-                                        <a href="{{ route('requirements.edit', $requirement->id) }}" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $requirement->id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    @endif
-                                </div>
-
-                                <!-- Delete Modal -->
-                                <div class="modal fade" id="deleteModal{{ $requirement->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $requirement->id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteModalLabel{{ $requirement->id }}">Confirm Delete</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to delete this requirement ({{ $requirement->requirement_id }})?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <form action="{{ route('requirements.destroy', $requirement->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="9" class="text-center">No requirements found</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
                 </table>
-            </div>
-
-            <div class="d-flex justify-content-end mt-3">
-                {{ $requirements->links() }}
             </div>
         </div>
     </div>
@@ -173,12 +93,65 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
-        $('#requirementsTable').DataTable({
-            paging: false,
-            searching: true,
-            ordering: true,
-            info: false,
+        var table = $('#requirementsTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('requirements.index') }}",
+                data: function(d) {
+                    d.vendor_id = $('#vendor_id').val();
+                    d.department_id = $('#department_id').val();
+                    d.status = $('#status').val();
+                }
+            },
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'vendor', name: 'vendor' },
+                { data: 'requirement_id', name: 'requirement_id' },
+                { data: 'department', name: 'department' },
+                { data: 'client_budget', name: 'client_budget' },
+                { data: 'proposed_budget', name: 'proposed_budget' },
+                { data: 'status', name: 'status' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            ],
+            order: [[0, 'desc']],
+            pageLength: 10,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search..."
+            }
         });
+
+        // Filter button click handler
+        $('#filterBtn').click(function() {
+            table.ajax.reload();
+        });
+
+        // Reset button click handler
+        $('#resetBtn').click(function() {
+            $('#filterForm select').val('');
+            table.ajax.reload();
+        });
+
+        // Update pending counts
+        // function updatePendingCounts() {
+        //     $.ajax({
+        //         url: "{{ route('requirements.pending-counts') }}",
+        //         type: 'GET',
+        //         success: function(response) {
+        //             if (response.pending_hod) {
+        //                 $('#pendingHodCount').text(response.pending_hod + ' pending your approval');
+        //             }
+        //             if (response.pending_founder) {
+        //                 $('#pendingFounderCount').text(response.pending_founder + ' pending your approval');
+        //             }
+        //         }
+        //     });
+        // }
+
+        // Initial update of pending counts
+       // updatePendingCounts();
     });
 </script>
 @endsection
