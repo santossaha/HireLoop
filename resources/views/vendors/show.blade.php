@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Vendor Details</h1>
         <div>
-            <a href="{{ route('requirements.create', ['vendor_id' => $vendor->id]) }}" class="btn btn-success me-2">
+            {{-- <a href="{{ route('requirements.create', ['vendor_id' => $vendor->id]) }}" class="btn btn-success me-2">
                 <i class="fas fa-plus-circle me-1"></i> Add Requirement
             </a>
             <a href="{{ route('interviews.create', ['vendor_id' => $vendor->id]) }}" class="btn btn-info me-2">
@@ -15,7 +15,7 @@
             </a>
             <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-primary me-2">
                 <i class="fas fa-edit me-1"></i> Edit Vendor
-            </a>
+            </a> --}}
             <a href="{{ route('vendors.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Back to Vendors
             </a>
