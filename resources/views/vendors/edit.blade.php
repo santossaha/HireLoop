@@ -21,7 +21,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Vendor Information</h6>
         </div>
         <div class="card-body">
-            @if ($errors->any())
+            {{-- @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
@@ -29,7 +29,7 @@
                     @endforeach
                 </ul>
             </div>
-            @endif
+            @endif --}}
 
             <form action="{{ route('vendors.update', $vendor->id) }}" method="POST">
                 @csrf
@@ -61,7 +61,7 @@
                         <h5 class="mb-3">Vendor Profile</h5>
                         <div class="mb-3">
                             <label for="type" class="form-label">Vendor Type</label>
-                            <select class="form-select" id="type" name="type" required>
+                            <select class="form-select" id="type" name="vendor_type" required>
                                 <option value="company" {{ old('type', $vendor->vendor_type) == 'company' ? 'selected' : '' }}>Company</option>
                                 <option value="freelancer" {{ old('type', $vendor->vendor_type) == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
                             </select>
@@ -75,8 +75,17 @@
                             <input type="text" class="form-control" id="skype" name="skype" value="{{ old('skype', $vendor->skype_id) }}">
                         </div>
                         <div class="mb-3">
-                            <label for="slack" class="form-label">Slack ID</label>
-                            <input type="text" class="form-control" id="slack" name="slack" value="{{ old('slack', $vendor->slack_id) }}">
+                            <label for="key_skills" class="form-label">Key Skills <span class="text-danger">*</span></label>
+                            <select class="form-select select2 @error('key_skills') is-invalid @enderror" id="key_skills" name="key_skills[]" multiple required>
+                                @foreach(App\Models\KeySkill::all() as $skill)
+                                    <option value="{{ $skill->id }}" {{ in_array($skill->id, old('key_skills', $vendor->keySkills->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                        {{ $skill->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('key_skills')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -164,4 +173,16 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: 'Select key skills',
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
 @endsection

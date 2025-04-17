@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Vendor extends Model
 {
@@ -33,7 +34,7 @@ class Vendor extends Model
         'technical_rating',
         'client_ready',
         'availability',
-        'mt_ead_status',
+        'mt_ead_status'
     ];
 
     /**
@@ -102,6 +103,14 @@ class Vendor extends Model
     public function payments()
     {
         return $this->hasMany(VendorPayment::class);
+    }
+
+    /**
+     * Get the key skills for this vendor
+     */
+    public function keySkills(): BelongsToMany
+    {
+        return $this->belongsToMany(KeySkill::class, 'vendor_key_skills');
     }
     
     /**

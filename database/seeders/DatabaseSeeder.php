@@ -102,5 +102,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed vendors
         $this->call(VendorSeeder::class);
+
+        // Call KeySkillSeeder
+        $this->call(KeySkillSeeder::class);
     }
 }
