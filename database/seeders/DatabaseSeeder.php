@@ -105,5 +105,8 @@ class DatabaseSeeder extends Seeder
 
         // Call KeySkillSeeder
         $this->call(KeySkillSeeder::class);
+
+        // Seed Requirements
+        $this->call(RequirementsSeeder::class);
     }
 }
