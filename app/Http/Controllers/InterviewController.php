@@ -17,36 +17,119 @@ class InterviewController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Interview::query();
-        
-        // Filter by vendor if provided
-        if ($request->has('vendor_id') && !empty($request->vendor_id)) {
-            $query->where('vendor_id', $request->vendor_id);
+        if ($request->ajax()) {
+            $query = Interview::query()->with(['vendor', 'requirement', 'interviewer']);
+
+            // Apply filters
+            if ($request->has('vendor_id') && !empty($request->vendor_id)) {
+                $query->where('vendor_id', $request->vendor_id);
+            }
+
+            if ($request->has('type') && !empty($request->type)) {
+                $query->where('type', $request->type);
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->has('result') && !empty($request->result)) {
+                $query->where('result', $request->result);
+            }
+
+            // Search functionality
+            if ($request->has('search') && !empty($request->search['value'])) {
+                $search = $request->search['value'];
+                $query->where(function($q) use ($search) {
+                    $q->where('id', 'like', "%{$search}%")
+                      ->orWhereHas('vendor', function($q) use ($search) {
+                          $q->where('company_name', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('requirement', function($q) use ($search) {
+                          $q->where('requirement_id', 'like', "%{$search}%");
+                      });
+                });
+            }
+
+            // Get total records count
+            $totalRecords = $query->count();
+
+            // Apply pagination
+            $interviews = $query->skip($request->start)
+                              ->take($request->length)
+                              ->get();
+
+            $data = [];
+            foreach ($interviews as $interview) {
+                $data[] = [
+                    'id' => $interview->id,
+                    'vendor' => '<a href="' . route('vendors.show', $interview->vendor_id) . '">' . 
+                               $interview->vendor->company_name . '</a>',
+                    'requirement' => $interview->requirement ? 
+                                   '<a href="' . route('requirements.show', $interview->requirement_id) . '">' . 
+                                   $interview->requirement->requirement_id . '</a>' : 'N/A',
+                    'type' => $this->getTypeBadge($interview->type),
+                    'scheduled_at' => $interview->scheduled_at->format('M d, Y H:i'),
+                    'interviewer' => $interview->interviewer->name ?? 'N/A',
+                    'status' => $this->getStatusBadge($interview->status),
+                    'result' => $this->getResultBadge($interview->result),
+                    'actions' => view('interview.partials.actions', ['interview' => $interview])->render()
+                ];
+            }
+
+            return response()->json([
+                'draw' => $request->draw,
+                'recordsTotal' => $totalRecords,
+                'recordsFiltered' => $totalRecords,
+                'data' => $data
+            ]);
         }
-        
-        // Filter by interview type if provided
-        if ($request->has('type') && !empty($request->type)) {
-            $query->where('type', $request->type);
-        }
-        
-        // Filter by status if provided
-        if ($request->has('status') && !empty($request->status)) {
-            $query->where('status', $request->status);
-        }
-        
-        // Filter by result if provided
-        if ($request->has('result') && !empty($request->result)) {
-            $query->where('result', $request->result);
-        }
-        
-        // Filter by interviewer if user is an interviewer
-        if (Auth::user()->role === 'poc') {
-            $query->where('interviewer_id', Auth::id());
-        }
-        
-        $interviews = $query->with(['vendor', 'requirement', 'interviewer'])->paginate(10);
-        
-        return view('interview.index', compact('interviews'));
+
+        // Get statistics for the dashboard cards
+        $stats = [
+            'upcoming' => Interview::upcoming()->count(),
+            'pass_rate' => $this->calculatePassRate(),
+            'this_week' => Interview::whereBetween('scheduled_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'client_interviews' => Interview::ofType('client')->count()
+        ];
+
+        return view('interview.index', compact('stats'));
+    }
+
+    private function getTypeBadge($type)
+    {
+        $badges = [
+            'mock' => '<span class="badge bg-secondary">Mock</span>',
+            'internal' => '<span class="badge bg-info">Internal</span>',
+            'client' => '<span class="badge bg-warning">Client</span>'
+        ];
+        return $badges[$type] ?? '';
+    }
+
+    private function getStatusBadge($status)
+    {
+        $badges = [
+            'scheduled' => '<span class="badge bg-primary">Scheduled</span>',
+            'completed' => '<span class="badge bg-success">Completed</span>',
+            'cancelled' => '<span class="badge bg-danger">Cancelled</span>'
+        ];
+        return $badges[$status] ?? '';
+    }
+
+    private function getResultBadge($result)
+    {
+        $badges = [
+            'pass' => '<span class="badge bg-success">Pass</span>',
+            'fail' => '<span class="badge bg-danger">Fail</span>'
+        ];
+        return $badges[$result] ?? '<span class="badge bg-secondary">Pending</span>';
+    }
+
+    private function calculatePassRate()
+    {
+        $totalCompleted = Interview::withStatus('completed')->count();
+        $totalPassed = Interview::withResult('pass')->count();
+        return $totalCompleted > 0 ? round(($totalPassed / $totalCompleted) * 100) : 0;
     }
 
     /**
@@ -235,5 +318,44 @@ class InterviewController extends Controller
         
         return redirect()->route('interviews.show', $interview->id)
             ->with('success', 'Interview feedback submitted successfully.');
+    }
+
+    public function getStats(Request $request)
+    {
+        $query = Interview::query();
+
+        // Apply filters
+        if ($request->has('vendor_id') && !empty($request->vendor_id)) {
+            $query->where('vendor_id', $request->vendor_id);
+        }
+
+        if ($request->has('type') && !empty($request->type)) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('result') && !empty($request->result)) {
+            $query->where('result', $request->result);
+        }
+
+        // Calculate statistics
+        $stats = [
+            'upcoming' => (clone $query)->upcoming()->count(),
+            'pass_rate' => $this->calculatePassRateWithQuery($query),
+            'this_week' => (clone $query)->whereBetween('scheduled_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'client_interviews' => (clone $query)->ofType('client')->count()
+        ];
+
+        return response()->json($stats);
+    }
+
+    private function calculatePassRateWithQuery($query)
+    {
+        $totalCompleted = (clone $query)->withStatus('completed')->count();
+        $totalPassed = (clone $query)->withResult('pass')->count();
+        return $totalCompleted > 0 ? round(($totalPassed / $totalCompleted) * 100) : 0;
     }
 }

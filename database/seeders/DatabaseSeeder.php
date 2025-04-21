@@ -108,5 +108,10 @@ class DatabaseSeeder extends Seeder
 
         // Seed Requirements
         $this->call(RequirementsSeeder::class);
+
+        // Seed interviews
+        $this->call([
+            InterviewSeeder::class,
+        ]);
     }
 }

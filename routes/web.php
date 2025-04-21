@@ -111,6 +111,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/interviews/{interview}', [InterviewController::class, 'update'])->name('interviews.update');
     Route::delete('/interviews/{interview}', [InterviewController::class, 'destroy'])->name('interviews.destroy');
     Route::post('/interviews/{interview}/feedback', [InterviewController::class, 'submitFeedback'])->name('interviews.feedback');
+    Route::get('/interviews/stats', [InterviewController::class, 'getStats'])->name('interviews.stats');
     
     // Payment Management routes
     // Include payment management specific routes from separate file
