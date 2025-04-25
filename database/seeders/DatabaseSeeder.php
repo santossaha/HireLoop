@@ -30,38 +30,56 @@ class DatabaseSeeder extends Seeder
             'description' => 'C#, .Net, Xamarin, SiteCore, NuGet, ASP.Net, Microsoft Azure'
         ]);
 
+
         // Create Admin User
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'admin',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@vendormanagement.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+            ]
+        );
+        $admin->assignRole('admin');
+
+      
+        
 
         // Create HOD users
-        $nikhil = User::create([
-            'name' => 'Nikhil Solanki',
-            'email' => 'nikhil@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'hod',
-            'department_id' => $mobileTech->id,
-        ]);
+        $nikhil = User::firstOrCreate(
+            ['email' => 'nikhil@vendormanagement.com'],
+            [
+                'name' => 'Nikhil Solanki',
+                'password' => Hash::make('password123'),
+                'role' => 'hod',
+            ]
+        );
+        $nikhil->assignRole('hod');
 
-        $ruchir = User::create([
-            'name' => 'Ruchir Pandya',
-            'email' => 'ruchir@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'hod',
-            'department_id' => $openSource->id,
-        ]);
 
-        $milan = User::create([
-            'name' => 'Milan Shah',
-            'email' => 'milan@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'hod',
-            'department_id' => $dotNet->id,
-        ]);
+        $ruchir = User::firstOrCreate(
+            ['email' => 'ruchir@vendormanagement.com'],
+            [
+                'name' => 'Ruchir Pandya',
+                'password' => Hash::make('password123'),
+                'role' => 'hod',
+                'department_id' => $openSource->id,
+            ]
+        );
+        $ruchir->assignRole('hod');
+
+
+        $milan = User::firstOrCreate(
+            ['email' => 'milan@vendormanagement.com'],
+            [
+                'name' => 'Milan Shah',
+                'password' => Hash::make('password123'),
+                'role' => 'hod',
+                'department_id' => $openSource->id,
+            ]
+        );
+        $milan->assignRole('hod');
+
 
         // Update departments with HOD IDs
         $mobileTech->update(['hod_id' => $nikhil->id]);
@@ -69,44 +87,57 @@ class DatabaseSeeder extends Seeder
         $dotNet->update(['hod_id' => $milan->id]);
 
         // Create founder user
-        User::create([
-            'name' => 'Dilipbhai',
-            'email' => 'founder@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'founder',
-        ]);
 
-        // Create accounts user
-        User::create([
-            'name' => 'Accounts Manager',
-            'email' => 'accounts@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'accounts',
-        ]);
+        $user1 = User::firstOrCreate(
+            ['email' => 'founder@vendormanagement.com'],
+            [
+                'name' => 'Dilipbhai',
+                'password' => Hash::make('password123'),
+                'role' => 'founder',
+            ]
+            );
+        $user1->assignRole('founder');
 
-        // Create POC user
-        User::create([
-            'name' => 'Project Coordinator',
-            'email' => 'poc@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'poc',
-        ]);
+        $user2 = User::firstOrCreate(
+            ['email' => 'accounts@vendormanagement.com'],
+            [
+                'name' => 'Accounts Manager',
+                'password' => Hash::make('password123'),
+                'role' => 'accounts',
+            ]
+            );
+        $user2->assignRole('accounts');
 
-        // Create vendor user
-        User::create([
-            'name' => 'Vendor User',
-            'email' => 'vendor@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'vendor',
-        ]);
+        $user3 = User::firstOrCreate(
+            ['email' => 'poc@vendormanagement.com'],
+            [
+                'name' => 'Project Coordinator',
+                'password' => Hash::make('password123'),
+                'role' => 'poc',
+            ]
+            );
+        $user3->assignRole('poc');
 
-        // BED user
-        User::create([
-            'name' => 'BDE User',
-            'email' => 'bde@vendormanagement.com',
-            'password' => Hash::make('password123'),
-            'role' => 'bde',
-        ]);
+        $user4 = User::firstOrCreate(
+            ['email' => 'vendor@vendormanagement.com'],
+            [
+                'name' => 'Vendor User',
+                'password' => Hash::make('password123'),
+                'role' => 'vendor',
+            ]
+            );
+        $user4->assignRole('vendor');
+
+        $user5 = User::firstOrCreate(
+            ['email' => 'bde@vendormanagement.com'],
+            [
+                'name' => 'BDE User',
+                'password' => Hash::make('password123'),
+                'role' => 'bde',
+            ]
+            );
+        $user5->assignRole('bde');
+
 
         // Seed vendors
         $this->call(VendorSeeder::class);

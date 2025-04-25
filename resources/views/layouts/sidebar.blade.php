@@ -97,43 +97,44 @@
                 </li>
                 @endcan
                 
-               
+                @can('view-vendor-payments', 'export-vendor-payments','view-invoice-summary','view-vendor-attendance-summary')
                 <li class="nav-section mt-2">
                     <span class="sidebar-heading px-3 py-2 d-block">Reports</span>
                 </li>
+                @endcan
                
 
-                {{-- @can('view payment history') --}}
+                @can('view-vendor-payments')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('vendor-payments.monthly-report') ? 'active' : '' }}" href="{{ route('vendor-payments.monthly-report') }}">
                         <i class="fas fa-history me-2"></i> Payment History
                     </a>
                 </li>
-                {{-- @endcan --}}
+                @endcan
 
-                {{-- @can('export payments') --}}
+                @can('export-vendor-payments')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('vendor-payments.export') ? 'active' : '' }}" href="{{ route('vendor-payments.export') }}">
                         <i class="fas fa-file-export me-2"></i> Export Payments
                     </a>
                 </li>
-                {{-- @endcan --}}
+                @endcan
 
-                {{-- @can('view invoice summary') --}}
+                @can('view-invoice-summary')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('invoices.summary') ? 'active' : '' }}" href="{{ route('invoices.summary') }}">
                         <i class="fas fa-chart-bar me-2"></i> Invoice Summary
                     </a>
                 </li>
-                {{-- @endcan --}}
+                @endcan
 
-                {{-- @can('view attendance summary') --}}
+                @can('view-vendor-attendance-summary')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('vendor-attendances.summary') ? 'active' : '' }}" href="{{ route('vendor-attendances.summary') }}">
                         <i class="fas fa-calendar-alt me-2"></i> Attendance Summary
                     </a>
                 </li>
-                {{-- @endcan --}}
+                @endcan
                 
                 {{-- @if(auth()->user()->can('view departments') || auth()->user()->can('view settings'))
                 <li class="nav-section mt-2">

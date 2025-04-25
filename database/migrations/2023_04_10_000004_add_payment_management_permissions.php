@@ -108,6 +108,21 @@ return new class extends Migration
             'create-role',
             'edit-role',
             'delete-role',
+
+            // Vender Payment 
+            'view-vendor-payments',
+            'create-vendor-payments',
+            'edit-vendor-payments',
+            'delete-vendor-payments',
+            'approve-vendor-payments',
+            'reject-vendor-payments',
+            'mark-vendor-payments-paid',
+            'generate-vendor-payments',
+            'view-vendor-payment-approval',
+            'view-vendor-payment-processing',
+            'view-vendor-payment-reports',
+            'export-vendor-payments',
+            'view-vendor-payment-api'
    
  
         ];
@@ -136,6 +151,8 @@ return new class extends Migration
             $rolePermissions = [
                 'admin' => $permissions,
                 'founder' => [
+                        // Vendor Management:
+                        'view-dashboard',
                         // Vendor Management:
                         'view-vendors',
                         'create-vendor',
@@ -194,9 +211,27 @@ return new class extends Migration
                         'submit-interview-feedback',
                         'view-interview-stats',
 
+                        // Vender Payment
+                        'view-vendor-payments',
+                        'view-vendor-payments',
+                        'create-vendor-payments',
+                        'edit-vendor-payments',
+                        'delete-vendor-payments',
+                        'approve-vendor-payments',
+                        'reject-vendor-payments',
+                        'mark-vendor-payments-paid',
+                        'generate-vendor-payments',
+                        'view-vendor-payment-approval',
+                        'view-vendor-payment-processing',
+                        'view-vendor-payment-reports',
+                        'export-vendor-payments',
+                        'view-vendor-payment-api'
+
                        
                 ],
                 'accounts' => [
+                        // Vendor Management:
+                        'view-dashboard',
                         //Vendor Attendance Management:
                         'view-vendor-attendances',
                         'create-vendor-attendance',
@@ -217,8 +252,28 @@ return new class extends Migration
                         'view-pending-invoices',
                         'view-invoice-discrepancies',
                         'view-invoice-summary',
+
+                        // Vender Payment
+                        'view-vendor-payments',
+                        'view-vendor-payments',
+                        'create-vendor-payments',
+                        'edit-vendor-payments',
+                        'delete-vendor-payments',
+                        'approve-vendor-payments',
+                        'reject-vendor-payments',
+                        'mark-vendor-payments-paid',
+                        'generate-vendor-payments',
+                        'view-vendor-payment-approval',
+                        'view-vendor-payment-processing',
+                        'view-vendor-payment-reports',
+                        'export-vendor-payments',
+                        'view-vendor-payment-api'
                 ],
                 'poc' => [
+                    // Vendor Management:
+                    'view-dashboard',
+
+                    // Client Payment Management:
                     'view-client-payments',
                     'view-vendor-payments',
                     'view-invoices',
@@ -233,6 +288,9 @@ return new class extends Migration
                    'view-dashboard'
                 ],
                 'bde' => [
+                    // Vendor Management:
+
+                    'view-dashboard',
                     //Requirement Management:
                     'view-requirements',
                     'create-requirement',
