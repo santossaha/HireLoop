@@ -39,8 +39,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Protected routes (require authentication)
 Route::middleware(['auth'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        //->middleware('permission:view-dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')
+        ->middleware('permission:view-dashboard');
     
     // Vendor routes
     Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index')
@@ -182,32 +182,32 @@ Route::middleware(['auth'])->group(function () {
     require __DIR__.'/vendor-payments.php';
 
     // User Management routes
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-       // ->middleware('permission:view-users');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-       // ->middleware('permission:create-user');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-        //->middleware('permission:create-user');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-       // ->middleware('permission:edit-user');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-       // ->middleware('permission:edit-user');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-       // ->middleware('permission:delete-user');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index')
+        ->middleware('permission:view-users');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create')
+        ->middleware('permission:create-user');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store')
+        ->middleware('permission:create-user');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')
+        ->middleware('permission:edit-user');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update')
+        ->middleware('permission:edit-user');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy')
+        ->middleware('permission:delete-user');
 
     // Role Management routes
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-       // ->middleware('permission:view-roles');
-    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
-       // ->middleware('permission:create-role');
-    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-       // ->middleware('permission:create-role');
-    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
-        //->middleware('permission:edit-role');
-    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
-       // ->middleware('permission:edit-role');
-    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
-       // ->middleware('permission:delete-role');
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')
+        ->middleware('permission:view-roles');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create')
+        ->middleware('permission:create-role');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store')
+        ->middleware('permission:create-role');
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit')
+        ->middleware('permission:edit-role');
+    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update')
+        ->middleware('permission:edit-role');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy')
+        ->middleware('permission:delete-role');
 });
 
 /*

@@ -21,6 +21,7 @@ return new class extends Migration
             ['name' => 'poc', 'guard_name' => 'web'],
             ['name' => 'accounts', 'guard_name' => 'web'],
             ['name' => 'vendor', 'guard_name' => 'web'],
+            ['name' => 'bde', 'guard_name' => 'web'],
         ];
 
         // Insert roles into database
@@ -38,7 +39,6 @@ return new class extends Migration
         $permissions = [
             // Vendor Management:
             'view-dashboard',
-            
             // Vendor Management:
             'view-vendors',
             'create-vendor',

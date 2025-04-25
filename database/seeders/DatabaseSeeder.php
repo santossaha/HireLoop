@@ -100,6 +100,14 @@ class DatabaseSeeder extends Seeder
             'role' => 'vendor',
         ]);
 
+        // BED user
+        User::create([
+            'name' => 'BDE User',
+            'email' => 'bde@vendormanagement.com',
+            'password' => Hash::make('password123'),
+            'role' => 'bde',
+        ]);
+
         // Seed vendors
         $this->call(VendorSeeder::class);
 
