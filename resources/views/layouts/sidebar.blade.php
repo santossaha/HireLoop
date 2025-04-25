@@ -10,6 +10,18 @@
                         <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
+                        <i class="fas fa-users me-2"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('roles.*') ? 'active' : '' }}" href="{{ route('roles.index') }}">
+                        <i class="fas fa-user-shield me-2"></i> Roles & Permissions
+                    </a>
+                </li>
+                
                 
                 <li class="nav-section mt-2">
                     <span class="sidebar-heading px-3 py-2 d-block">Vendor Management</span>
@@ -82,11 +94,7 @@
                 <li class="nav-section mt-2">
                     <span class="sidebar-heading px-3 py-2 d-block">Administration</span>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-user-shield me-2"></i> Users
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="fas fa-building me-2"></i> Departments

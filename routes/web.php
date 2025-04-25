@@ -10,6 +10,8 @@ use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\VendorAttendanceController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorPaymentController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,82 +40,255 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        //->middleware('permission:view-dashboard');
     
     // Vendor routes
-    Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index');
-    Route::get('/vendors/data', [VendorController::class, 'getVendorsData'])->name('vendors.data');
-    Route::get('/vendors/create', [VendorController::class, 'create'])->name('vendors.create');
-    Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store');
-    Route::delete('/vendors/{vendor}', [VendorController::class, 'destroy'])->name('vendors.destroy');
+    Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index')
+        ->middleware('permission:view-vendors');
+    Route::get('/vendors/data', [VendorController::class, 'getVendorsData'])->name('vendors.data')
+        ->middleware('permission:view-vendors');
+    Route::get('/vendors/create', [VendorController::class, 'create'])->name('vendors.create')
+        ->middleware('permission:create-vendor');
+    Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store')
+        ->middleware('permission:create-vendor');
+    Route::delete('/vendors/{vendor}', [VendorController::class, 'destroy'])->name('vendors.destroy')
+        ->middleware('permission:delete-vendor');
 
-    Route::get('/vendors/{vendor}', [VendorController::class, 'show'])->name('vendors.show');
-    Route::get('/vendors/{vendor}/edit', [VendorController::class, 'edit'])->name('vendors.edit');
-    Route::put('/vendors/{vendor}', [VendorController::class, 'update'])->name('vendors.update');
-    Route::patch('/vendors/{vendor}/status', [VendorController::class, 'updateStatus'])->name('vendors.update-status');
-    Route::get('/vendor-approvals', [VendorController::class, 'pendingApprovals'])->name('vendors.pending-approvals');
-    Route::patch('/vendors/{vendor}/approve', [VendorController::class, 'approve'])->name('vendors.approve');
+    Route::get('/vendors/{vendor}', [VendorController::class, 'show'])->name('vendors.show')
+        ->middleware('permission:view-vendor-details');
+    Route::get('/vendors/{vendor}/edit', [VendorController::class, 'edit'])->name('vendors.edit')
+        ->middleware('permission:edit-vendor');
+    Route::put('/vendors/{vendor}', [VendorController::class, 'update'])->name('vendors.update')
+        ->middleware('permission:edit-vendor');
+    Route::patch('/vendors/{vendor}/status', [VendorController::class, 'updateStatus'])->name('vendors.update-status')
+        ->middleware('permission:update-vendor-status');
+    Route::get('/vendor-approvals', [VendorController::class, 'pendingApprovals'])->name('vendors.pending-approvals')
+        ->middleware('permission:view-vendor-approvals');
+    Route::patch('/vendors/{vendor}/approve', [VendorController::class, 'approve'])->name('vendors.approve')
+        ->middleware('permission:approve-vendor');
     
     // Client Payment routes
-    Route::get('/client-payments', [ClientPaymentController::class, 'index'])->name('client-payments.index');
-    Route::get('/client-payments/create', [ClientPaymentController::class, 'create'])->name('client-payments.create');
-    Route::post('/client-payments', [ClientPaymentController::class, 'store'])->name('client-payments.store');
-    Route::get('/client-payments/{clientPayment}', [ClientPaymentController::class, 'show'])->name('client-payments.show');
-    Route::get('/client-payments/{clientPayment}/edit', [ClientPaymentController::class, 'edit'])->name('client-payments.edit');
-    Route::put('/client-payments/{clientPayment}', [ClientPaymentController::class, 'update'])->name('client-payments.update');
-    Route::delete('/client-payments/{clientPayment}', [ClientPaymentController::class, 'destroy'])->name('client-payments.destroy');
-    Route::patch('/client-payments/{clientPayment}/mark-as-received', [ClientPaymentController::class, 'markAsReceived'])->name('client-payments.mark-as-received');
-    Route::get('/client-payment-dashboard', [ClientPaymentController::class, 'dashboard'])->name('client-payments.dashboard');
+    Route::get('/client-payments', [ClientPaymentController::class, 'index'])->name('client-payments.index')
+        ->middleware('permission:view-client-payments');
+    Route::get('/client-payments/create', [ClientPaymentController::class, 'create'])->name('client-payments.create')
+        ->middleware('permission:create-client-payment');
+    Route::post('/client-payments', [ClientPaymentController::class, 'store'])->name('client-payments.store')
+        ->middleware('permission:create-client-payment');
+    Route::get('/client-payments/{clientPayment}', [ClientPaymentController::class, 'show'])->name('client-payments.show')
+        ->middleware('permission:view-client-payment-details');
+    Route::get('/client-payments/{clientPayment}/edit', [ClientPaymentController::class, 'edit'])->name('client-payments.edit')
+        ->middleware('permission:edit-client-payment');
+    Route::put('/client-payments/{clientPayment}', [ClientPaymentController::class, 'update'])->name('client-payments.update')
+        ->middleware('permission:edit-client-payment');
+    Route::delete('/client-payments/{clientPayment}', [ClientPaymentController::class, 'destroy'])->name('client-payments.destroy')
+        ->middleware('permission:delete-client-payment');
+    Route::patch('/client-payments/{clientPayment}/mark-as-received', [ClientPaymentController::class, 'markAsReceived'])->name('client-payments.mark-as-received')
+        ->middleware('permission:mark-client-payment-received');
+    Route::get('/client-payment-dashboard', [ClientPaymentController::class, 'dashboard'])->name('client-payments.dashboard')
+        ->middleware('permission:view-client-payment-dashboard');
     
     // Vendor Attendance routes
-    Route::get('/vendor-attendances', [VendorAttendanceController::class, 'index'])->name('vendor-attendances.index');
-    Route::get('/vendor-attendances/create', [VendorAttendanceController::class, 'create'])->name('vendor-attendances.create');
-    Route::post('/vendor-attendances', [VendorAttendanceController::class, 'store'])->name('vendor-attendances.store');
-    Route::get('/vendor-attendances/{vendorAttendance}', [VendorAttendanceController::class, 'show'])->name('vendor-attendances.show');
-    Route::get('/vendor-attendances/{vendorAttendance}/edit', [VendorAttendanceController::class, 'edit'])->name('vendor-attendances.edit');
-    Route::put('/vendor-attendances/{vendorAttendance}', [VendorAttendanceController::class, 'update'])->name('vendor-attendances.update');
-    Route::patch('/vendor-attendances/{vendorAttendance}/approve', [VendorAttendanceController::class, 'approve'])->name('vendor-attendances.approve');
-    Route::patch('/vendor-attendances/{vendorAttendance}/reject', [VendorAttendanceController::class, 'reject'])->name('vendor-attendances.reject');
-    Route::post('/vendor-attendances/send-reminders', [VendorAttendanceController::class, 'sendReminders'])->name('vendor-attendances.send-reminders');
-    Route::get('/vendor-attendance-summary', [VendorAttendanceController::class, 'summary'])->name('vendor-attendances.summary');
+    Route::get('/vendor-attendances', [VendorAttendanceController::class, 'index'])->name('vendor-attendances.index')
+        ->middleware('permission:view-vendor-attendances');
+    Route::get('/vendor-attendances/create', [VendorAttendanceController::class, 'create'])->name('vendor-attendances.create')
+        ->middleware('permission:create-vendor-attendance');
+    Route::post('/vendor-attendances', [VendorAttendanceController::class, 'store'])->name('vendor-attendances.store')
+        ->middleware('permission:create-vendor-attendance');
+    Route::get('/vendor-attendances/{vendorAttendance}', [VendorAttendanceController::class, 'show'])->name('vendor-attendances.show')
+        ->middleware('permission:view-vendor-attendance-details');
+    Route::get('/vendor-attendances/{vendorAttendance}/edit', [VendorAttendanceController::class, 'edit'])->name('vendor-attendances.edit')
+        ->middleware('permission:edit-vendor-attendance');
+    Route::put('/vendor-attendances/{vendorAttendance}', [VendorAttendanceController::class, 'update'])->name('vendor-attendances.update')
+        ->middleware('permission:edit-vendor-attendance');
+    Route::patch('/vendor-attendances/{vendorAttendance}/approve', [VendorAttendanceController::class, 'approve'])->name('vendor-attendances.approve')
+        ->middleware('permission:approve-vendor-attendance');
+    Route::patch('/vendor-attendances/{vendorAttendance}/reject', [VendorAttendanceController::class, 'reject'])->name('vendor-attendances.reject')
+        ->middleware('permission:reject-vendor-attendance');
+    Route::post('/vendor-attendances/send-reminders', [VendorAttendanceController::class, 'sendReminders'])->name('vendor-attendances.send-reminders')
+        ->middleware('permission:send-vendor-attendance-reminders');
+    Route::get('/vendor-attendance-summary', [VendorAttendanceController::class, 'summary'])->name('vendor-attendances.summary')
+        ->middleware('permission:view-vendor-attendance-summary');
     
     // Invoice routes
-    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
-    Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
-    Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
-    Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
-    Route::get('/invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
-    Route::put('/invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
-    Route::patch('/invoices/{invoice}/verify', [InvoiceController::class, 'verify'])->name('invoices.verify');
-    Route::get('/invoices/{invoice}/download', [InvoiceController::class, 'download'])->name('invoices.download');
-    Route::get('/invoice-pending-verification', [InvoiceController::class, 'pendingVerification'])->name('invoices.pending-verification');
-    Route::get('/invoice-discrepancies', [InvoiceController::class, 'discrepancies'])->name('invoices.discrepancies');
-    Route::get('/invoice-summary', [InvoiceController::class, 'summary'])->name('invoices.summary');
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index')
+        ->middleware('permission:view-invoices');
+    Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create')
+        ->middleware('permission:create-invoice');
+    Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store')
+        ->middleware('permission:create-invoice');
+    Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show')
+        ->middleware('permission:view-invoice-details');
+    Route::get('/invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit')
+        ->middleware('permission:edit-invoice');
+    Route::put('/invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update')
+        ->middleware('permission:edit-invoice');
+    Route::patch('/invoices/{invoice}/verify', [InvoiceController::class, 'verify'])->name('invoices.verify')
+        ->middleware('permission:verify-invoice');
+    Route::get('/invoices/{invoice}/download', [InvoiceController::class, 'download'])->name('invoices.download')
+        ->middleware('permission:download-invoice');
+    Route::get('/invoice-pending-verification', [InvoiceController::class, 'pendingVerification'])->name('invoices.pending-verification')
+        ->middleware('permission:view-pending-invoices');
+    Route::get('/invoice-discrepancies', [InvoiceController::class, 'discrepancies'])->name('invoices.discrepancies')
+        ->middleware('permission:view-invoice-discrepancies');
+    Route::get('/invoice-summary', [InvoiceController::class, 'summary'])->name('invoices.summary')
+        ->middleware('permission:view-invoice-summary');
     
     // Requirements routes
-    Route::get('/requirements', [RequirementController::class, 'index'])->name('requirements.index');
-    Route::get('/requirements/create', [RequirementController::class, 'create'])->name('requirements.create');
-    Route::post('/requirements', [RequirementController::class, 'store'])->name('requirements.store');
-    Route::get('/requirements/{requirement}', [RequirementController::class, 'show'])->name('requirements.show');
-    Route::get('/requirements/{requirement}/edit', [RequirementController::class, 'edit'])->name('requirements.edit');
-    Route::put('/requirements/{requirement}', [RequirementController::class, 'update'])->name('requirements.update');
-    Route::delete('/requirements/{requirement}', [RequirementController::class, 'destroy'])->name('requirements.destroy');
-    Route::post('/requirements/{requirement}/hod-approve', [RequirementController::class, 'hodApprove'])->name('requirements.hod-approve');
-    Route::post('/requirements/{requirement}/founder-approve', [RequirementController::class, 'founderApprove'])->name('requirements.founder-approve');
-    Route::get('/requirements/data', [RequirementController::class, 'index'])->name('requirements.data');
-    Route::get('/requirements/pending-counts', [RequirementController::class, 'getPendingCounts'])->name('requirements.pending-counts');
+    Route::get('/requirements', [RequirementController::class, 'index'])->name('requirements.index')
+        ->middleware('permission:view-requirements');
+    Route::get('/requirements/create', [RequirementController::class, 'create'])->name('requirements.create')
+        ->middleware('permission:create-requirement');
+    Route::post('/requirements', [RequirementController::class, 'store'])->name('requirements.store')
+        ->middleware('permission:create-requirement');
+    Route::get('/requirements/{requirement}', [RequirementController::class, 'show'])->name('requirements.show')
+        ->middleware('permission:view-requirement-details');
+    Route::get('/requirements/{requirement}/edit', [RequirementController::class, 'edit'])->name('requirements.edit')
+        ->middleware('permission:edit-requirement');
+    Route::put('/requirements/{requirement}', [RequirementController::class, 'update'])->name('requirements.update')
+        ->middleware('permission:edit-requirement');
+    Route::delete('/requirements/{requirement}', [RequirementController::class, 'destroy'])->name('requirements.destroy')
+        ->middleware('permission:delete-requirement');
+    Route::post('/requirements/{requirement}/hod-approve', [RequirementController::class, 'hodApprove'])->name('requirements.hod-approve')
+        ->middleware('permission:approve-requirement');
+    Route::post('/requirements/{requirement}/founder-approve', [RequirementController::class, 'founderApprove'])->name('requirements.founder-approve')
+        ->middleware('permission:approve-requirement');
+    Route::get('/requirements/data', [RequirementController::class, 'index'])->name('requirements.data')
+        ->middleware('permission:view-requirements');
+    Route::get('/requirements/pending-counts', [RequirementController::class, 'getPendingCounts'])->name('requirements.pending-counts')
+        ->middleware('permission:view-requirement-counts');
     
     // Interview routes
-    Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index');
-    Route::get('/interviews/create', [InterviewController::class, 'create'])->name('interviews.create');
-    Route::post('/interviews', [InterviewController::class, 'store'])->name('interviews.store');
-    Route::get('/interviews/{interview}', [InterviewController::class, 'show'])->name('interviews.show');
-    Route::get('/interviews/{interview}/edit', [InterviewController::class, 'edit'])->name('interviews.edit');
-    Route::put('/interviews/{interview}', [InterviewController::class, 'update'])->name('interviews.update');
-    Route::delete('/interviews/{interview}', [InterviewController::class, 'destroy'])->name('interviews.destroy');
-    Route::post('/interviews/{interview}/feedback', [InterviewController::class, 'submitFeedback'])->name('interviews.feedback');
-    Route::get('/interviews/stats', [InterviewController::class, 'getStats'])->name('interviews.stats');
+    Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index')
+        ->middleware('permission:view-interviews');
+    Route::get('/interviews/create', [InterviewController::class, 'create'])->name('interviews.create')
+        ->middleware('permission:create-interview');
+    Route::post('/interviews', [InterviewController::class, 'store'])->name('interviews.store')
+        ->middleware('permission:create-interview');
+    Route::get('/interviews/{interview}', [InterviewController::class, 'show'])->name('interviews.show')
+        ->middleware('permission:view-interview-details');
+    Route::get('/interviews/{interview}/edit', [InterviewController::class, 'edit'])->name('interviews.edit')
+        ->middleware('permission:edit-interview');
+    Route::put('/interviews/{interview}', [InterviewController::class, 'update'])->name('interviews.update')
+        ->middleware('permission:edit-interview');
+    Route::delete('/interviews/{interview}', [InterviewController::class, 'destroy'])->name('interviews.destroy')
+        ->middleware('permission:delete-interview');
+    Route::post('/interviews/{interview}/feedback', [InterviewController::class, 'submitFeedback'])->name('interviews.feedback')
+        ->middleware('permission:submit-interview-feedback');
+    Route::get('/interviews/stats', [InterviewController::class, 'getStats'])->name('interviews.stats')
+        ->middleware('permission:view-interview-stats');
     
     // Payment Management routes
     // Include payment management specific routes from separate file
     require __DIR__.'/vendor-payments.php';
+
+    // User Management routes
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+       // ->middleware('permission:view-users');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+       // ->middleware('permission:create-user');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        //->middleware('permission:create-user');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+       // ->middleware('permission:edit-user');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+       // ->middleware('permission:edit-user');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+       // ->middleware('permission:delete-user');
+
+    // Role Management routes
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+       // ->middleware('permission:view-roles');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+       // ->middleware('permission:create-role');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+       // ->middleware('permission:create-role');
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+        //->middleware('permission:edit-role');
+    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+       // ->middleware('permission:edit-role');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+       // ->middleware('permission:delete-role');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Required Permissions List
+|--------------------------------------------------------------------------
+|
+| Below is a list of all permissions required by the application.
+| These should be created in the database and assigned to appropriate roles.
+|
+| Dashboard:
+| - view-dashboard
+|
+| Vendor Management:
+| - view-vendors
+| - create-vendor
+| - edit-vendor
+| - delete-vendor
+| - view-vendor-details
+| - update-vendor-status
+| - view-vendor-approvals
+| - approve-vendor
+|
+| Client Payment Management:
+| - view-client-payments
+| - create-client-payment
+| - edit-client-payment
+| - delete-client-payment
+| - view-client-payment-details
+| - mark-client-payment-received
+| - view-client-payment-dashboard
+|
+| Vendor Attendance Management:
+| - view-vendor-attendances
+| - create-vendor-attendance
+| - edit-vendor-attendance
+| - view-vendor-attendance-details
+| - approve-vendor-attendance
+| - reject-vendor-attendance
+| - send-vendor-attendance-reminders
+| - view-vendor-attendance-summary
+|
+| Invoice Management:
+| - view-invoices
+| - create-invoice
+| - edit-invoice
+| - view-invoice-details
+| - verify-invoice
+| - download-invoice
+| - view-pending-invoices
+| - view-invoice-discrepancies
+| - view-invoice-summary
+|
+| Requirement Management:
+| - view-requirements
+| - create-requirement
+| - edit-requirement
+| - delete-requirement
+| - view-requirement-details
+| - approve-requirement
+| - view-requirement-counts
+|
+| Interview Management:
+| - view-interviews
+| - create-interview
+| - edit-interview
+| - delete-interview
+| - view-interview-details
+| - submit-interview-feedback
+| - view-interview-stats
+|
+| User Management:
+| - view-users
+| - create-user
+| - edit-user
+| - delete-user
+|
+| Role Management:
+| - view-roles
+| - create-role
+| - edit-role
+| - delete-role
+|
+*/

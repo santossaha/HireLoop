@@ -14,12 +14,12 @@ class RoleSeeder extends Seeder
     {
         // Define the roles
         $roles = [
-            ['name' => 'admin', 'description' => 'Administrator with full access'],
-            ['name' => 'hod', 'description' => 'Head of Department'],
-            ['name' => 'founder', 'description' => 'Company Founder'],
-            ['name' => 'poc', 'description' => 'Point of Contact'],
-            ['name' => 'accounts', 'description' => 'Accounts Team Member'],
-            ['name' => 'vendor', 'description' => 'External Vendor'],
+            ['name' => 'admin', 'guard_name' => 'web'],
+            ['name' => 'hod', 'guard_name' => 'web'],
+            ['name' => 'founder', 'guard_name' => 'web'],
+            ['name' => 'poc', 'guard_name' => 'web'],
+            ['name' => 'accounts', 'guard_name' => 'web'],
+            ['name' => 'vendor', 'guard_name' => 'web'],
         ];
 
         // Insert roles into database

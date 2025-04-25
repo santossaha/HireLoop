@@ -12,37 +12,104 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        // Define the roles
+        $roles = [
+            ['name' => 'admin', 'guard_name' => 'web'],
+            ['name' => 'hod', 'guard_name' => 'web'],
+            ['name' => 'founder', 'guard_name' => 'web'],
+            ['name' => 'poc', 'guard_name' => 'web'],
+            ['name' => 'accounts', 'guard_name' => 'web'],
+            ['name' => 'vendor', 'guard_name' => 'web'],
+        ];
+
+        // Insert roles into database
+        foreach ($roles as $role) {
+            DB::table('roles')->insert([
+                'name' => $role['name'],
+                'guard_name' => $role['guard_name'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        
         // Create payment management permissions
         $permissions = [
-            // Client Payment permissions
+            // Vendor Management:
+            'view-dashboard',
+            
+            // Vendor Management:
+            'view-vendors',
+            'create-vendor',
+            'edit-vendor',
+            'delete-vendor',
+            'view-vendor-details',
+            'update-vendor-status',
+            'view-vendor-approvals',
+            'approve-vendor',
+            
+            // Client Payment Management:
             'view-client-payments',
             'create-client-payment',
             'edit-client-payment',
             'delete-client-payment',
+            'view-client-payment-details',
             'mark-client-payment-received',
+            'view-client-payment-dashboard',
             
-            // Vendor Payment permissions
-            'view-vendor-payments',
-            'create-vendor-payment',
-            'edit-vendor-payment',
-            'delete-vendor-payment',
-            'approve-payment',
-            'mark-payment-paid',
-            'view-payment-reports',
-            
-            // Invoice permissions
-            'view-invoices',
-            'create-invoice',
-            'edit-invoice',
-            'delete-invoice',
-            'verify-invoice',
-            
-            // Vendor Attendance permissions
+            //Vendor Attendance Management:
             'view-vendor-attendances',
             'create-vendor-attendance',
             'edit-vendor-attendance',
+            'view-vendor-attendance-details',
             'approve-vendor-attendance',
-            'view-attendance-reports',
+            'send-vendor-attendance-reminders',
+            'view-vendor-attendance-summary',
+           
+            
+            //Invoice Management:
+            'view-invoices',
+            'create-invoice',
+            'edit-invoice',
+            'view-invoice-details',
+            'verify-invoice',
+            'download-invoice',
+            'view-pending-invoices',
+            'view-invoice-discrepancies',
+            'view-invoice-summary',
+
+            //Requirement Management:
+            'view-requirements',
+            'create-requirement',
+            'edit-requirement',
+            'delete-requirement',
+            'view-requirement-details',
+            'approve-requirement',
+            'view-requirement-counts',
+
+            //Requirement Management:
+            'view-interviews',
+            'create-interview',
+            'edit-interview',
+            'delete-interview',
+            'view-interview-details',
+            'submit-interview-feedback',
+            'view-interview-stats',
+
+            //User Management:
+            'view-users',
+            'create-user',
+            'edit-user',
+            'delete-user',
+
+            //User Management:
+            'view-roles',
+            'create-role',
+            'edit-role',
+            'delete-role',
+   
+ 
         ];
 
         // First, check if permissions table exists
@@ -69,29 +136,87 @@ return new class extends Migration
             $rolePermissions = [
                 'admin' => $permissions,
                 'founder' => [
-                    'view-client-payments',
-                    'view-vendor-payments',
-                    'approve-payment',
-                    'view-payment-reports',
-                    'view-invoices',
-                    'verify-invoice',
-                    'view-vendor-attendances',
-                    'view-attendance-reports',
+                        // Vendor Management:
+                        'view-vendors',
+                        'create-vendor',
+                        'edit-vendor',
+                        'delete-vendor',
+                        'view-vendor-details',
+                        'update-vendor-status',
+                        'view-vendor-approvals',
+                        'approve-vendor',
+                        
+                        // Client Payment Management:
+                        'view-client-payments',
+                        'create-client-payment',
+                        'edit-client-payment',
+                        'delete-client-payment',
+                        'view-client-payment-details',
+                        'mark-client-payment-received',
+                        'view-client-payment-dashboard',
+                        
+                        //Vendor Attendance Management:
+                        'view-vendor-attendances',
+                        'create-vendor-attendance',
+                        'edit-vendor-attendance',
+                        'view-vendor-attendance-details',
+                        'approve-vendor-attendance',
+                        'send-vendor-attendance-reminders',
+                        'view-vendor-attendance-summary',
+                    
+                        
+                        //Invoice Management:
+                        'view-invoices',
+                        'create-invoice',
+                        'edit-invoice',
+                        'view-invoice-details',
+                        'verify-invoice',
+                        'download-invoice',
+                        'view-pending-invoices',
+                        'view-invoice-discrepancies',
+                        'view-invoice-summary',
+
+                        //Requirement Management:
+                        'view-requirements',
+                        'create-requirement',
+                        'edit-requirement',
+                        'delete-requirement',
+                        'view-requirement-details',
+                        'approve-requirement',
+                        'view-requirement-counts',
+
+                        //Requirement Management:
+                        'view-interviews',
+                        'create-interview',
+                        'edit-interview',
+                        'delete-interview',
+                        'view-interview-details',
+                        'submit-interview-feedback',
+                        'view-interview-stats',
+
+                       
                 ],
                 'accounts' => [
-                    'view-client-payments',
-                    'create-client-payment',
-                    'edit-client-payment',
-                    'mark-client-payment-received',
-                    'view-vendor-payments',
-                    'create-vendor-payment',
-                    'edit-vendor-payment',
-                    'mark-payment-paid',
-                    'view-payment-reports',
-                    'view-invoices',
-                    'verify-invoice',
-                    'view-vendor-attendances',
-                    'view-attendance-reports',
+                        //Vendor Attendance Management:
+                        'view-vendor-attendances',
+                        'create-vendor-attendance',
+                        'edit-vendor-attendance',
+                        'view-vendor-attendance-details',
+                        'approve-vendor-attendance',
+                        'send-vendor-attendance-reminders',
+                        'view-vendor-attendance-summary',
+                    
+                        
+                        //Invoice Management:
+                        'view-invoices',
+                        'create-invoice',
+                        'edit-invoice',
+                        'view-invoice-details',
+                        'verify-invoice',
+                        'download-invoice',
+                        'view-pending-invoices',
+                        'view-invoice-discrepancies',
+                        'view-invoice-summary',
                 ],
                 'poc' => [
                     'view-client-payments',
@@ -105,11 +230,26 @@ return new class extends Migration
                     'view-attendance-reports',
                 ],
                 'vendor' => [
-                    'view-vendor-payments',
-                    'view-invoices',
-                    'create-invoice',
-                    'view-vendor-attendances',
-                    'create-vendor-attendance',
+                   'view-dashboard'
+                ],
+                'bde' => [
+                    //Requirement Management:
+                    'view-requirements',
+                    'create-requirement',
+                    'edit-requirement',
+                    'delete-requirement',
+                    'view-requirement-details',
+                    'approve-requirement',
+                    'view-requirement-counts',
+
+                    //Requirement Management:
+                    'view-interviews',
+                    'create-interview',
+                    'edit-interview',
+                    'delete-interview',
+                    'view-interview-details',
+                    'submit-interview-feedback',
+                    'view-interview-stats',
                 ],
             ];
             
