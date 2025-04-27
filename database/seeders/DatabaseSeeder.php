@@ -33,10 +33,10 @@ class DatabaseSeeder extends Seeder
 
         // Create Admin User
         $admin = User::firstOrCreate(
-            ['email' => 'admin@vendormanagement.com'],
+            ['email' => 'admin@gmail.com'],
             [
                 'name' => 'Admin User',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'admin',
             ]
         );
@@ -47,10 +47,10 @@ class DatabaseSeeder extends Seeder
 
         // Create HOD users
         $nikhil = User::firstOrCreate(
-            ['email' => 'nikhil@vendormanagement.com'],
+            ['email' => 'nikhil@gmail.com'],
             [
                 'name' => 'Nikhil Solanki',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'hod',
             ]
         );
@@ -58,10 +58,10 @@ class DatabaseSeeder extends Seeder
 
 
         $ruchir = User::firstOrCreate(
-            ['email' => 'ruchir@vendormanagement.com'],
+            ['email' => 'ruchir@gmail.com'],
             [
                 'name' => 'Ruchir Pandya',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'hod',
                 'department_id' => $openSource->id,
             ]
@@ -70,10 +70,10 @@ class DatabaseSeeder extends Seeder
 
 
         $milan = User::firstOrCreate(
-            ['email' => 'milan@vendormanagement.com'],
+            ['email' => 'milan@gmail.com'],
             [
                 'name' => 'Milan Shah',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'hod',
                 'department_id' => $openSource->id,
             ]
@@ -89,50 +89,50 @@ class DatabaseSeeder extends Seeder
         // Create founder user
 
         $user1 = User::firstOrCreate(
-            ['email' => 'founder@vendormanagement.com'],
+            ['email' => 'founder@gmail.com'],
             [
                 'name' => 'Dilipbhai',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'founder',
             ]
             );
         $user1->assignRole('founder');
 
         $user2 = User::firstOrCreate(
-            ['email' => 'accounts@vendormanagement.com'],
+            ['email' => 'accounts@gmail.com'],
             [
                 'name' => 'Accounts Manager',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'accounts',
             ]
             );
         $user2->assignRole('accounts');
 
         $user3 = User::firstOrCreate(
-            ['email' => 'poc@vendormanagement.com'],
+            ['email' => 'poc@gmail.com'],
             [
                 'name' => 'Project Coordinator',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'poc',
             ]
             );
         $user3->assignRole('poc');
 
         $user4 = User::firstOrCreate(
-            ['email' => 'vendor@vendormanagement.com'],
+            ['email' => 'vendor@gmail.com'],
             [
                 'name' => 'Vendor User',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'vendor',
             ]
             );
         $user4->assignRole('vendor');
 
         $user5 = User::firstOrCreate(
-            ['email' => 'bde@vendormanagement.com'],
+            ['email' => 'bde@gmail.com'],
             [
                 'name' => 'BDE User',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'role' => 'bde',
             ]
             );
