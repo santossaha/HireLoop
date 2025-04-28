@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\Requirements;
+use App\Models\Requirement;
 use App\Models\Vendor;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class RequirementsFactory extends Factory
+class RequirementFactory extends Factory
 {
-    protected $model = Requirements::class;
+    protected $model = Requirement::class;
 
     public function definition(): array
     {

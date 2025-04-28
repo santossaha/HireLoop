@@ -12,6 +12,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorPaymentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CandidateSourcingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,24 +137,34 @@ Route::middleware(['auth'])->group(function () {
     // Requirements routes
     Route::get('/requirements', [RequirementController::class, 'index'])->name('requirements.index')
         ->middleware('permission:view-requirements');
+        
     Route::get('/requirements/create', [RequirementController::class, 'create'])->name('requirements.create')
         ->middleware('permission:create-requirement');
+
     Route::post('/requirements', [RequirementController::class, 'store'])->name('requirements.store')
         ->middleware('permission:create-requirement');
+
     Route::get('/requirements/{requirement}', [RequirementController::class, 'show'])->name('requirements.show')
         ->middleware('permission:view-requirement-details');
+
     Route::get('/requirements/{requirement}/edit', [RequirementController::class, 'edit'])->name('requirements.edit')
         ->middleware('permission:edit-requirement');
+
     Route::put('/requirements/{requirement}', [RequirementController::class, 'update'])->name('requirements.update')
         ->middleware('permission:edit-requirement');
+
     Route::delete('/requirements/{requirement}', [RequirementController::class, 'destroy'])->name('requirements.destroy')
         ->middleware('permission:delete-requirement');
+
     Route::post('/requirements/{requirement}/hod-approve', [RequirementController::class, 'hodApprove'])->name('requirements.hod-approve')
         ->middleware('permission:approve-requirement');
+
     Route::post('/requirements/{requirement}/founder-approve', [RequirementController::class, 'founderApprove'])->name('requirements.founder-approve')
         ->middleware('permission:approve-requirement');
+
     Route::get('/requirements/data', [RequirementController::class, 'index'])->name('requirements.data')
         ->middleware('permission:view-requirements');
+        
     Route::get('/requirements/pending-counts', [RequirementController::class, 'getPendingCounts'])->name('requirements.pending-counts')
         ->middleware('permission:view-requirement-counts');
     
