@@ -26,9 +26,15 @@ class RequirementFactory extends Factory
             'UI/UX Designer'
         ];
 
+        // Generate requirement_id in the format REQ-YYYY-MM-XXX
+        $year = date('Y');
+        $month = date('m');
+        $sequence = $this->faker->unique()->numberBetween(1, 999);
+        $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
+
         return [
             'vendor_id' => Vendor::factory(),
-            'requirement_id' => 'REQ-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'requirement_id' => $requirement_id,
             'job_description' => $this->faker->paragraph(3),
             'client_budget' => $this->faker->numberBetween(50000, 200000),
             'proposed_budget' => $this->faker->numberBetween(40000, 180000),

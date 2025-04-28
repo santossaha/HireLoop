@@ -146,7 +146,7 @@ class DatabaseSeeder extends Seeder
         $this->call(KeySkillSeeder::class);
 
         // Seed Requirements
-        $this->call(RequirementsSeeder::class);
+        $this->call(RequirementSeeder::class);
 
         // Seed interviews
         $this->call([

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\AutoGeneratesRequirementId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Requirement extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, AutoGeneratesRequirementId;
 
     /**
      * The attributes that are mass assignable.
@@ -18,9 +20,6 @@ class Requirement extends Model
         'vendor_id',
         'requirement_id',
         'job_description',
-        'client_budget',
-        'proposed_budget',
-        'cv_path',
         'status',
         'hod_approved',
         'founder_approved',
@@ -70,6 +69,14 @@ class Requirement extends Model
     public function interviews()
     {
         return $this->hasMany(Interview::class);
+    }
+
+    /**
+     * Get the candidate sourcing records for this requirement
+     */
+    public function candidateSourcings()
+    {
+        return $this->hasMany(CandidateSourcing::class);
     }
 
     /**

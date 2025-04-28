@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\ApprovalRequiredNotification;
+use App\Notifications\NewRequirementNotification;
 use Yajra\DataTables\DataTables;
 
 class RequirementController extends Controller
@@ -128,7 +129,28 @@ class RequirementController extends Controller
         $vendors = Vendor::all();
         $departments = Department::all();
         
-        return view('requirement.create', compact('vendors', 'departments'));
+        // Generate the next Requirement ID
+        $year = date('Y');
+        $month = date('m');
+        
+        // Get the last requirement ID for this year and month
+        $lastRequirement = Requirement::where('requirement_id', 'like', "REQ-{$year}-{$month}-%")
+            ->orderBy('requirement_id', 'desc')
+            ->first();
+
+        if ($lastRequirement) {
+            // Extract the sequence number and increment it
+            $parts = explode('-', $lastRequirement->requirement_id);
+            $sequence = (int) $parts[3] + 1;
+        } else {
+            // Start with sequence 1 if no requirements exist for this month
+            $sequence = 1;
+        }
+
+        // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
+        $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
+        
+        return view('requirement.create', compact('vendors', 'departments', 'requirement_id'));
     }
 
     /**
@@ -138,11 +160,7 @@ class RequirementController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'vendor_id' => 'required|exists:vendors,id',
-            'requirement_id' => 'required|string|max:50|unique:requirements',
             'job_description' => 'required|string',
-            'client_budget' => 'required|numeric|min:0',
-            'proposed_budget' => 'required|numeric|min:0',
-            'cv_file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,ppt,pptx,xls,xlsx|max:5120',
             'department_id' => 'required|exists:departments,id',
         ]);
 
@@ -150,17 +168,32 @@ class RequirementController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Store the CV file
-        $cvPath = $request->file('cv_file')->store('cv_files');
+        // Generate the next Requirement ID
+        $year = date('Y');
+        $month = date('m');
+        
+        // Get the last requirement ID for this year and month
+        $lastRequirement = Requirement::where('requirement_id', 'like', "REQ-{$year}-{$month}-%")
+            ->orderBy('requirement_id', 'desc')
+            ->first();
+
+        if ($lastRequirement) {
+            // Extract the sequence number and increment it
+            $parts = explode('-', $lastRequirement->requirement_id);
+            $sequence = (int) $parts[3] + 1;
+        } else {
+            // Start with sequence 1 if no requirements exist for this month
+            $sequence = 1;
+        }
+
+        // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
+        $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
 
         // Create the requirement
         $requirement = Requirement::create([
             'vendor_id' => $request->vendor_id,
-            'requirement_id' => $request->requirement_id,
+            'requirement_id' => $requirement_id,
             'job_description' => $request->job_description,
-            'client_budget' => $request->client_budget,
-            'proposed_budget' => $request->proposed_budget,
-            'cv_path' => $cvPath,
             'department_id' => $request->department_id,
             'status' => 'pending',
             'hod_approved' => false,
@@ -175,9 +208,18 @@ class RequirementController extends Controller
             $hod->notify(new ApprovalRequiredNotification(
                 'requirement',
                 $requirement->id,
-                'HOD Approval Required for CV/Budget',
+                'HOD Approval Required',
                 "A new requirement has been submitted for vendor " . $requirement->vendor->company_name . " that requires your approval."
             ));
+        }
+        
+        // Notify POC users in the same department
+        $pocUsers = User::where('role', 'poc')
+            ->where('department_id', $requirement->department_id)
+            ->get();
+
+        foreach ($pocUsers as $pocUser) {
+            $pocUser->notify(new NewRequirementNotification($requirement));
         }
         
         return redirect()->route('requirements.index')
@@ -226,9 +268,6 @@ class RequirementController extends Controller
             'vendor_id' => 'required|exists:vendors,id',
             'requirement_id' => 'required|string|max:50|unique:requirements,requirement_id,' . $requirement->id,
             'job_description' => 'required|string',
-            'client_budget' => 'required|numeric|min:0',
-            'proposed_budget' => 'required|numeric|min:0',
-            'cv_file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,ppt,pptx,xls,xlsx|max:5120',
             'department_id' => 'required|exists:departments,id',
         ]);
 
@@ -236,24 +275,10 @@ class RequirementController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Handle CV file update if provided
-        if ($request->hasFile('cv_file')) {
-            // Delete old file
-            if ($requirement->cv_path) {
-                Storage::delete($requirement->cv_path);
-            }
-            
-            // Store new file
-            $cvPath = $request->file('cv_file')->store('cv_files');
-            $requirement->cv_path = $cvPath;
-        }
-
         // Update the requirement
         $requirement->vendor_id = $request->vendor_id;
         $requirement->requirement_id = $request->requirement_id;
         $requirement->job_description = $request->job_description;
-        $requirement->client_budget = $request->client_budget;
-        $requirement->proposed_budget = $request->proposed_budget;
         $requirement->department_id = $request->department_id;
         $requirement->save();
         
@@ -266,7 +291,7 @@ class RequirementController extends Controller
                 $hod->notify(new ApprovalRequiredNotification(
                     'requirement',
                     $requirement->id,
-                    'HOD Approval Required for CV/Budget',
+                    'HOD Approval Required',
                     "A requirement has been updated for vendor " . $requirement->vendor->company_name . " that requires your approval."
                 ));
             }
@@ -415,4 +440,32 @@ class RequirementController extends Controller
 
     //     return response()->json($response);
     // }
+
+    /**
+     * Get the next Requirement ID
+     */
+    public function getNextRequirementId()
+    {
+        $year = date('Y');
+        $month = date('m');
+        
+        // Get the last requirement ID for this year and month
+        $lastRequirement = Requirement::where('requirement_id', 'like', "REQ-{$year}-{$month}-%")
+            ->orderBy('requirement_id', 'desc')
+            ->first();
+
+        if ($lastRequirement) {
+            // Extract the sequence number and increment it
+            $parts = explode('-', $lastRequirement->requirement_id);
+            $sequence = (int) $parts[3] + 1;
+        } else {
+            // Start with sequence 1 if no requirements exist for this month
+            $sequence = 1;
+        }
+
+        // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
+        return response()->json([
+            'requirement_id' => sprintf("REQ-%s-%s-%03d", $year, $month, $sequence)
+        ]);
+    }
 }

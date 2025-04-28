@@ -168,6 +168,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/requirements/pending-counts', [RequirementController::class, 'getPendingCounts'])->name('requirements.pending-counts')
         ->middleware('permission:view-requirement-counts');
     
+    Route::get('/requirements/next-id', [RequirementController::class, 'getNextRequirementId'])->name('requirements.next-id');
+    
     // Interview routes
     Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index')
         ->middleware('permission:view-interviews');
@@ -219,6 +221,16 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:edit-role');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy')
         ->middleware('permission:delete-role');
+
+    // Candidate Sourcing Routes
+    Route::get('/candidate-sourcing', [CandidateSourcingController::class, 'index'])->name('candidate-sourcing.index');
+    Route::get('/candidate-sourcing/{requirement}/create', [CandidateSourcingController::class, 'create'])->name('candidate-sourcing.create');
+    Route::post('/candidate-sourcing/{requirement}', [CandidateSourcingController::class, 'store'])->name('candidate-sourcing.store');
+    Route::get('/candidate-sourcing/{candidateSourcing}', [CandidateSourcingController::class, 'show'])->name('candidate-sourcing.show');
+    Route::post('/candidate-sourcing/{candidateSourcing}/approve', [CandidateSourcingController::class, 'approve'])->name('candidate-sourcing.approve');
+    Route::post('/candidate-sourcing/{candidateSourcing}/reject', [CandidateSourcingController::class, 'reject'])->name('candidate-sourcing.reject');
+    Route::post('/candidate-sourcing/{candidateSourcing}/schedule-interview', [CandidateSourcingController::class, 'scheduleInterview'])->name('candidate-sourcing.schedule-interview');
+    Route::post('/candidate-sourcing/{requirement}/upload-candidate', [CandidateSourcingController::class, 'uploadCandidate'])->name('candidate-sourcing.upload-candidate');
 });
 
 /*

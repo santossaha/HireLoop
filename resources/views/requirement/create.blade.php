@@ -16,7 +16,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Requirement Information</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('requirements.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('requirements.store') }}" method="POST">
                 @csrf
 
                 <div class="row mb-3">
@@ -52,45 +52,9 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="requirement_id" class="form-label">Requirement ID <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('requirement_id') is-invalid @enderror" id="requirement_id" name="requirement_id" value="{{ old('requirement_id') }}" required>
-                        <div class="form-text">Unique identifier for this requirement (e.g., REQ-2023-001)</div>
-                        @error('requirement_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-6">
-                        <label for="cv_file" class="form-label">CV File <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control @error('cv_file') is-invalid @enderror" id="cv_file" name="cv_file" required>
-                        <div class="form-text">Upload the vendor's CV (PDF, DOC, DOCX, max 5MB)</div>
-                        @error('cv_file')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="client_budget" class="form-label">Client Budget <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" min="0" class="form-control @error('client_budget') is-invalid @enderror" id="client_budget" name="client_budget" value="{{ old('client_budget') }}" required>
-                        </div>
-                        <div class="form-text">Approximate budget from client</div>
-                        @error('client_budget')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-6">
-                        <label for="proposed_budget" class="form-label">Proposed Budget <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" min="0" class="form-control @error('proposed_budget') is-invalid @enderror" id="proposed_budget" name="proposed_budget" value="{{ old('proposed_budget') }}" required>
-                        </div>
-                        <div class="form-text">Budget proposed for this vendor</div>
-                        @error('proposed_budget')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <label for="requirement_id" class="form-label">Requirement ID</label>
+                        <input type="text" class="form-control" id="requirement_id" value="{{ $requirement_id }}" readonly>
+                        <div class="form-text">Requirement ID will be automatically generated</div>
                     </div>
                 </div>
 

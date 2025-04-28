@@ -16,9 +16,6 @@ return new class extends Migration
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade');
             $table->string('requirement_id')->unique();
             $table->text('job_description');
-            $table->decimal('client_budget', 10, 2);
-            $table->decimal('proposed_budget', 10, 2);
-            $table->string('cv_path');
             $table->string('status')->default('pending');
             $table->boolean('hod_approved')->default(false);
             $table->boolean('founder_approved')->default(false);

@@ -16,7 +16,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Requirement Information</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('requirements.update', $requirement->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('requirements.update', $requirement->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -60,42 +60,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-6">
-                        <label for="cv_file" class="form-label">CV File</label>
-                        <input type="file" class="form-control @error('cv_file') is-invalid @enderror" id="cv_file" name="cv_file">
-                        <div class="form-text">
-                            Current file: <a href="#" target="_blank">{{ basename($requirement->cv_path) }}</a> 
-                            <br>Upload a new file only if you want to replace the current one (PDF, DOC, DOCX, max 5MB)
-                        </div>
-                        @error('cv_file')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="client_budget" class="form-label">Client Budget <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" min="0" class="form-control @error('client_budget') is-invalid @enderror" id="client_budget" name="client_budget" value="{{ old('client_budget', $requirement->client_budget) }}" required>
-                        </div>
-                        <div class="form-text">Approximate budget from client</div>
-                        @error('client_budget')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-6">
-                        <label for="proposed_budget" class="form-label">Proposed Budget <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" min="0" class="form-control @error('proposed_budget') is-invalid @enderror" id="proposed_budget" name="proposed_budget" value="{{ old('proposed_budget', $requirement->proposed_budget) }}" required>
-                        </div>
-                        <div class="form-text">Budget proposed for this vendor</div>
-                        @error('proposed_budget')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -106,12 +70,12 @@
                     @enderror
                 </div>
 
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle me-2"></i> Editing this requirement will reset any previous approvals and require a new approval process.
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> This requirement will be submitted for approval to the respective department HOD, followed by founder approval.
                 </div>
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                    <a href="{{ route('requirements.show', $requirement->id) }}" class="btn btn-secondary me-md-2">Cancel</a>
+                    <button type="reset" class="btn btn-secondary me-md-2">Reset</button>
                     <button type="submit" class="btn btn-primary">Update Requirement</button>
                 </div>
             </form>

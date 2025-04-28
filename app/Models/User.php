@@ -88,6 +88,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user is BDE
+     */
+    public function isBde()
+    {
+        return $this->role === 'bde';
+    }
+
+    /**
      * Check if user is accounts
      */
     public function isAccounts()
