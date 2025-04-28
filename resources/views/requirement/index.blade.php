@@ -76,9 +76,6 @@
                             <th>Vendor</th>
                             <th>Requirement ID</th>
                             <th>Department</th>
-                            <th>Client Budget</th>
-                            <th>Proposed Budget</th>
-                            <th>Status</th>
                             <th>Created</th>
                             <th>Actions</th>
                         </tr>
@@ -109,9 +106,6 @@
                 { data: 'vendor', name: 'vendor' },
                 { data: 'requirement_id', name: 'requirement_id' },
                 { data: 'department', name: 'department' },
-                { data: 'client_budget', name: 'client_budget' },
-                { data: 'proposed_budget', name: 'proposed_budget' },
-                { data: 'status', name: 'status' },
                 { data: 'created_at', name: 'created_at' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],

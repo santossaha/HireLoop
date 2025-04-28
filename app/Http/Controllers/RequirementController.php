@@ -24,35 +24,6 @@ class RequirementController extends Controller
         if ($request->ajax()) {
             $query = Requirement::query();
             
-            // Filter by department if user is an HOD
-            if (Auth::user()->isHod()) {
-                $query->where('department_id', Auth::user()->department_id);
-            }
-            
-            // Filter by vendor if provided
-            if ($request->has('vendor_id') && !empty($request->vendor_id)) {
-                $query->where('vendor_id', $request->vendor_id);
-            }
-            
-            // Filter by department if provided
-            if ($request->has('department_id') && !empty($request->department_id)) {
-                $query->where('department_id', $request->department_id);
-            }
-            
-            // Filter by status if provided
-            if ($request->has('status') && !empty($request->status)) {
-                if ($request->status === 'pending_hod') {
-                    $query->where('hod_approved', false);
-                } elseif ($request->status === 'pending_founder') {
-                    $query->where('hod_approved', true)
-                          ->where('founder_approved', false);
-                } elseif ($request->status === 'approved') {
-                    $query->where('hod_approved', true)
-                          ->where('founder_approved', true);
-                } elseif ($request->status === 'rejected') {
-                    $query->where('status', 'rejected');
-                }
-            }
 
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {
@@ -84,9 +55,6 @@ class RequirementController extends Controller
                     'vendor' => $requirement->vendor->company_name,
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
-                    'client_budget' => '$' . number_format($requirement->client_budget, 2),
-                    'proposed_budget' => '$' . number_format($requirement->proposed_budget, 2),
-                    'status' => $this->getStatusBadge($requirement),
                     'created_at' => $requirement->created_at->format('M d, Y'),
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];
@@ -108,18 +76,18 @@ class RequirementController extends Controller
     /**
      * Get status badge HTML
      */
-    private function getStatusBadge($requirement)
-    {
-        if ($requirement->status == 'rejected') {
-            return '<span class="badge bg-danger">Rejected</span>';
-        } elseif ($requirement->founder_approved && $requirement->hod_approved) {
-            return '<span class="badge bg-success">Approved</span>';
-        } elseif ($requirement->hod_approved) {
-            return '<span class="badge bg-warning">HOD Approved</span>';
-        } else {
-            return '<span class="badge bg-secondary">Pending HOD</span>';
-        }
-    }
+    // private function getStatusBadge($requirement)
+    // {
+    //     if ($requirement->status == 'rejected') {
+    //         return '<span class="badge bg-danger">Rejected</span>';
+    //     } elseif ($requirement->founder_approved && $requirement->hod_approved) {
+    //         return '<span class="badge bg-success">Approved</span>';
+    //     } elseif ($requirement->hod_approved) {
+    //         return '<span class="badge bg-warning">HOD Approved</span>';
+    //     } else {
+    //         return '<span class="badge bg-secondary">Pending HOD</span>';
+    //     }
+    // }
 
     /**
      * Show the form for creating a new requirement

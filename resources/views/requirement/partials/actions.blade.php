@@ -3,15 +3,14 @@
         <i class="fas fa-eye"></i>
     </a>
     
-    @if(!$requirement->isApproved() && !($requirement->status == 'rejected'))
-        <a href="{{ route('requirements.edit', $requirement->id) }}" class="btn btn-primary btn-sm">
-            <i class="fas fa-edit"></i>
-        </a>
-        
-        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $requirement->id }}">
-            <i class="fas fa-trash"></i>
-        </button>
-    @endif
+    <a href="{{ route('requirements.edit', $requirement->id) }}" class="btn btn-primary btn-sm">
+        <i class="fas fa-edit"></i>
+    </a>
+    
+    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $requirement->id }}">
+        <i class="fas fa-trash"></i>
+    </button>
+   
 </div>
 
 <!-- Delete Modal -->
