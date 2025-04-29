@@ -44,7 +44,7 @@
                             <th>Contact Info</th>
                             <th>Internal POC</th>
                             <th>Status</th>
-                            <th>Client Ready</th>
+                            {{-- <th>Client Ready</th> --}}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -101,14 +101,14 @@
                         return `<span class="badge ${badgeClass}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
                     }
                 },
-                { 
-                    data: 'client_ready',
-                    render: function(data) {
-                        return data ? 
-                            '<span class="badge bg-success">Ready</span>' : 
-                            '<span class="badge bg-secondary">Not Ready</span>';
-                    }
-                },
+                // { 
+                //     data: 'client_ready',
+                //     render: function(data) {
+                //         return data ? 
+                //             '<span class="badge bg-success">Ready</span>' : 
+                //             '<span class="badge bg-secondary">Not Ready</span>';
+                //     }
+                // },
                 { 
                     data: 'actions',
                     orderable: false,
