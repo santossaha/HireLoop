@@ -182,7 +182,7 @@
                             </tr>
                             <tr>
                                 <th>Budget</th>
-                                <td>${{ number_format($candidate->budget, 2) }}</td>
+                                <td>{{ number_format($candidate->budget, 2) }}</td>
                             </tr>
                         </table>
                     </div>
