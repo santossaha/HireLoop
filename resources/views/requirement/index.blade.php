@@ -35,16 +35,6 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
-                        <option value="">All Status</option>
-                        <option value="pending_hod">Pending HOD Approval</option>
-                        <option value="pending_founder">Pending Founder Approval</option>
-                        <option value="approved">Fully Approved</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <button type="button" class="btn btn-primary me-2" id="filterBtn">
                         <i class="fas fa-filter me-1"></i> Filter
@@ -98,7 +88,6 @@
                 data: function(d) {
                     d.vendor_id = $('#vendor_id').val();
                     d.department_id = $('#department_id').val();
-                    d.status = $('#status').val();
                 }
             },
             columns: [

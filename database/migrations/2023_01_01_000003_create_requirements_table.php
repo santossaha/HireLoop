@@ -16,12 +16,12 @@ return new class extends Migration
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade');
             $table->string('requirement_id')->unique();
             $table->text('job_description');
-            $table->string('status')->default('pending');
-            $table->boolean('hod_approved')->default(false);
-            $table->boolean('founder_approved')->default(false);
+           // $table->string('status')->default('pending');
+            //$table->boolean('hod_approved')->default(false);
+            //$table->boolean('founder_approved')->default(false);
             $table->foreignId('department_id')->constrained()->onDelete('cascade');
-            $table->timestamp('approved_at')->nullable();
-            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
+            //$table->timestamp('approved_at')->nullable();
+            //$table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -20,12 +20,7 @@ class Requirement extends Model
         'vendor_id',
         'requirement_id',
         'job_description',
-        'status',
-        'hod_approved',
-        'founder_approved',
         'department_id',
-        'approved_at',
-        'approved_by',
     ];
 
     /**

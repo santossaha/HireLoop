@@ -24,6 +24,14 @@ class RequirementController extends Controller
         if ($request->ajax()) {
             $query = Requirement::query();
             
+            // Apply filters
+            if ($request->has('vendor_id') && !empty($request->vendor_id)) {
+                $query->where('vendor_id', $request->vendor_id);
+            }
+
+            if ($request->has('department_id') && !empty($request->department_id)) {
+                $query->where('department_id', $request->department_id);
+            }
 
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {
