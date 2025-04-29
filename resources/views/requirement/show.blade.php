@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="row mb-4">
+            {{-- <div class="row mb-4">
                 <div class="col-md-6">
                     <h5 class="font-weight-bold">Status</h5>
                     <p>
@@ -79,7 +79,7 @@
                     <h5 class="font-weight-bold">Approved By</h5>
                     <p>{{ $requirement->approvedBy->name ?? 'N/A' }}</p>
                 </div>
-            </div>
+            </div> --}}
 
             @if($requirement->isApproved())
                 <div class="row mb-4">
@@ -209,7 +209,7 @@
                     </div>
                 </div>
                 
-                <div class="row mt-4">
+                {{-- <div class="row mt-4">
                     <div class="col-12">
                         <h6 class="font-weight-bold">Resume Preview</h6>
                         @if($candidate->resume_path)
@@ -220,7 +220,7 @@
                             <p class="text-muted">No resume available for preview.</p>
                         @endif
                     </div>
-                </div>
+                </div> --}}
 
                 @if($candidate->notes)
                 <div class="row mt-4">
