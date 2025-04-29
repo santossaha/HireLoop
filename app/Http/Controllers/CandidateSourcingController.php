@@ -214,7 +214,10 @@ class CandidateSourcingController extends Controller
         ]);
 
         // Send email notification
-        Mail::to($requirement->vendor->email)->send(new NewResumeUploaded($candidate));
+        $pocUsers = User::role('bde')->get();
+        foreach ($pocUsers as $pocUser) {
+            Mail::to($pocUser->email)->send(new NewResumeUploaded($candidate));
+        }
 
         return redirect()->back()->with('success', 'Candidate details uploaded successfully.');
     }

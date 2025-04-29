@@ -48,7 +48,7 @@
             <h3>Requirement Details:</h3>
             <ul>
                 <li><strong>Job Description:</strong> {{ $requirement->job_description }}</li>
-                <li><strong>Client Budget:</strong> ${{ number_format($requirement->client_budget, 2) }}</li>
+               
                 <li><strong>Department:</strong> {{ $requirement->department->name }}</li>
             </ul>
 
@@ -57,13 +57,14 @@
                 <li><strong>Name:</strong> {{ $candidate->candidate_name }}</li>
                 <li><strong>Email:</strong> {{ $candidate->email }}</li>
                 <li><strong>Phone:</strong> {{ $candidate->phone }}</li>
+                <li><strong>Candidate Budget:</strong> ${{ number_format($candidate->budget, 2) }}</li>
             </ul>
 
             <p><strong>Uploaded by:</strong> {{ $uploadedBy->name }}</p>
             
             <p>Please review the candidate's resume and take appropriate action.</p>
             
-            <a href="{{ route('candidate-sourcing.show', $candidate->id) }}" class="button">View Candidate Details</a>
+            <a href="{{ route('requirements.show', $requirement->id) }}" class="button">View Candidate Details</a>
         </div>
     </div>
 </body>

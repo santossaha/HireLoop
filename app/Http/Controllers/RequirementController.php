@@ -7,12 +7,13 @@ use App\Models\Vendor;
 use App\Models\Department;
 use App\Models\Requirement;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use App\Models\CandidateSourcing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Notifications\ApprovalRequiredNotification;
 use App\Notifications\NewRequirementNotification;
-use Yajra\DataTables\DataTables;
+use App\Notifications\ApprovalRequiredNotification;
 
 class RequirementController extends Controller
 {
@@ -194,10 +195,7 @@ class RequirementController extends Controller
         // }
         
         // Notify POC users in the same department
-        $pocUsers = User::where('role', 'poc')
-            ->where('department_id', $requirement->department_id)
-            ->get();
-
+        $pocUsers = User::role('poc')->get();
         foreach ($pocUsers as $pocUser) {
             $pocUser->notify(new NewRequirementNotification($requirement));
         }
@@ -211,9 +209,8 @@ class RequirementController extends Controller
      */
     public function show(Requirement $requirement)
     {
-        $requirement->load(['vendor', 'department', 'approvedBy']);
-        
-        return view('requirement.show', compact('requirement'));
+        $candidates = CandidateSourcing::where('requirement_id', $requirement->id)->get();
+        return view('requirement.show', compact('requirement', 'candidates'));
     }
 
     /**
