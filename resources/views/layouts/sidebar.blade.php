@@ -43,13 +43,21 @@
                 </li>
                 @endcan
 
-                @can('view-requirements')
+                @can('view-vendors')
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('requirements.*') ? 'active' : '' }}" href="{{ route('requirements.index') }}">
-                        <i class="fas fa-clipboard-list me-2"></i> Requirements
+                    <a class="nav-link {{ request()->routeIs('vendors.*') ? 'active' : '' }}" href="{{ route('candidate-sourcing.index') }}">
+                        <i class="fas fa-users me-2"></i> Vendors Requirements
                     </a>
                 </li>
                 @endcan
+
+                {{-- @can('view-requirements') --}}
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('candidate-sourcing.*') ? 'active' : '' }}" href="{{ route('requirements.index') }}">
+                        <i class="fas fa-clipboard-list me-2"></i> Requirements
+                    </a>
+                </li>
+                {{-- @endcan --}}
 
                 @can('view-interviews')
                 <li class="nav-item">

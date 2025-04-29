@@ -171,23 +171,27 @@ class RequirementController extends Controller
             'requirement_id' => $requirement_id,
             'job_description' => $request->job_description,
             'department_id' => $request->department_id,
-            'status' => 'pending',
-            'hod_approved' => false,
-            'founder_approved' => false,
+            'status' => 'approved',  
+            'hod_approved' => true,
+            'founder_approved' => true,
+
+            // 'status' => 'pending',  
+            // 'hod_approved' => false,
+            // 'founder_approved' => false,
         ]);
         
         // Notify the HOD for approval
-        $department = Department::find($request->department_id);
-        $hod = $department->hod;
+        // $department = Department::find($request->department_id);
+        // $hod = $department->hod;
         
-        if ($hod) {
-            $hod->notify(new ApprovalRequiredNotification(
-                'requirement',
-                $requirement->id,
-                'HOD Approval Required',
-                "A new requirement has been submitted for vendor " . $requirement->vendor->company_name . " that requires your approval."
-            ));
-        }
+        // if ($hod) {
+        //     $hod->notify(new ApprovalRequiredNotification(
+        //         'requirement',
+        //         $requirement->id,
+        //         'HOD Approval Required',
+        //         "A new requirement has been submitted for vendor " . $requirement->vendor->company_name . " that requires your approval."
+        //     ));
+        // }
         
         // Notify POC users in the same department
         $pocUsers = User::where('role', 'poc')

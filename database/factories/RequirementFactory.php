@@ -36,12 +36,12 @@ class RequirementFactory extends Factory
             'vendor_id' => Vendor::factory(),
             'requirement_id' => $requirement_id,
             'job_description' => $this->faker->paragraph(3),
-            'status' => $this->faker->randomElement($statuses),
-            'hod_approved' => $this->faker->boolean(),
-            'founder_approved' => $this->faker->boolean(),
+            //'status' => $this->faker->randomElement($statuses),
+            //'hod_approved' => $this->faker->boolean(),
+            //'founder_approved' => $this->faker->boolean(),
             'department_id' => $this->faker->randomElement(Department::pluck('id')->toArray()),
-            'approved_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
-            'approved_by' => $this->faker->optional()->randomElement(User::pluck('id')->toArray()),
+            //'approved_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
+            //'approved_by' => $this->faker->optional()->randomElement(User::pluck('id')->toArray()),
         ];
     }
 } 

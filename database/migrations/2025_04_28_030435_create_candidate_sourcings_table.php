@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('requirement_id')->constrained()->onDelete('cascade');
             $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
-            $table->string('candidate_name');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('resume_path');
+            $table->string('candidate_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('resume_path')->nullable();
             $table->decimal('budget', 10, 2)->nullable();
             $table->text('candidate_details')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

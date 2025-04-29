@@ -27,19 +27,19 @@ class CandidateSourcingController extends Controller
             $query = Requirement::query();
             
             // Filter by status if provided
-            if ($request->has('status') && !empty($request->status)) {
-                if ($request->status === 'pending_hod') {
-                    $query->where('hod_approved', false);
-                } elseif ($request->status === 'pending_founder') {
-                    $query->where('hod_approved', true)
-                          ->where('founder_approved', false);
-                } elseif ($request->status === 'approved') {
-                    $query->where('hod_approved', true)
-                          ->where('founder_approved', true);
-                } elseif ($request->status === 'rejected') {
-                    $query->where('status', 'rejected');
-                }
-            }
+            // if ($request->has('status') && !empty($request->status)) {
+            //     if ($request->status === 'pending_hod') {
+            //         $query->where('hod_approved', false);
+            //     } elseif ($request->status === 'pending_founder') {
+            //         $query->where('hod_approved', true)
+            //               ->where('founder_approved', false);
+            //     } elseif ($request->status === 'approved') {
+            //         $query->where('hod_approved', true)
+            //               ->where('founder_approved', true);
+            //     } elseif ($request->status === 'rejected') {
+            //         $query->where('status', 'rejected');
+            //     }
+            // }
 
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {
@@ -71,9 +71,9 @@ class CandidateSourcingController extends Controller
                     'vendor' => $requirement->vendor->company_name,
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
-                    'client_budget' => '$' . number_format($requirement->client_budget, 2),
-                    'proposed_budget' => '$' . number_format($requirement->proposed_budget, 2),
-                    'status' => $this->getStatusBadge($requirement),
+                   // 'client_budget' => '$' . number_format($requirement->client_budget, 2),
+                    //'proposed_budget' => '$' . number_format($requirement->proposed_budget, 2),
+                    //'status' => $this->getStatusBadge($requirement),
                     'created_at' => $requirement->created_at->format('M d, Y'),
                     'actions' => view('candidate-sourcing.partials.actions', compact('requirement'))->render()
                 ];
@@ -190,8 +190,8 @@ class CandidateSourcingController extends Controller
     {
         $request->validate([
             'candidate_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'email' => 'email|max:255',
+            'phone' => 'string|max:20',
             'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
             'budget' => 'required|numeric|min:0',
             'notes' => 'nullable|string'

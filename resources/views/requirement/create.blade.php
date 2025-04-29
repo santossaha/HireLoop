@@ -53,7 +53,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="requirement_id" class="form-label">Requirement ID</label>
-                        <input type="text" class="form-control" id="requirement_id" value="{{ $requirement_id }}" readonly>
+                        <input type="text" class="form-control" id="requirement_id" value="{{ $requirement_id }}" >
                         <div class="form-text">Requirement ID will be automatically generated</div>
                     </div>
                 </div>
@@ -66,9 +66,9 @@
                     @enderror
                 </div>
 
-                <div class="alert alert-info">
+                {{-- <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i> This requirement will be submitted for approval to the respective department HOD, followed by founder approval.
-                </div>
+                </div> --}}
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                     <button type="reset" class="btn btn-secondary me-md-2">Reset</button>

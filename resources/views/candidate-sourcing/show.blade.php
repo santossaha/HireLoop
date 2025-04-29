@@ -17,7 +17,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <!-- Requirement Info Card -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -39,10 +39,10 @@
                             <h5 class="font-weight-bold">Vendor</h5>
                             <p>{{ $requirement->vendor->company_name ?? 'N/A' }}</p>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <h5 class="font-weight-bold">Client Budget</h5>
                             <p>${{ number_format($requirement->client_budget, 2) }}</p>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="mb-4">
                         <h5 class="font-weight-bold">Job Description</h5>
@@ -66,7 +66,7 @@
                             <div class="modal-body">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="candidate_name" class="form-label">Candidate Name</label>
+                                        <label for="candidate_name" class="form-label">Candidate Name*</label>
                                         <input type="text" class="form-control" id="candidate_name" name="candidate_name" required>
                                     </div>
                                     <div class="col-md-6">
@@ -77,16 +77,16 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="phone" class="form-label">Phone</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                                        <input type="tel" class="form-control" id="phone" name="phone" >
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="resume" class="form-label">Resume</label>
+                                        <label for="resume" class="form-label">Resume*</label>
                                         <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="budget" class="form-label">Budget</label>
+                                        <label for="budget" class="form-label">Budget*</label>
                                         <input type="number" class="form-control" id="budget" name="budget" step="0.01" min="0" required>
                                     </div>
                                     <div class="col-md-6">
