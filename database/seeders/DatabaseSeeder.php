@@ -138,6 +138,8 @@ class DatabaseSeeder extends Seeder
             );
         $user5->assignRole('bde');
 
+        // Seed Companies
+        $this->call(CompanySeeder::class);
 
         // Seed vendors
         $this->call(VendorSeeder::class);
@@ -145,11 +147,12 @@ class DatabaseSeeder extends Seeder
         // Call KeySkillSeeder
         $this->call(KeySkillSeeder::class);
 
+        
+
         // Seed Requirements
         $this->call(RequirementSeeder::class);
 
-        // Seed Companies
-        $this->call(CompanySeeder::class);
+      
 
         // Seed interviews
         $this->call([

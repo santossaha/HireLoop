@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\NewRequirementNotification;
 use App\Notifications\ApprovalRequiredNotification;
+use App\Models\Company;
 
 class RequirementController extends Controller
 {
@@ -103,7 +104,7 @@ class RequirementController extends Controller
      */
     public function create()
     {
-        $vendors = Vendor::all();
+        $companies = Company::all();
         $departments = Department::all();
         
         // Generate the next Requirement ID
@@ -127,7 +128,7 @@ class RequirementController extends Controller
         // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
         $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
         
-        return view('requirement.create', compact('vendors', 'departments', 'requirement_id'));
+        return view('requirement.create', compact('companies', 'departments', 'requirement_id'));
     }
 
     /**
@@ -135,8 +136,9 @@ class RequirementController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
         $validator = Validator::make($request->all(), [
-            'vendor_id' => 'required|exists:vendors,id',
+            'company_id' => 'required|exists:companies,id',
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
         ]);
@@ -168,7 +170,7 @@ class RequirementController extends Controller
 
         // Create the requirement
         $requirement = Requirement::create([
-            'vendor_id' => $request->vendor_id,
+            'company_id' => $request->company_id,
             'requirement_id' => $requirement_id,
             'job_description' => $request->job_description,
             'department_id' => $request->department_id,
@@ -224,10 +226,10 @@ class RequirementController extends Controller
                 ->with('error', 'Cannot edit an approved requirement.');
         }
         
-        $vendors = Vendor::all();
+        $companies = Company::all();
         $departments = Department::all();
         
-        return view('requirement.edit', compact('requirement', 'vendors', 'departments'));
+        return view('requirement.edit', compact('requirement', 'companies', 'departments'));
     }
 
     /**
@@ -242,7 +244,7 @@ class RequirementController extends Controller
         }
         
         $validator = Validator::make($request->all(), [
-            'vendor_id' => 'required|exists:vendors,id',
+            'comapny_id' => 'required|exists:companies,id',
             'requirement_id' => 'required|string|max:50|unique:requirements,requirement_id,' . $requirement->id,
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
@@ -253,7 +255,7 @@ class RequirementController extends Controller
         }
 
         // Update the requirement
-        $requirement->vendor_id = $request->vendor_id;
+        $requirement->comapny_id = $request->comapny_id;
         $requirement->requirement_id = $request->requirement_id;
         $requirement->job_description = $request->job_description;
         $requirement->department_id = $request->department_id;
@@ -303,100 +305,100 @@ class RequirementController extends Controller
     /**
      * HOD approval for the requirement
      */
-    public function hodApprove(Request $request, Requirement $requirement)
-    {
-        // Check if user is the HOD of the department
-        if (!Auth::user()->isHod() || Auth::user()->department_id != $requirement->department_id) {
-            return redirect()->route('requirements.show', $requirement->id)
-                ->with('error', 'You are not authorized to approve this requirement.');
-        }
+    // public function hodApprove(Request $request, Requirement $requirement)
+    // {
+    //     // Check if user is the HOD of the department
+    //     if (!Auth::user()->isHod() || Auth::user()->department_id != $requirement->department_id) {
+    //         return redirect()->route('requirements.show', $requirement->id)
+    //             ->with('error', 'You are not authorized to approve this requirement.');
+    //     }
         
-        $validator = Validator::make($request->all(), [
-            'approve' => 'required|boolean',
-            'comments' => 'nullable|string',
-        ]);
+    //     $validator = Validator::make($request->all(), [
+    //         'approve' => 'required|boolean',
+    //         'comments' => 'nullable|string',
+    //     ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
+    //     if ($validator->fails()) {
+    //         return back()->withErrors($validator)->withInput();
+    //     }
 
-        if ($request->approve) {
-            $requirement->hod_approved = true;
-            $requirement->save();
+    //     if ($request->approve) {
+    //         $requirement->hod_approved = true;
+    //         $requirement->save();
             
-            // Notify founders for final approval
-            $founders = User::where('role', 'founder')->get();
+    //         // Notify founders for final approval
+    //         $founders = User::where('role', 'founder')->get();
             
-            foreach ($founders as $founder) {
-                $founder->notify(new ApprovalRequiredNotification(
-                    'requirement',
-                    $requirement->id,
-                    'Founder Approval Required for CV/Budget',
-                    "A requirement for vendor " . $requirement->vendor->company_name . " has been approved by HOD and requires your final approval."
-                ));
-            }
+    //         foreach ($founders as $founder) {
+    //             $founder->notify(new ApprovalRequiredNotification(
+    //                 'requirement',
+    //                 $requirement->id,
+    //                 'Founder Approval Required for CV/Budget',
+    //                 "A requirement for vendor " . $requirement->vendor->company_name . " has been approved by HOD and requires your final approval."
+    //             ));
+    //         }
             
-            return redirect()->route('requirements.show', $requirement->id)
-                ->with('success', 'Requirement approved and sent for founder approval.');
-        } else {
-            $requirement->status = 'rejected';
-            $requirement->save();
+    //         return redirect()->route('requirements.show', $requirement->id)
+    //             ->with('success', 'Requirement approved and sent for founder approval.');
+    //     } else {
+    //         $requirement->status = 'rejected';
+    //         $requirement->save();
             
-            return redirect()->route('requirements.index')
-                ->with('success', 'Requirement has been rejected.');
-        }
-    }
+    //         return redirect()->route('requirements.index')
+    //             ->with('success', 'Requirement has been rejected.');
+    //     }
+    // }
     
     /**
      * Founder approval for the requirement
      */
-    public function founderApprove(Request $request, Requirement $requirement)
-    {
-        // Check if user is a founder
-        if (!Auth::user()->isFounder()) {
-            return redirect()->route('requirements.show', $requirement->id)
-                ->with('error', 'You are not authorized to perform this action.');
-        }
+    // public function founderApprove(Request $request, Requirement $requirement)
+    // {
+    //     // Check if user is a founder
+    //     if (!Auth::user()->isFounder()) {
+    //         return redirect()->route('requirements.show', $requirement->id)
+    //             ->with('error', 'You are not authorized to perform this action.');
+    //     }
         
-        $validator = Validator::make($request->all(), [
-            'approve' => 'required|boolean',
-            'comments' => 'nullable|string',
-        ]);
+    //     $validator = Validator::make($request->all(), [
+    //         'approve' => 'required|boolean',
+    //         'comments' => 'nullable|string',
+    //     ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
+    //     if ($validator->fails()) {
+    //         return back()->withErrors($validator)->withInput();
+    //     }
 
-        if ($request->approve) {
-            $requirement->founder_approved = true;
-            $requirement->status = 'approved';
-            $requirement->approved_by = Auth::id();
-            $requirement->approved_at = now();
-            $requirement->save();
+    //     if ($request->approve) {
+    //         $requirement->founder_approved = true;
+    //         $requirement->status = 'approved';
+    //         $requirement->approved_by = Auth::id();
+    //         $requirement->approved_at = now();
+    //         $requirement->save();
             
-            // Notify the vendor's POC
-            $vendor = $requirement->vendor;
-            $poc = $vendor->internalPoc;
+    //         // Notify the vendor's POC
+    //         $vendor = $requirement->vendor;
+    //         $poc = $vendor->internalPoc;
             
-            if ($poc) {
-                $poc->notify(new ApprovalRequiredNotification(
-                    'requirement',
-                    $requirement->id,
-                    'CV/Budget Approved',
-                    "The CV and budget for " . $vendor->company_name . " has been fully approved and can be shared with the client."
-                ));
-            }
+    //         if ($poc) {
+    //             $poc->notify(new ApprovalRequiredNotification(
+    //                 'requirement',
+    //                 $requirement->id,
+    //                 'CV/Budget Approved',
+    //                 "The CV and budget for " . $vendor->company_name . " has been fully approved and can be shared with the client."
+    //             ));
+    //         }
             
-            return redirect()->route('requirements.show', $requirement->id)
-                ->with('success', 'Requirement has been fully approved.');
-        } else {
-            $requirement->status = 'rejected';
-            $requirement->save();
+    //         return redirect()->route('requirements.show', $requirement->id)
+    //             ->with('success', 'Requirement has been fully approved.');
+    //     } else {
+    //         $requirement->status = 'rejected';
+    //         $requirement->save();
             
-            return redirect()->route('requirements.index')
-                ->with('success', 'Requirement has been rejected.');
-        }
-    }
+    //         return redirect()->route('requirements.index')
+    //             ->with('success', 'Requirement has been rejected.');
+    //     }
+    // }
 
     /**
      * Get pending counts for HOD and Founder

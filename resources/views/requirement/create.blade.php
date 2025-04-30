@@ -21,16 +21,16 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="vendor_id" class="form-label">Vendor <span class="text-danger">*</span></label>
-                        <select id="vendor_id" name="vendor_id" class="form-select @error('vendor_id') is-invalid @enderror" required>
+                        <label for="company_id" class="form-label">Vendor <span class="text-danger">*</span></label>
+                        <select id="company_id" name="company_id" class="form-select @error('company_id') is-invalid @enderror" required>
                             <option value="">Select Vendor</option>
-                            @foreach($vendors as $vendor)
-                                <option value="{{ $vendor->id }}" {{ old('vendor_id', request()->get('vendor_id')) == $vendor->id ? 'selected' : '' }}>
-                                    {{ $vendor->company_name }} ({{ ucfirst($vendor->vendor_type) }})
+                            @foreach($companies as $company)
+                                <option value="{{ $company->id }}" {{ old('company_id', request()->get('company_id')) == $company->id ? 'selected' : '' }}>
+                                    {{ $company->name }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('vendor_id')
+                        @error('company_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

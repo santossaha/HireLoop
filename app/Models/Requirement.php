@@ -17,7 +17,7 @@ class Requirement extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'vendor_id',
+        'company_id',
         'requirement_id',
         'job_description',
         'department_id',

@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Company;
 use App\Models\Requirement;
-use App\Models\Vendor;
+
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -33,7 +34,7 @@ class RequirementFactory extends Factory
         $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
 
         return [
-            'vendor_id' => Vendor::factory(),
+            'company_id' => Company::inRandomOrder()->first()->id,
             'requirement_id' => $requirement_id,
             'job_description' => $this->faker->paragraph(3),
             //'status' => $this->faker->randomElement($statuses),
