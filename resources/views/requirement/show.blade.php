@@ -26,37 +26,45 @@
             <h6 class="m-0 font-weight-bold text-primary">Requirement Information</h6>
         </div>
         <div class="card-body">
-            <div class="row mb-4">
+            <div class="row">
                 <div class="col-md-6">
-                    <h5 class="font-weight-bold">Requirement ID</h5>
-                    <p>{{ $requirement->requirement_id }}</p>
-                </div>
-                <div class="col-md-6">
-                    <h5 class="font-weight-bold">Department</h5>
-                    <p>{{ $requirement->department->name ?? 'N/A' }}</p>
-                </div>
-            </div>
+                    <div class="mb-4">
+                        <h5 class="font-weight-bold">Requirement ID</h5>
+                        <p>{{ $requirement->requirement_id }}</p>
+                    </div>
 
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <h5 class="font-weight-bold">Vendor</h5>
-                    <p>
-                        <a href="{{ route('vendors.show', $requirement->vendor_id) }}">
-                            {{ $requirement->vendor->company_name }}
-                        </a> 
-                        ({{ ucfirst($requirement->vendor->vendor_type) }})
-                    </p>
-                </div>
-                <div class="col-md-6">
-                    <h5 class="font-weight-bold">Internal POC</h5>
-                    <p>{{ $requirement->vendor->internalPoc->name ?? 'N/A' }}</p>
-                </div>
-            </div>
+                    <div class="mb-4">
+                        <h5 class="font-weight-bold">Vendor</h5>
+                        <p>
+                            <a href="{{ route('vendors.show', $requirement->vendor_id) }}">
+                                {{ $requirement->vendor->company_name }}
+                            </a> 
+                            ({{ ucfirst($requirement->vendor->vendor_type) }})
+                        </p>
+                    </div>
 
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <h5 class="font-weight-bold">Job Description</h5>
-                    <p>{{ $requirement->job_description }}</p>
+                    <div class="mb-4">
+                        <h5 class="font-weight-bold">Department</h5>
+                        <p>{{ $requirement->department->name ?? 'N/A' }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="font-weight-bold">Internal POC</h5>
+                        <p>{{ $requirement->vendor->internalPoc->name ?? 'N/A' }}</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-4">
+                        <h5 class="font-weight-bold">Job Description</h5>
+                        <div class="job-description">
+                            <div id="shortDescription">{{ Str::limit($requirement->job_description, 100) }}</div>
+                            <div id="fullDescription" style="display: none;">{{ $requirement->job_description }}</div>
+                            <button type="button" class="btn btn-link p-0" onclick="toggleDescription()" id="readMoreBtn">
+                                Read More
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -246,8 +254,26 @@
 </div>
 @endforeach
 
-@push('scripts')
+@endsection
+
+@section('scripts')
 <script>
+    function toggleDescription() {
+        const shortDesc = document.getElementById('shortDescription');
+        const fullDesc = document.getElementById('fullDescription');
+        const readMoreBtn = document.getElementById('readMoreBtn');
+
+        if (shortDesc.style.display !== 'none') {
+            shortDesc.style.display = 'none';
+            fullDesc.style.display = 'block';
+            readMoreBtn.textContent = 'Show Less';
+        } else {
+            shortDesc.style.display = 'block';
+            fullDesc.style.display = 'none';
+            readMoreBtn.textContent = 'Read More';
+        }
+    }
+
     $(document).ready(function() {
         $('#candidatesTable').DataTable({
             "order": [[6, "desc"]], // Sort by uploaded date by default
@@ -258,5 +284,4 @@
         });
     });
 </script>
-@endpush
 @endsection
