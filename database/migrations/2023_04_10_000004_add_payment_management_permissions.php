@@ -122,7 +122,13 @@ return new class extends Migration
             'view-vendor-payment-processing',
             'view-vendor-payment-reports',
             'export-vendor-payments',
-            'view-vendor-payment-api'
+            'view-vendor-payment-api',
+
+            // Company Management:
+            'company-list',
+            'company-create',
+            'company-edit',
+            'company-delete'
    
  
         ];
@@ -225,7 +231,13 @@ return new class extends Migration
                         'view-vendor-payment-processing',
                         'view-vendor-payment-reports',
                         'export-vendor-payments',
-                        'view-vendor-payment-api'
+                        'view-vendor-payment-api',
+
+                        // Company Management:
+                        'company-list',
+                        'company-create',
+                        'company-edit',
+                        'company-delete'
 
                        
                 ],

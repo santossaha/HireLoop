@@ -13,6 +13,7 @@ use App\Http\Controllers\VendorPaymentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CandidateSourcingController;
+use App\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -231,6 +232,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/candidate-sourcing/{candidateSourcing}/reject', [CandidateSourcingController::class, 'reject'])->name('candidate-sourcing.reject');
     Route::post('/candidate-sourcing/{candidateSourcing}/schedule-interview', [CandidateSourcingController::class, 'scheduleInterview'])->name('candidate-sourcing.schedule-interview');
     Route::post('/candidate-sourcing/{requirement}/upload-candidate', [CandidateSourcingController::class, 'uploadCandidate'])->name('candidate-sourcing.upload-candidate');
+
+    // Company routes
+    Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index')
+        ->middleware('permission:company-list');
+    Route::get('/companies/create', [CompanyController::class, 'create'])->name('companies.create')
+        ->middleware('permission:company-create');
+    Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store')
+        ->middleware('permission:company-create');
+    Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show')
+        ->middleware('permission:company-list');
+    Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.edit')
+        ->middleware('permission:company-edit');
+    Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update')
+        ->middleware('permission:company-edit');
+    Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])->name('companies.destroy')
+        ->middleware('permission:company-delete');
 });
 
 /*
@@ -313,5 +330,11 @@ Route::middleware(['auth'])->group(function () {
 | - create-role
 | - edit-role
 | - delete-role
+|
+| Company Management:
+| - company-list
+| - company-create
+| - company-edit
+| - company-delete
 |
 */

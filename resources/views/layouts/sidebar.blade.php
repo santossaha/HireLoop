@@ -35,6 +35,14 @@
                 </li>
                 @endcan
 
+                @can('view-companies')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('companies.*') ? 'active' : '' }}" href="{{ route('companies.index') }}">
+                        <i class="fas fa-building me-2"></i> Companies
+                    </a>
+                </li>
+                @endcan
+
                 @can('view-vendors')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('vendors.*') ? 'active' : '' }}" href="{{ route('vendors.index') }}">

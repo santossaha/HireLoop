@@ -148,6 +148,9 @@ class DatabaseSeeder extends Seeder
         // Seed Requirements
         $this->call(RequirementSeeder::class);
 
+        // Seed Companies
+        $this->call(CompanySeeder::class);
+
         // Seed interviews
         $this->call([
             InterviewSeeder::class,

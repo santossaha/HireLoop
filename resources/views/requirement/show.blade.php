@@ -26,68 +26,37 @@
             <h6 class="m-0 font-weight-bold text-primary">Requirement Information</h6>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-4">
-                        <h5 class="font-weight-bold">Requirement ID</h5>
-                        <p>{{ $requirement->requirement_id }}</p>
-                    </div>
-
-                    <div class="mb-4">
-                        <h5 class="font-weight-bold">Vendor</h5>
-                        <p>
-                            <a href="{{ route('vendors.show', $requirement->vendor_id) }}">
-                                {{ $requirement->vendor->company_name }}
-                            </a> 
-                            ({{ ucfirst($requirement->vendor->vendor_type) }})
-                        </p>
-                    </div>
-
-                    <div class="mb-4">
-                        <h5 class="font-weight-bold">Department</h5>
-                        <p>{{ $requirement->department->name ?? 'N/A' }}</p>
-                    </div>
-
-                    <div class="mb-4">
-                        <h5 class="font-weight-bold">Internal POC</h5>
-                        <p>{{ $requirement->vendor->internalPoc->name ?? 'N/A' }}</p>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="mb-4">
-                        <h5 class="font-weight-bold">Job Description</h5>
-                        <div class="job-description">
-                            <div id="shortDescription">{{ Str::limit($requirement->job_description, 100) }}</div>
-                            <div id="fullDescription" style="display: none;">{{ $requirement->job_description }}</div>
-                            <button type="button" class="btn btn-link p-0" onclick="toggleDescription()" id="readMoreBtn">
-                                Read More
-                            </button>
-                        </div>
-                    </div>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Requirement ID</th>
+                            <th>Vendor</th>
+                            <th>Department</th>
+                            <th>Internal POC</th>
+                        </tr>
+                        <tr>
+                            <td>{{ $requirement->requirement_id }}</td>
+                            <td>
+                                <a href="{{ route('vendors.show', $requirement->vendor_id) }}">
+                                    {{ $requirement->vendor->company_name }}
+                                </a> 
+                                ({{ ucfirst($requirement->vendor->vendor_type) }})
+                            </td>
+                            <td>{{ $requirement->department->name ?? 'N/A' }}</td>
+                            <td>{{ $requirement->vendor->internalPoc->name ?? 'N/A' }}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
-            {{-- <div class="row mb-4">
-                <div class="col-md-6">
-                    <h5 class="font-weight-bold">Status</h5>
-                    <p>
-                        @if($requirement->isApproved())
-                            <span class="badge bg-success">Approved</span>
-                        @elseif($requirement->status == 'rejected')
-                            <span class="badge bg-danger">Rejected</span>
-                        @elseif($requirement->hod_approved && !$requirement->founder_approved)
-                            <span class="badge bg-warning">Pending Founder Approval</span>
-                        @else
-                            <span class="badge bg-info">Pending HOD Approval</span>
-                        @endif
-                    </p>
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobDescriptionModal">
+                        <i class="fas fa-file-alt"></i> Job Description
+                    </button>
                 </div>
-                <div class="col-md-6">
-                    <h5 class="font-weight-bold">Approved By</h5>
-                    <p>{{ $requirement->approvedBy->name ?? 'N/A' }}</p>
-                </div>
-            </div> --}}
+            </div>
 
             @if($requirement->isApproved())
                 <div class="row mb-4">
@@ -127,7 +96,7 @@
                             <td>{{ $candidate->candidate_name }}</td>
                             <td>{{ $candidate->email }}</td>
                             <td>{{ $candidate->phone }}</td>
-                            <td>${{ number_format($candidate->budget, 2) }}</td>
+                            <td>{{ number_format($candidate->budget, 2) }}</td>
                             <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
                             <td>
                                 <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">
@@ -173,69 +142,46 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="font-weight-bold">Personal Information</h6>
+                    <div class="col-12">
                         <table class="table table-bordered">
                             <tr>
-                                <th>Name</th>
-                                <td>{{ $candidate->candidate_name }}</td>
+                                <th>Requirement ID</th>
+                               
+                                <th>Vendor</th>
+                                
+                                <th>Department</th>
+                               
+                                <th>Internal POC</th>
+                               
                             </tr>
                             <tr>
-                                <th>Email</th>
-                                <td>{{ $candidate->email }}</td>
-                            </tr>
-                            <tr>
-                                <th>Phone</th>
-                                <td>{{ $candidate->phone }}</td>
-                            </tr>
-                            <tr>
-                                <th>Budget</th>
-                                <td>{{ number_format($candidate->budget, 2) }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="font-weight-bold">Upload Information</h6>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Uploaded By</th>
-                                <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Upload Date</th>
-                                <td>{{ $candidate->created_at->format('Y-m-d H:i') }}</td>
-                            </tr>
-                            <tr>
-                                <th>Status</th>
-                                <td>
-                                    <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">
-                                        {{ ucfirst($candidate->status) }}
-                                    </span>
-                                </td>
+                                <td>{{ $requirement->requirement_id }}</td>
+                                <td>{{ $requirement->vendor->company_name }}</td>
+                                <td>{{ $requirement->department->name }}</td>
+                                <td>{{ $requirement->vendor->internalPoc->name ?? 'N/A'  }}</td>
+                                
                             </tr>
                         </table>
                     </div>
                 </div>
-                
-                {{-- <div class="row mt-4">
-                    <div class="col-12">
-                        <h6 class="font-weight-bold">Resume Preview</h6>
-                        @if($candidate->resume_path)
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item" src="{{ asset('storage/' . $candidate->resume_path) }}" style="width: 100%; height: 500px;"></iframe>
-                            </div>
-                        @else
-                            <p class="text-muted">No resume available for preview.</p>
-                        @endif
-                    </div>
-                </div> --}}
 
-                @if($candidate->notes)
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h6 class="font-weight-bold">Job Description</h6>
+                        <div class="p-3 bg-light rounded">
+                            {{ $requirement->job_description }}
+                        </div>
+                    </div>
+                </div>
+                
+               
+
+                @if($candidate->candidate_details)
                 <div class="row mt-4">
                     <div class="col-12">
                         <h6 class="font-weight-bold">Additional Notes</h6>
                         <div class="p-3 bg-light rounded">
-                            {{ $candidate->notes }}
+                            {{ $candidate->candidate_details }}
                         </div>
                     </div>
                 </div>
@@ -253,6 +199,26 @@
     </div>
 </div>
 @endforeach
+
+<!-- Job Description Modal -->
+<div class="modal fade" id="jobDescriptionModal" tabindex="-1" aria-labelledby="jobDescriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobDescriptionModalLabel">Job Description</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-3 bg-light rounded">
+                    {{ $requirement->job_description }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -274,14 +240,14 @@
         }
     }
 
-    $(document).ready(function() {
-        $('#candidatesTable').DataTable({
-            "order": [[6, "desc"]], // Sort by uploaded date by default
-            "pageLength": 10,
-            "language": {
-                "search": "Search candidates:"
-            }
-        });
-    });
+    // $(document).ready(function() {
+    //     $('#candidatesTable').DataTable({
+    //         "order": [[6, "desc"]], // Sort by uploaded date by default
+    //         "pageLength": 10,
+    //         "language": {
+    //             "search": "Search candidates:"
+    //         }
+    //     });
+    // });
 </script>
 @endsection
