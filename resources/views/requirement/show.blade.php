@@ -27,11 +27,13 @@
                             <th>Requirement ID</th>
                             <th>Company</th>
                             <th>Department</th>
+                            <th>Created By</th>
                         </tr>
                         <tr>
                             <td>{{ $requirement->requirement_id }}</td>
                             <td>{{ $requirement->company->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->department->name ?? 'N/A' }}</td>
+                            <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
                         </tr>
                     </table>
                 </div>
@@ -133,34 +135,21 @@
                         <table class="table table-bordered">
                             <tr>
                                 <th>Requirement ID</th>
-                               
                                 <th>Company</th>
-                                
                                 <th>Department</th>
-                               
-                                {{-- <th>Internal POC</th> --}}
+                                <th>Created By</th>
                                
                             </tr>
                             <tr>
                                 <td>{{ $requirement->requirement_id }}</td>
                                 <td>{{ $requirement->company->name }}</td>
                                 <td>{{ $requirement->department->name }}</td>
-                                {{-- <td>{{ $requirement->vendor->internalPoc->name ?? 'N/A'  }}</td> --}}
+                                <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
                                 
                             </tr>
                         </table>
                     </div>
                 </div>
-
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <h6 class="font-weight-bold">Job Description</h6>
-                        <div class="p-3 bg-light rounded">
-                            {{ $requirement->job_description }}
-                        </div>
-                    </div>
-                </div>
-                
                
 
                 @if($candidate->candidate_details)
@@ -168,7 +157,7 @@
                     <div class="col-12">
                         <h6 class="font-weight-bold">Additional Notes</h6>
                         <div class="p-3 bg-light rounded">
-                            {{ $candidate->candidate_details }}
+                            <textarea name="" id="" cols="100" rows="10" class="form-control" readonly>{!! $candidate->candidate_details !!}</textarea>
                         </div>
                     </div>
                 </div>
@@ -176,11 +165,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                @if($candidate->resume_path)
-                    <a href="{{ asset('storage/' . $candidate->resume_path) }}" class="btn btn-primary" target="_blank">
-                        <i class="fas fa-download"></i> Download Resume
-                    </a>
-                @endif
+               
             </div>
         </div>
     </div>
