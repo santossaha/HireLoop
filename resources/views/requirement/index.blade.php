@@ -19,10 +19,10 @@
             <form id="filterForm" class="row g-3">
                 <div class="col-md-3">
                     <label for="vendor_id" class="form-label">Vendor</label>
-                    <select class="form-select" id="vendor_id" name="vendor_id">
-                        <option value="">All Vendors</option>
-                        @foreach(App\Models\Vendor::orderBy('company_name')->get() as $vendor)
-                            <option value="{{ $vendor->id }}">{{ $vendor->company_name }}</option>
+                    <select class="form-select" id="company_id" name="company_id">
+                        <option value="">All Comapnay</option>
+                        @foreach(App\Models\Company::orderBy('name')->get() as $company)
+                            <option value="{{ $company->id }}">{{ $company->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -63,7 +63,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Vendor</th>
+                            <th>Company</th>
                             <th>Requirement ID</th>
                             <th>Department</th>
                             <th>Created</th>
@@ -86,13 +86,13 @@
             ajax: {
                 url: "{{ route('requirements.index') }}",
                 data: function(d) {
-                    d.vendor_id = $('#vendor_id').val();
+                    d.company_id = $('#company_id').val();
                     d.department_id = $('#department_id').val();
                 }
             },
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'vendor', name: 'vendor' },
+                { data: 'company', name: 'company' },
                 { data: 'requirement_id', name: 'requirement_id' },
                 { data: 'department', name: 'department' },
                 { data: 'created_at', name: 'created_at' },

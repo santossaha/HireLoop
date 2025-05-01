@@ -37,9 +37,9 @@ class Requirement extends Model
     /**
      * Get the vendor that submitted the requirement
      */
-    public function vendor()
+    public function company()
     {
-        return $this->belongsTo(Vendor::class);
+        return $this->belongsTo(Company::class);
     }
 
     /**

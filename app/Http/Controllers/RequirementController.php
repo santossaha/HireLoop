@@ -27,8 +27,8 @@ class RequirementController extends Controller
             $query = Requirement::query();
             
             // Apply filters
-            if ($request->has('vendor_id') && !empty($request->vendor_id)) {
-                $query->where('vendor_id', $request->vendor_id);
+            if ($request->has('company_id') && !empty($request->company_id)) {
+                $query->where('company_id', $request->company_id);
             }
 
             if ($request->has('department_id') && !empty($request->department_id)) {
@@ -40,8 +40,8 @@ class RequirementController extends Controller
                 $search = $request->search['value'];
                 $query->where(function($q) use ($search) {
                     $q->where('requirement_id', 'like', "%{$search}%")
-                      ->orWhereHas('vendor', function($q) use ($search) {
-                          $q->where('company_name', 'like', "%{$search}%");
+                      ->orWhereHas('company', function($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%");
                       })
                       ->orWhereHas('department', function($q) use ($search) {
                           $q->where('name', 'like', "%{$search}%");
@@ -53,7 +53,7 @@ class RequirementController extends Controller
             $totalRecords = $query->count();
 
             // Apply pagination
-            $requirements = $query->with(['vendor', 'department'])
+            $requirements = $query->with(['company', 'department'])
                                 ->skip($request->start)
                                 ->take($request->length)
                                 ->get();
@@ -62,7 +62,7 @@ class RequirementController extends Controller
             foreach ($requirements as $requirement) {
                 $data[] = [
                     'id' => $requirement->id,
-                    'vendor' => $requirement->vendor->company_name,
+                    'company' => $requirement->company->name,
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y'),
