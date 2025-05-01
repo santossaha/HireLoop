@@ -34,6 +34,11 @@ class Requirement extends Model
         'approved_at' => 'datetime',
     ];
 
+    public function createBy()
+    {
+        return $this->belongsTo(User::class, 'create_by');
+    }
+
     /**
      * Get the vendor that submitted the requirement
      */

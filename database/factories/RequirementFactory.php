@@ -37,6 +37,7 @@ class RequirementFactory extends Factory
             'company_id' => Company::inRandomOrder()->first()->id,
             'requirement_id' => $requirement_id,
             'job_description' => $this->faker->paragraph(3),
+            'create_by' => User::inRandomOrder()->first()->id,
             //'status' => $this->faker->randomElement($statuses),
             //'hod_approved' => $this->faker->boolean(),
             //'founder_approved' => $this->faker->boolean(),

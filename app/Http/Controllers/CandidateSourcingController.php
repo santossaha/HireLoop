@@ -26,32 +26,20 @@ class CandidateSourcingController extends Controller
         if ($request->ajax()) {
             $query = Requirement::query();
             
-            // Filter by status if provided
-            // if ($request->has('status') && !empty($request->status)) {
-            //     if ($request->status === 'pending_hod') {
-            //         $query->where('hod_approved', false);
-            //     } elseif ($request->status === 'pending_founder') {
-            //         $query->where('hod_approved', true)
-            //               ->where('founder_approved', false);
-            //     } elseif ($request->status === 'approved') {
-            //         $query->where('hod_approved', true)
-            //               ->where('founder_approved', true);
-            //     } elseif ($request->status === 'rejected') {
-            //         $query->where('status', 'rejected');
-            //     }
-            // }
-
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {
                 $search = $request->search['value'];
                 $query->where(function($q) use ($search) {
                     $q->where('requirement_id', 'like', "%{$search}%")
-                      ->orWhereHas('vendor', function($q) use ($search) {
-                          $q->where('company_name', 'like', "%{$search}%");
+                      ->orWhereHas('company', function($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%");
                       })
                       ->orWhereHas('department', function($q) use ($search) {
                           $q->where('name', 'like', "%{$search}%");
-                      });
+                      })
+                      ->orWhereHas('createBy', function($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
                 });
             }
 
@@ -59,7 +47,7 @@ class CandidateSourcingController extends Controller
             $totalRecords = $query->count();
 
             // Apply pagination
-            $requirements = $query->with(['vendor', 'department'])
+            $requirements = $query->with(['company', 'department', 'createBy'])
                                 ->skip($request->start)
                                 ->take($request->length)
                                 ->get();
@@ -68,12 +56,10 @@ class CandidateSourcingController extends Controller
             foreach ($requirements as $requirement) {
                 $data[] = [
                     'id' => $requirement->id,
-                    'vendor' => $requirement->vendor->company_name,
+                    'company' => $requirement->company->name,
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
-                   // 'client_budget' => '$' . number_format($requirement->client_budget, 2),
-                    //'proposed_budget' => '$' . number_format($requirement->proposed_budget, 2),
-                    //'status' => $this->getStatusBadge($requirement),
+                    'created_by' => $requirement->createBy->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y'),
                     'actions' => view('candidate-sourcing.partials.actions', compact('requirement'))->render()
                 ];

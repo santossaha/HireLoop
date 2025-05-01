@@ -2,19 +2,13 @@
 
 @section('title', 'Requirement Details')
 
+
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Requirement Details</h1>
         <div>
-            @if(!$requirement->isApproved() && !($requirement->status == 'rejected'))
-                <a href="{{ route('requirements.edit', $requirement->id) }}" class="btn btn-primary me-2">
-                    <i class="fas fa-edit me-1"></i> Edit Requirement
-                </a>
-            @endif
-            <a href="{{ route('vendors.show', $requirement->vendor_id) }}" class="btn btn-info me-2">
-                <i class="fas fa-user me-1"></i> View Vendor
-            </a>
+            
             <a href="{{ route('requirements.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Back to Requirements
             </a>
@@ -31,20 +25,13 @@
                     <table class="table table-bordered">
                         <tr>
                             <th>Requirement ID</th>
-                            <th>Vendor</th>
+                            <th>Company</th>
                             <th>Department</th>
-                            <th>Internal POC</th>
                         </tr>
                         <tr>
                             <td>{{ $requirement->requirement_id }}</td>
-                            <td>
-                                <a href="{{ route('vendors.show', $requirement->vendor_id) }}">
-                                    {{ $requirement->vendor->company_name }}
-                                </a> 
-                                ({{ ucfirst($requirement->vendor->vendor_type) }})
-                            </td>
+                            <td>{{ $requirement->company->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->department->name ?? 'N/A' }}</td>
-                            <td>{{ $requirement->vendor->internalPoc->name ?? 'N/A' }}</td>
                         </tr>
                     </table>
                 </div>
@@ -147,18 +134,18 @@
                             <tr>
                                 <th>Requirement ID</th>
                                
-                                <th>Vendor</th>
+                                <th>Company</th>
                                 
                                 <th>Department</th>
                                
-                                <th>Internal POC</th>
+                                {{-- <th>Internal POC</th> --}}
                                
                             </tr>
                             <tr>
                                 <td>{{ $requirement->requirement_id }}</td>
-                                <td>{{ $requirement->vendor->company_name }}</td>
+                                <td>{{ $requirement->company->name }}</td>
                                 <td>{{ $requirement->department->name }}</td>
-                                <td>{{ $requirement->vendor->internalPoc->name ?? 'N/A'  }}</td>
+                                {{-- <td>{{ $requirement->vendor->internalPoc->name ?? 'N/A'  }}</td> --}}
                                 
                             </tr>
                         </table>
@@ -210,7 +197,7 @@
             </div>
             <div class="modal-body">
                 <div class="p-3 bg-light rounded">
-                    {{ $requirement->job_description }}
+                    <textarea name="" id="" cols="100" rows="10" class="form-control" readonly>{!! $requirement->job_description !!}</textarea>
                 </div>
             </div>
             <div class="modal-footer">

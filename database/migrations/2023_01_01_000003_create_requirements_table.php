@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->string('requirement_id')->unique();
             $table->text('job_description');
+            $table->foreignId('create_by')->constrained('users')->onDelete('cascade');
            // $table->string('status')->default('pending');
             //$table->boolean('hod_approved')->default(false);
             //$table->boolean('founder_approved')->default(false);

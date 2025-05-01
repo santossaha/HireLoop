@@ -22,9 +22,9 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="company_id" class="form-label">Vendor <span class="text-danger">*</span></label>
+                        <label for="company_id" class="form-label">Company <span class="text-danger">*</span></label>
                         <select id="company_id" name="company_id" class="form-select @error('company_id') is-invalid @enderror" required>
-                            <option value="">Select Vendor</option>
+                            <option value="">Select Company</option>
                             @foreach($companies as $company)
                                 <option value="{{ $company->id }}" {{ old('company_id', $requirement->company_id) == $company->id ? 'selected' : '' }}>
                                     {{ $company->name }}
@@ -70,9 +70,6 @@
                     @enderror
                 </div>
 
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i> This requirement will be submitted for approval to the respective department HOD, followed by founder approval.
-                </div>
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                     <button type="reset" class="btn btn-secondary me-md-2">Reset</button>
