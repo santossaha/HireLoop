@@ -11,7 +11,7 @@ class CompanySeeder extends Seeder
     {
         DB::table('companies')->insert([
             [
-                'name' => 'MT.',
+                'name' => 'MT',
                 'detail' => 'Manektech Solution Pvt. Ltd.',
                 'created_at' => now(),
                 'updated_at' => now(),

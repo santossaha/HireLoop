@@ -21,9 +21,9 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="company_id" class="form-label">Vendor <span class="text-danger">*</span></label>
+                        <label for="company_id" class="form-label">Company <span class="text-danger">*</span></label>
                         <select id="company_id" name="company_id" class="form-select @error('company_id') is-invalid @enderror" required>
-                            <option value="">Select Vendor</option>
+                            <option value="">Select Company</option>
                             @foreach($companies as $company)
                                 <option value="{{ $company->id }}" {{ old('company_id', request()->get('company_id')) == $company->id ? 'selected' : '' }}>
                                     {{ $company->name }}
