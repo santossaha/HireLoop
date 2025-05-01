@@ -153,10 +153,7 @@ class CandidateSourcingController extends Controller
 
     public function scheduleInterview(Request $request, CandidateSourcing $candidateSourcing)
     {
-        if (!Auth::user()->isBde()) {
-            abort(403, 'Unauthorized action.');
-        }
-
+        
         $request->validate([
             'interview_date' => 'required|date|after:today',
             'interview_time' => 'required'

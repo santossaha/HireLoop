@@ -35,6 +35,10 @@ class RequirementController extends Controller
                 $query->where('department_id', $request->department_id);
             }
 
+            if ($request->has('create_by') && !empty($request->create_by)) {
+                $query->where('create_by', $request->create_by);
+            }
+
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {
                 $search = $request->search['value'];
@@ -43,9 +47,12 @@ class RequirementController extends Controller
                       ->orWhereHas('company', function($q) use ($search) {
                           $q->where('name', 'like', "%{$search}%");
                       })
-                      ->orWhereHas('department', function($q) use ($search) {
-                          $q->where('name', 'like', "%{$search}%");
-                      });
+                        ->orWhereHas('department', function($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('create_by', function($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
                 });
             }
 
@@ -53,7 +60,7 @@ class RequirementController extends Controller
             $totalRecords = $query->count();
 
             // Apply pagination
-            $requirements = $query->with(['company', 'department'])
+            $requirements = $query->with(['company', 'department', 'createBy'])
                                 ->skip($request->start)
                                 ->take($request->length)
                                 ->get();
@@ -65,6 +72,7 @@ class RequirementController extends Controller
                     'company' => $requirement->company->name,
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
+                    'created_by' => $requirement->createBy->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y'),
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];

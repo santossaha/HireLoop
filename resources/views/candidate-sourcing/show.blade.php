@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Requirement & Uploaded Resumes')
+@section('title', 'Vendor Dashboard')
 
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Requirement Details</h1>
+        <h1 class="h3 mb-0 text-gray-800">Vendor Dashboard</h1>
         <div>
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#uploadCandidateModal">
                 <i class="fas fa-plus me-1"></i> Upload Candidate
@@ -20,34 +20,54 @@
         <div class="col-lg-12">
             <!-- Requirement Info Card -->
             <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Requirement Information</h6>
                 </div>
                 <div class="card-body">
                     <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5 class="font-weight-bold">Requirement ID</h5>
-                            <p>{{ $requirement->requirement_id }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="font-weight-bold">Department</h5>
-                            <p>{{ $requirement->department->name ?? 'N/A' }}</p>
+                        <div class="col-12">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Requirement ID</th>
+                                    <th>Department</th>
+                                    <th>Company</th>
+                                    <th>Created By</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ $requirement->requirement_id }}</td>
+                                    <td>{{ $requirement->department->name ?? 'N/A' }}</td>
+                                    <td>{{ $requirement->company->name ?? 'N/A' }}</td>
+                                    <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5 class="font-weight-bold">Vendor</h5>
-                            <p>{{ $requirement->vendor->company_name ?? 'N/A' }}</p>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobDescriptionModal">
+                                <i class="fas fa-file-alt"></i> Job Description
+                            </button>
                         </div>
-                        {{-- <div class="col-md-6">
-                            <h5 class="font-weight-bold">Client Budget</h5>
-                            <p>${{ number_format($requirement->client_budget, 2) }}</p>
-                        </div> --}}
                     </div>
-                    <div class="mb-4">
-                        <h5 class="font-weight-bold">Job Description</h5>
-                        <div class="p-3 bg-light rounded">
-                            {!! nl2br(e($requirement->job_description)) !!}
+                </div>
+            </div>
+
+            <!-- Job Description Modal -->
+            <div class="modal fade" id="jobDescriptionModal" tabindex="-1" aria-labelledby="jobDescriptionModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="jobDescriptionModalLabel">Job Description</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="p-3 bg-light rounded">
+                                <textarea name="" id="" cols="100" rows="10" class="form-control" readonly>{!! $requirement->job_description !!}</textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -130,7 +150,7 @@
                                     <td>{{ $candidate->candidate_name }}</td>
                                     <td>{{ $candidate->email }}</td>
                                     <td>{{ $candidate->phone }}</td>
-                                    <td>${{ number_format($candidate->budget, 2) }}</td>
+                                    <td>{{ number_format($candidate->budget, 2) }}</td>
                                     <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
                                     <td>
                                         <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">

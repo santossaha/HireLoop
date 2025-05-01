@@ -67,6 +67,7 @@
                             <th>Requirement ID</th>
                             <th>Department</th>
                             <th>Created</th>
+                            <th>Created By</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -96,6 +97,7 @@
                 { data: 'requirement_id', name: 'requirement_id' },
                 { data: 'department', name: 'department' },
                 { data: 'created_at', name: 'created_at' },
+                { data: 'created_by', name: 'created_by' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
             order: [[0, 'desc']],
