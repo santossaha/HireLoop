@@ -181,87 +181,109 @@ return new class extends Migration
             $rolePermissions = [
                 'admin' => $permissions,
                 'founder' => [
-                        // Vendor Management:
-                        'view-dashboard',
-                        // Vendor Management:
-                        'view-vendors',
-                        'create-vendor',
-                        'edit-vendor',
-                        'delete-vendor',
-                        'view-vendor-details',
-                        'update-vendor-status',
-                        'view-vendor-approvals',
-                        'approve-vendor',
-                        
-                        // Client Payment Management:
-                        'view-client-payments',
-                        'create-client-payment',
-                        'edit-client-payment',
-                        'delete-client-payment',
-                        'view-client-payment-details',
-                        'mark-client-payment-received',
-                        'view-client-payment-dashboard',
-                        
-                        //Vendor Attendance Management:
-                        'view-vendor-attendances',
-                        'create-vendor-attendance',
-                        'edit-vendor-attendance',
-                        'view-vendor-attendance-details',
-                        'approve-vendor-attendance',
-                        'send-vendor-attendance-reminders',
-                        'view-vendor-attendance-summary',
-                    
-                        
-                        //Invoice Management:
-                        'view-invoices',
-                        'create-invoice',
-                        'edit-invoice',
-                        'view-invoice-details',
-                        'verify-invoice',
-                        'download-invoice',
-                        'view-pending-invoices',
-                        'view-invoice-discrepancies',
-                        'view-invoice-summary',
+                         // Vendor Management:
+                'view-dashboard',
+                // Vendor Management:
+                'view-vendors',
+                'create-vendor',
+                'edit-vendor',
+                'delete-vendor',
+                'view-vendor-details',
+                'update-vendor-status',
+                'view-vendor-approvals',
+                'approve-vendor',
+                
+                // Client Payment Management:
+                'view-client-payments',
+                'create-client-payment',
+                'edit-client-payment',
+                'delete-client-payment',
+                'view-client-payment-details',
+                'mark-client-payment-received',
+                'view-client-payment-dashboard',
+                
+                //Vendor Attendance Management:
+                'view-vendor-attendances',
+                'create-vendor-attendance',
+                'edit-vendor-attendance',
+                'view-vendor-attendance-details',
+                'approve-vendor-attendance',
+                'send-vendor-attendance-reminders',
+                'view-vendor-attendance-summary',
+            
+                
+                //Invoice Management:
+                'view-invoices',
+                'create-invoice',
+                'edit-invoice',
+                'view-invoice-details',
+                'verify-invoice',
+                'download-invoice',
+                'view-pending-invoices',
+                'view-invoice-discrepancies',
+                'view-invoice-summary',
 
-                        //Requirement Management:
-                        'view-requirements',
-                        'create-requirement',
-                        'edit-requirement',
-                        'delete-requirement',
-                        'view-requirement-details',
-                        'approve-requirement',
-                        'view-requirement-counts',
+                //Requirement Management:
+                'view-requirements',
+                'create-requirement',
+                'edit-requirement',
+                'delete-requirement',
+                'view-requirement-details',
+                'approve-requirement',
+                'view-requirement-counts',
 
-                        //Requirement Management:
-                        'view-interviews',
-                        'create-interview',
-                        'edit-interview',
-                        'delete-interview',
-                        'view-interview-details',
-                        'submit-interview-feedback',
-                        'view-interview-stats',
+                //Requirement Management:
+                'view-interviews',
+                'create-interview',
+                'edit-interview',
+                'delete-interview',
+                'view-interview-details',
+                'submit-interview-feedback',
+                'view-interview-stats',
 
-                        // Vender Payment
-                        'view-vendor-payments',
-                        'view-vendor-payments',
-                        'create-vendor-payments',
-                        'edit-vendor-payments',
-                        'delete-vendor-payments',
-                        'approve-vendor-payments',
-                        'reject-vendor-payments',
-                        'mark-vendor-payments-paid',
-                        'generate-vendor-payments',
-                        'view-vendor-payment-approval',
-                        'view-vendor-payment-processing',
-                        'view-vendor-payment-reports',
-                        'export-vendor-payments',
-                        'view-vendor-payment-api',
+                //User Management:
+                'view-users',
+                'create-user',
+                'edit-user',
+                'delete-user',
 
-                        // Company Management:
-                        'company-list',
-                        'company-create',
-                        'company-edit',
-                        'company-delete'
+                //User Management:
+                'view-roles',
+                'create-role',
+                'edit-role',
+                'delete-role',
+
+                // Vender Payment 
+                'view-vendor-payments',
+                'create-vendor-payments',
+                'edit-vendor-payments',
+                'delete-vendor-payments',
+                'approve-vendor-payments',
+                'reject-vendor-payments',
+                'mark-vendor-payments-paid',
+                'generate-vendor-payments',
+                'view-vendor-payment-approval',
+                'view-vendor-payment-processing',
+                'view-vendor-payment-reports',
+                'export-vendor-payments',
+                'view-vendor-payment-api',
+
+                // Company Management:
+                'company-list',
+                'company-create',
+                'company-edit',
+                'company-delete',
+
+                // Client Payment Management:
+                'view-client-payments',
+                'view-vendor-payments',
+                'view-invoices',
+                'create-invoice',
+                'view-vendor-attendances',
+                'create-vendor-attendance',
+                'edit-vendor-attendance',
+                'approve-vendor-attendance',
+                'view-attendance-reports',
 
                        
                 ],
@@ -321,7 +343,7 @@ return new class extends Migration
                     'view-attendance-reports',
                 ],
                 'vendor' => [
-                   'view-dashboard',
+                  // 'view-dashboard',
                     
                   // Candidate Sourcing:
                     'view-candidate-sourcing', 
