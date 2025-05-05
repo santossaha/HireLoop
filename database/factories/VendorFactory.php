@@ -5,6 +5,8 @@ namespace Database\Factories;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class VendorFactory extends Factory
 {
@@ -12,6 +14,22 @@ class VendorFactory extends Factory
 
     public function definition()
     {
+        // Create a user with vendor role first
+        $user = User::create([
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => Hash::make('password'),
+            'role' => 'vendor',
+        ]);
+
+        // Assign vendor role and permissions
+        $role = Role::where('name', 'vendor')->first();
+        $user->assignRole($role);
+        
+        // Sync permissions based on the role
+        $permissions = $role->permissions()->pluck('name')->toArray();
+        $user->syncPermissions($permissions);
+
         $vendorTypes = ['company', 'freelancer'];
         $statuses = ['pending', 'approved', 'rejected'];
         $mtEadStatuses = ['pending', 'approved', 'rejected'];
@@ -20,10 +38,10 @@ class VendorFactory extends Factory
         
         return [
             'vendor_type' => $this->faker->randomElement($vendorTypes),
-            'user_id' => User::inRandomOrder()->first()->id,
+            'user_id' => $user->id,
             'company_name' => $this->faker->company,
-            'contact_person' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
+            'contact_person' => $user->name,
+            'email' => $user->email,
             'phone' => $this->faker->phoneNumber,
             'skype_id' => $this->faker->userName,
             'slack_id' => $this->faker->userName,

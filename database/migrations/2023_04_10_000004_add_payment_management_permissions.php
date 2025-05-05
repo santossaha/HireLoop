@@ -128,7 +128,18 @@ return new class extends Migration
             'company-list',
             'company-create',
             'company-edit',
-            'company-delete'
+            'company-delete',
+
+            // Candidate Sourcing
+            'view-candidate-sourcing',
+            'create-candidate-sourcing',
+            'edit-candidate-sourcing',
+            'delete-candidate-sourcing',
+            'view-candidate-sourcing-details',
+            'approve-candidate-sourcing',
+            'reject-candidate-sourcing',
+            'schedule-candidate-interview',
+            'upload-candidate',
    
  
         ];
@@ -297,7 +308,18 @@ return new class extends Migration
                     'view-attendance-reports',
                 ],
                 'vendor' => [
-                   'view-dashboard'
+                   'view-dashboard',
+                    
+                   // Candidate Sourcing
+                   'view-candidate-sourcing',
+                   'create-candidate-sourcing',
+                   'edit-candidate-sourcing',
+                   'delete-candidate-sourcing',
+                   'view-candidate-sourcing-details',
+                   'approve-candidate-sourcing',
+                   'reject-candidate-sourcing',
+                   'schedule-candidate-interview',
+                   'upload-candidate',
                 ],
                 'bde' => [
                     // Vendor Management:
