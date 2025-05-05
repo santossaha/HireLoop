@@ -51,7 +51,7 @@
                 </li>
                 @endcan
 
-                @can('view-vendors')
+                @can('view-candidate-sourcing')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('candidate-sourcing.*') ? 'active' : '' }}" href="{{ route('candidate-sourcing.index') }}">
                         <i class="fas fa-users me-2"></i> Vendors Dashboard
