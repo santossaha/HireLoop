@@ -126,7 +126,8 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewResumeModalLabel{{ $candidate->id }}">Resume Details - {{ $candidate->candidate_name }}</h5>
+                <h5 class="modal-title" id="viewResumeModalLabel{{ $candidate->id }}">
+                     - {{ $candidate->candidate_name }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -162,10 +163,36 @@
                     </div>
                 </div>
                 @endif
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        @php
+                            $hasScheduledInterview = $candidate->interviewSchedule && $candidate->interviewSchedule->proceed_for_mock;
+                        @endphp
+                        @if($hasScheduledInterview)
+                            <button type="button" class="btn btn-danger" disabled>
+                                <i class="fas fa-times-circle"></i> Interview Scheduled
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-success" id="proceedForMockBtn{{ $candidate->id }}" onclick="showDateTimeField({{ $candidate->id }})">
+                                <i class="fas fa-calendar-plus"></i> Proceed for Mock
+                            </button>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="row mt-3" id="mockDateTime{{ $candidate->id }}" style="display: none;">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="mockDateTimeInput{{ $candidate->id }}">Select Date and Time</label>
+                            <input type="datetime-local" class="form-control" id="mockDateTimeInput{{ $candidate->id }}" name="mock_datetime">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-               
+                <button type="button" class="btn btn-primary" onclick="submitMockSchedule({{ $candidate->id }})">Submit</button>
             </div>
         </div>
     </div>
@@ -221,5 +248,69 @@
     //         }
     //     });
     // });
+
+    function showDateTimeField(candidateId) {
+        const dateTimeDiv = document.getElementById('mockDateTime' + candidateId);
+        dateTimeDiv.style.display = 'block';
+    }
+
+    function submitMockSchedule(candidateId) {
+        const mockDateTime = document.getElementById('mockDateTimeInput' + candidateId).value;
+       
+        if (!mockDateTime) {
+            alert('Please select date and time for mock interview');
+            return;
+        }
+
+        // Format the date to ensure it's in the correct format for Laravel
+        const formattedDateTime = new Date(mockDateTime).toISOString().slice(0, 19).replace('T', ' ');
+
+        // Send AJAX request to save the schedule
+        $.ajax({
+            url: "{{ route('interview-schedule.store', ['candidateId' => ':candidateId']) }}".replace(':candidateId', candidateId),
+            type: 'POST', 
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                candidate_id: candidateId,
+                requirement_id: {{ $requirement->id }},
+                proceed_for_mock: 1,
+                mock_datetime: formattedDateTime
+            },
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    // Update button appearance
+                    const button = document.getElementById('proceedForMockBtn' + candidateId);
+                    button.className = 'btn btn-danger';
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-times-circle"></i> Interview Scheduled';
+                    
+                    // Close the modal
+                    const modal = document.getElementById('viewResumeModal' + candidateId);
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+                    modalInstance.hide();
+                    
+                    alert('Interview scheduled successfully');
+                } else {
+                    alert('Error scheduling interview');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessage = 'Validation errors:\n';
+                    for (let field in errors) {
+                        errorMessage += errors[field].join('\n') + '\n';
+                    }
+                    alert(errorMessage);
+                } else {
+                    alert('Error scheduling interview');
+                }
+            }
+        });
+    }
 </script>
 @endsection

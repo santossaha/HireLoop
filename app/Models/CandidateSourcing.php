@@ -59,4 +59,9 @@ class CandidateSourcing extends Model
     {
         return $query->where('status', 'rejected');
     }
+
+    public function interviewSchedule()
+    {
+        return $this->hasOne(InterviewSchedule::class, 'candidate_id');
+    }
 }

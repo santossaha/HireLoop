@@ -2,18 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ClientPaymentController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\InterviewController;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\RequirementController;
-use App\Http\Controllers\VendorAttendanceController;
-use App\Http\Controllers\VendorController;
-use App\Http\Controllers\VendorPaymentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CandidateSourcingController;
+use App\Http\Controllers\VendorController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\RequirementController;
+use App\Http\Controllers\ClientPaymentController;
+use App\Http\Controllers\VendorPaymentController;
+use App\Http\Controllers\VendorAttendanceController;
+use App\Http\Controllers\CandidateSourcingController;
+use App\Http\Controllers\InterviewScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -248,6 +249,8 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:company-edit');
     Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])->name('companies.destroy')
         ->middleware('permission:company-delete');
+
+    Route::post('/interview-schedule/{candidateId}', [InterviewScheduleController::class, 'store'])->name('interview-schedule.store'); 
 });
 
 /*
