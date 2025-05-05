@@ -24,6 +24,7 @@ class Vendor extends Model
         'phone',
         'skype_id',
         'slack_id',
+        'user_id',
         'internal_poc_id',
         'budget_3_years',
         'budget_5_years',
@@ -54,7 +55,7 @@ class Vendor extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'email', 'email');
+        return $this->belongsTo(User::class);
     }
 
     /**

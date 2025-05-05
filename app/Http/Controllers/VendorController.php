@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class VendorController extends Controller
 {
@@ -34,24 +36,7 @@ class VendorController extends Controller
     {
         $user = Auth::user();
         $query = Vendor::query();
-
-        // Different users see different sets of vendors
-        if ($user->isAdmin() || $user->isFounder()) {
-            // Admin and founder see all vendors
-            $query->with('user');
-        } elseif ($user->isHod()) {
-            // HOD sees vendors in their department
-            $department = $user->department;
-            $query->whereHas('requirements', function ($q) use ($department) {
-                $q->where('department_id', $department->id);
-            })->with('user');
-        } elseif ($user->isPoc()) {
-            // POC sees vendors they're responsible for
-            $query->where('internal_poc_id', $user->id)->with('user');
-        } else {
-            // Other users only see their own vendor profile if they have one
-            $query->where('user_id', $user->id)->with('user');
-        }
+        $query->with('user');
 
         // Filter by status if provided
         if ($request->has('status') && $request->status !== 'all') {
@@ -66,7 +51,7 @@ class VendorController extends Controller
                   ->orWhere('contact_person', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhereHas('internalPoc', function($q) use ($search) {
+                  ->orWhereHas('user', function($q) use ($search) {
                       $q->where('name', 'like', "%{$search}%");
                   });
             });
@@ -84,7 +69,7 @@ class VendorController extends Controller
         foreach ($vendors as $vendor) {
             $data[] = [
                 'id' => $vendor->id,
-                'company_name' => $vendor->company_name,
+                'name' => $vendor->user->name,
                 'vendor_type' => ucfirst($vendor->vendor_type),
                 'contact_person' => $vendor->contact_person,
                 'contact_info' => [
@@ -119,15 +104,77 @@ class VendorController extends Controller
     }
 
     /**
+     * Helper function to handle vendor creation with rollback
+     */
+    private function createVendorWithUser(array $data)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Create user account
+            $user = User::create([
+                'name' => $data['poc_name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role' => 'vendor',
+            ]);
+
+            // Assign vendor role and permissions
+            $role = Role::where('name', 'vendor')
+                ->where('guard_name', 'web')
+                ->firstOrFail();
+                
+            $user->assignRole($role);
+
+            // Sync permissions based on the role
+            $permissions = $role->permissions()
+                ->where('guard_name', 'web')
+                ->pluck('name')
+                ->toArray();
+                
+            $user->syncPermissions($permissions);
+
+            // Create vendor profile
+            $vendor = Vendor::create([
+                'user_id' => $user->id,
+                'vendor_type' => $data['vendor_type'],
+                'contact_person' => $data['poc_name'],
+                'email' => $data['email'],
+                'phone' => $data['contact_number'],
+                'skype_id' => $data['skype_id'],
+                'internal_poc_id' => $data['internal_poc_id'],
+                'budget_3_years' => $data['budget_3_years'],
+                'budget_5_years' => $data['budget_5_years'],
+                'budget_7_years' => $data['budget_7_years'],
+                'budget_10_years' => $data['budget_10_years'],
+                'status' => $data['status'],
+            ]);
+            
+            if (isset($data['key_skills'])) {
+                $vendor->keySkills()->sync($data['key_skills']);
+            }
+
+            DB::commit();
+            return ['success' => true, 'vendor' => $vendor];
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'success' => false, 
+                'message' => 'Error creating vendor: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
      * Store a newly created vendor in storage.
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'vendor_type' => 'required|in:company,freelancer',
-            //'company_name' => 'required|string|max:255',
             'poc_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:vendors',
+            'email' => 'required|email|unique:vendors|unique:users',
             'contact_number' => 'required|string|max:20',
             'skype_id' => 'nullable|string|max:255',
             'internal_poc_id' => 'required|exists:users,id',
@@ -137,17 +184,20 @@ class VendorController extends Controller
             'budget_10_years' => 'required|numeric|min:0',
             'status' => 'required|in:pending,approved,rejected',
             'key_skills' => 'array',
-            'key_skills.*' => 'exists:key_skills,id'
+            'key_skills.*' => 'exists:key_skills,id',
+            'password' => 'required|string|min:8'
         ]);
 
-        $vendor = Vendor::create($validated);
-        
-        if (isset($validated['key_skills'])) {
-            $vendor->keySkills()->sync($validated['key_skills']);
-        }
+        $result = $this->createVendorWithUser($validated);
 
-        return redirect()->route('vendors.index')
-            ->with('success', 'Vendor created successfully.');
+        if ($result['success']) {
+            return redirect()->route('vendors.index')
+                ->with('success', 'Vendor created successfully.');
+        } else {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $result['message']);
+        }
     }
 
     /**

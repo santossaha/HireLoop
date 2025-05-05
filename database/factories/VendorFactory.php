@@ -20,6 +20,7 @@ class VendorFactory extends Factory
         
         return [
             'vendor_type' => $this->faker->randomElement($vendorTypes),
+            'user_id' => User::inRandomOrder()->first()->id,
             'company_name' => $this->faker->company,
             'contact_person' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,

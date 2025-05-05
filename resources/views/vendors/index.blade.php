@@ -79,7 +79,7 @@
             },
             columns: [
                 { data: 'id' },
-                { data: 'company_name' },
+                { data: 'name' },
                 { data: 'vendor_type' },
                 { data: 'contact_person' },
                 { 

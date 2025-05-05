@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
             $table->enum('vendor_type', ['company', 'freelancer']);
-            $table->string('company_name');
+            $table->string('company_name')->nullable();
             $table->string('contact_person');
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('skype_id')->nullable();
             $table->string('slack_id')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('internal_poc_id')->nullable()->constrained('users')->onDelete('set null');
             $table->decimal('budget_3_years', 10, 2)->default(0);
             $table->decimal('budget_5_years', 10, 2)->default(0);

@@ -18,7 +18,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Vendor Information</h6>
         </div>
         <div class="card-body">
-            @if ($errors->any())
+            {{-- @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
@@ -26,7 +26,7 @@
                     @endforeach
                 </ul>
             </div>
-            @endif
+            @endif --}}
 
             <form action="{{ route('vendors.store') }}" method="POST">
                 @csrf
@@ -44,12 +44,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to generate random password">
+                            <input type="password" class="form-control" id="password" value="{{ old('password') }}" name="password" placeholder="Leave blank to generate random password">
                             <small class="text-muted">If left blank, a random password will be generated</small>
                         </div>
                         <div class="mb-3">
                             <label for="password_confirmation" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                            <input type="password" class="form-control" id="password_confirmation" value="{{ old('password_confirmation') }}" name="password_confirmation">
                         </div>
                     </div>
 
@@ -67,8 +67,8 @@
                             <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ old('contact_number') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="skype" class="form-label">Skype ID</label>
-                            <input type="text" class="form-control" id="skype" name="skype" value="{{ old('skype') }}">
+                            <label for="skype_id" class="form-label">Skype ID</label>
+                            <input type="text" class="form-control" id="skype_id" name="skype_id" value="{{ old('skype_id') }}">
                         </div>
                         <div class="mb-3">
                             <label for="key_skills" class="form-label">Key Skills <span class="text-danger">*</span></label>
