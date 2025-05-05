@@ -130,17 +130,7 @@ return new class extends Migration
             'company-edit',
             'company-delete',
 
-            // Candidate Sourcing
-            'view-candidate-sourcing',
-            'create-candidate-sourcing',
-            'edit-candidate-sourcing',
-            'delete-candidate-sourcing',
-            'view-candidate-sourcing-details',
-            'approve-candidate-sourcing',
-            'reject-candidate-sourcing',
-            'schedule-candidate-interview',
-            'upload-candidate',
-   
+           
  
         ];
 

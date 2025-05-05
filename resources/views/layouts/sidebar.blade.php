@@ -59,13 +59,13 @@
                 </li>
                 @endcan
 
-                {{-- @can('view-requirements') --}}
+                @can('view-requirements')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('candidate-sourcing.*') ? 'active' : '' }}" href="{{ route('requirements.index') }}">
                         <i class="fas fa-clipboard-list me-2"></i> Requirements
                     </a>
                 </li>
-                {{-- @endcan --}}
+                @endcan
 
                 @can('view-interviews')
                 <li class="nav-item">
