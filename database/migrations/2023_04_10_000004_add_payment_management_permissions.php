@@ -142,7 +142,7 @@ return new class extends Migration
             'view-attendance-reports',
 
             // Candidate Sourcing:
-            'view-candidate-sourcing', 
+            'view-candidate-sourcing',
             'create-candidate-sourcing',
             'edit-candidate-sourcing',
             'delete-candidate-sourcing',
