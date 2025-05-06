@@ -175,20 +175,28 @@ Route::middleware(['auth'])->group(function () {
     // Interview routes
     Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index')
         ->middleware('permission:view-interviews');
+
     Route::get('/interviews/create', [InterviewController::class, 'create'])->name('interviews.create')
         ->middleware('permission:create-interview');
+
     Route::post('/interviews', [InterviewController::class, 'store'])->name('interviews.store')
         ->middleware('permission:create-interview');
+
     Route::get('/interviews/{interview}', [InterviewController::class, 'show'])->name('interviews.show')
         ->middleware('permission:view-interview-details');
+
     Route::get('/interviews/{interview}/edit', [InterviewController::class, 'edit'])->name('interviews.edit')
         ->middleware('permission:edit-interview');
+
     Route::put('/interviews/{interview}', [InterviewController::class, 'update'])->name('interviews.update')
         ->middleware('permission:edit-interview');
+
     Route::delete('/interviews/{interview}', [InterviewController::class, 'destroy'])->name('interviews.destroy')
         ->middleware('permission:delete-interview');
+
     Route::post('/interviews/{interview}/feedback', [InterviewController::class, 'submitFeedback'])->name('interviews.feedback')
         ->middleware('permission:submit-interview-feedback');
+        
     Route::get('/interviews/stats', [InterviewController::class, 'getStats'])->name('interviews.stats')
         ->middleware('permission:view-interview-stats');
     
@@ -258,7 +266,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])->name('companies.destroy')
         ->middleware('permission:company-delete');
 
-    Route::post('/interview-schedule/{candidateId}', [InterviewScheduleController::class, 'store'])->name('interview-schedule.store'); 
+    //Route::post('/interview-schedule/{candidateId}', [InterviewScheduleController::class, 'store'])->name('interview-schedule.store'); 
 });
 
 /*

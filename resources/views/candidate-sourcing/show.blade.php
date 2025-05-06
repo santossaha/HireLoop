@@ -178,6 +178,61 @@
                     </div>
                 </div>
             </div>
+
+             <!-- You have been selected for mock round. -->
+             <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">You have been selected for mock round.</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="candidatesTable">
+                            <thead>
+                                <tr>
+                                    <th>Candidate Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Budget</th>
+                                    <th>Uploaded By</th>
+                                    <th>Status</th>
+                                    <th>Uploaded At</th>
+                                    <th>Resume</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($candidates as $candidate)
+                                <tr>
+                                    <td>{{ $candidate->candidate_name }}</td>
+                                    <td>{{ $candidate->email }}</td>
+                                    <td>{{ $candidate->phone }}</td>
+                                    <td>{{ number_format($candidate->budget, 2) }}</td>
+                                    <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">
+                                            {{ ucfirst($candidate->status) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $candidate->created_at->format('Y-m-d H:i') }}</td>
+                                    <td>
+                                        @if($candidate->resume_path)
+                                            <a href="{{ asset('storage/' . $candidate->resume_path) }}" class="btn btn-sm btn-primary" target="_blank">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="8" class="text-center">No resumes uploaded yet.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- You can add a right column for status/approval if needed -->
     </div>

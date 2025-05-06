@@ -39,6 +39,11 @@ class Requirement extends Model
         return $this->belongsTo(User::class, 'create_by');
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'create_by', 'user_id');
+    }
+
     /**
      * Get the vendor that submitted the requirement
      */

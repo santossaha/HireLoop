@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Vendor;
-use App\Models\Requirement;
 use App\Models\Interview;
+use App\Models\Requirement;
 use Illuminate\Http\Request;
+use App\Models\CandidateSourcing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +19,7 @@ class InterviewController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Interview::query()->with(['vendor', 'requirement', 'interviewer']);
+            $query = Interview::query()->with(['vendor', 'requirement', 'interviewer'])->orderBy('created_at', 'desc');
 
             // Apply filters
             if ($request->has('vendor_id') && !empty($request->vendor_id)) {
@@ -135,15 +136,16 @@ class InterviewController extends Controller
     /**
      * Show the form for creating a new interview
      */
-    public function create()
+    public function create(Request $request)
     {
-        $vendors = Vendor::all();
-        $requirements = Requirement::where('hod_approved', true)
-                                  ->where('founder_approved', true)
-                                  ->get();
+        $candidateId = $request->input('candidate_id');
+        $requirementId = $request->input('requirement_id');
+        $requirement = Requirement::where('id', $requirementId)->with('vendor:id,user_id,email')->first();
+        $vendor = Vendor::where('id', $requirement->vendor->user_id)->first();
         $interviewers = User::where('role', 'poc')->get();
-        
-        return view('interview.create', compact('vendors', 'requirements', 'interviewers'));
+        $candidate = CandidateSourcing::where('id', $candidateId)->with('requirement:id,requirement_id')->first();
+       
+        return view('interview.create', compact('vendor', 'requirement', 'interviewers', 'candidate'));
     }
 
     /**
@@ -154,7 +156,8 @@ class InterviewController extends Controller
         $validator = Validator::make($request->all(), [
             'vendor_id' => 'required|exists:vendors,id',
             'requirement_id' => 'required|exists:requirements,id',
-            'interviewer_id' => 'required|exists:users,id',
+            'candidate_id' => 'required|exists:candidate_sourcings,id',
+            //'interviewer_id' => 'required|exists:users,id',
             'type' => 'required|in:mock,internal,client',
             'scheduled_at' => 'required|date',
             'status' => 'required|in:scheduled,completed,cancelled',
@@ -168,6 +171,7 @@ class InterviewController extends Controller
         $interview = Interview::create([
             'vendor_id' => $request->vendor_id,
             'requirement_id' => $request->requirement_id,
+            'candidate_id' => $request->candidate_id,
             'interviewer_id' => $request->interviewer_id,
             'type' => $request->type,
             'scheduled_at' => $request->scheduled_at,
@@ -193,19 +197,20 @@ class InterviewController extends Controller
      */
     public function edit(Interview $interview)
     {
+
+        $requirement = Requirement::where('id', $interview->requirement_id)->with('vendor:id,user_id,email')->first();
+        $vendor = Vendor::where('id', $interview->vendor_id)->first();
+        $candidate = CandidateSourcing::where('id', $interview->candidate_id)->with('requirement:id,requirement_id')->first();
+
+       
         // Prevent editing completed interviews
         if ($interview->status === 'completed') {
             return redirect()->route('interviews.show', $interview->id)
                 ->with('error', 'Cannot edit a completed interview.');
         }
         
-        $vendors = Vendor::all();
-        $requirements = Requirement::where('hod_approved', true)
-                                  ->where('founder_approved', true)
-                                  ->get();
-        $interviewers = User::where('role', 'poc')->get();
         
-        return view('interview.edit', compact('interview', 'vendors', 'requirements', 'interviewers'));
+        return view('interview.edit', compact('candidate', 'vendor', 'requirement', 'interview'));
     }
 
     /**
@@ -222,7 +227,8 @@ class InterviewController extends Controller
         $validator = Validator::make($request->all(), [
             'vendor_id' => 'required|exists:vendors,id',
             'requirement_id' => 'required|exists:requirements,id',
-            'interviewer_id' => 'required|exists:users,id',
+            'candidate_id' => 'required|exists:candidate_sourcings,id',
+            //'interviewer_id' => 'required|exists:users,id',
             'type' => 'required|in:mock,internal,client',
             'scheduled_at' => 'required|date',
             'status' => 'required|in:scheduled,completed,cancelled',

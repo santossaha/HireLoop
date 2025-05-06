@@ -71,7 +71,7 @@ class Vendor extends Model
      */
     public function requirements()
     {
-        return $this->hasMany(Requirement::class);
+        return $this->hasMany(Requirement::class, 'user_id');
     }
 
     /**

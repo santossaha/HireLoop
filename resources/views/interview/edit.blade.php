@@ -24,12 +24,9 @@
                     <div class="col-md-6">
                         <label for="vendor_id" class="form-label">Vendor <span class="text-danger">*</span></label>
                         <select id="vendor_id" name="vendor_id" class="form-select @error('vendor_id') is-invalid @enderror" required>
-                            <option value="">Select Vendor</option>
-                            @foreach($vendors as $vendor)
                                 <option value="{{ $vendor->id }}" {{ old('vendor_id', $interview->vendor_id) == $vendor->id ? 'selected' : '' }}>
                                     {{ $vendor->company_name }} ({{ ucfirst($vendor->vendor_type) }})
                                 </option>
-                            @endforeach
                         </select>
                         @error('vendor_id')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -39,11 +36,9 @@
                         <label for="requirement_id" class="form-label">Requirement <span class="text-danger">*</span></label>
                         <select id="requirement_id" name="requirement_id" class="form-select @error('requirement_id') is-invalid @enderror" required>
                             <option value="">Select Requirement</option>
-                            @foreach($requirements as $requirement)
                                 <option value="{{ $requirement->id }}" {{ old('requirement_id', $interview->requirement_id) == $requirement->id ? 'selected' : '' }}>
                                     {{ $requirement->requirement_id }} - {{ $requirement->department->name ?? 'N/A' }}
                                 </option>
-                            @endforeach
                         </select>
                         @error('requirement_id')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -65,16 +60,13 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="interviewer_id" class="form-label">Interviewer <span class="text-danger">*</span></label>
-                        <select id="interviewer_id" name="interviewer_id" class="form-select @error('interviewer_id') is-invalid @enderror" required>
-                            <option value="">Select Interviewer</option>
-                            @foreach($interviewers as $interviewer)
-                                <option value="{{ $interviewer->id }}" {{ old('interviewer_id', $interview->interviewer_id) == $interviewer->id ? 'selected' : '' }}>
-                                    {{ $interviewer->name }} {{ $interviewer->department ? '(' . $interviewer->department->name . ')' : '' }}
+                        <label for="candidate_id" class="form-label">Candidate <span class="text-danger">*</span></label>
+                        <select id="candidate_id" name="candidate_id" class="form-select @error('candidate_id') is-invalid @enderror" required>
+                                <option value="{{ $candidate->id }}" >
+                                    {{ $candidate->candidate_name }} {{ $candidate->email ? '(' . $candidate->email . ')' : '' }}
                                 </option>
-                            @endforeach
                         </select>
-                        @error('interviewer_id')
+                        @error('candidate_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -101,9 +93,9 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
+                {{-- <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i> To record interview results and feedback, please mark the interview as "Completed" and submit feedback from the interview details page.
-                </div>
+                </div> --}}
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                     <a href="{{ route('interviews.show', $interview->id) }}" class="btn btn-secondary me-md-2">Cancel</a>
@@ -117,37 +109,32 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function() {
-        // Filter requirements based on selected vendor
-        $('#vendor_id').change(function() {
-            const vendorId = $(this).val();
+    // $(document).ready(function() {
+    //     // Filter requirements based on selected vendor
+    //     $('#vendor_id').change(function() {
+    //         const vendorId = $(this).val();
             
-            // Clear and disable requirements dropdown if no vendor is selected
-            if (!vendorId) {
-                $('#requirement_id').html('<option value="">Select Requirement</option>').prop('disabled', true);
-                return;
-            }
+    //         // Clear and disable requirements dropdown if no vendor is selected
+    //         if (!vendorId) {
+    //             $('#requirement_id').html('<option value="">Select Requirement</option>').prop('disabled', true);
+    //             return;
+    //         }
             
-            // Save current selection if possible
-            const currentRequirement = $('#requirement_id').val();
+    //         // Save current selection if possible
+    //         const currentRequirement = $('#requirement_id').val();
             
-            // Filter requirements to only show those belonging to selected vendor
-            const requirementOptions = [
-                '<option value="">Select Requirement</option>'
-            ];
+    //         // Filter requirements to only show those belonging to selected vendor
+    //         const requirementOptions = [
+    //             '<option value="">Select Requirement</option>'
+    //         ];
             
-            @foreach($requirements as $requirement)
-                if ('{{ $requirement->vendor_id }}' == vendorId) {
-                    const selected = currentRequirement == '{{ $requirement->id }}' ? 'selected' : '';
-                    requirementOptions.push(`<option value="{{ $requirement->id }}" ${selected}>{{ $requirement->requirement_id }} - {{ $requirement->department->name ?? 'N/A' }}</option>`);
-                }
-            @endforeach
+           
             
-            $('#requirement_id').html(requirementOptions.join('')).prop('disabled', false);
-        });
+    //         $('#requirement_id').html(requirementOptions.join('')).prop('disabled', false);
+    //     });
         
-        // Trigger vendor change event on page load
-        $('#vendor_id').trigger('change');
-    });
+    //     // Trigger vendor change event on page load
+    //     $('#vendor_id').trigger('change');
+    // });
 </script>
 @endsection

@@ -205,7 +205,9 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
+       
         $this->authorize('view', $vendor);
+       
         
         return view('vendors.show', compact('vendor'));
     }

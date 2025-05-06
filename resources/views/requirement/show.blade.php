@@ -158,7 +158,7 @@
                     <div class="col-12">
                         <h6 class="font-weight-bold">Additional Notes</h6>
                         <div class="p-3 bg-light rounded">
-                            <textarea name="" id="" cols="100" rows="10" class="form-control" readonly>{!! $candidate->candidate_details !!}</textarea>
+                            <textarea name="" id="" cols="100" rows="2" class="form-control" readonly>{!! $candidate->candidate_details !!}</textarea>
                         </div>
                     </div>
                 </div>
@@ -166,10 +166,10 @@
 
                 <div class="row mt-4">
                     <div class="col-12">
-                        @php
+                        {{-- @php
                             $hasScheduledInterview = $candidate->interviewSchedule && $candidate->interviewSchedule->proceed_for_mock;
-                        @endphp
-                        @if($hasScheduledInterview)
+                        @endphp --}}
+                        {{-- @if($hasScheduledInterview)
                             <button type="button" class="btn btn-danger" disabled>
                                 <i class="fas fa-times-circle"></i> Interview Scheduled
                             </button>
@@ -177,22 +177,22 @@
                             <button type="button" class="btn btn-success" id="proceedForMockBtn{{ $candidate->id }}" onclick="showDateTimeField({{ $candidate->id }})">
                                 <i class="fas fa-calendar-plus"></i> Proceed for Mock
                             </button>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
 
-                <div class="row mt-3" id="mockDateTime{{ $candidate->id }}" style="display: none;">
+                {{-- <div class="row mt-3" id="mockDateTime{{ $candidate->id }}" style="display: none;">
                     <div class="col-12">
                         <div class="form-group">
                             <label for="mockDateTimeInput{{ $candidate->id }}">Select Date and Time</label>
                             <input type="datetime-local" class="form-control" id="mockDateTimeInput{{ $candidate->id }}" name="mock_datetime">
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitMockSchedule({{ $candidate->id }})">Submit</button>
+                <a href="{{ route('interviews.create', ['candidate_id' => $candidate->id, 'requirement_id' => $requirement->id]) }}" class="btn btn-primary">Schedule New Interview</a>
             </div>
         </div>
     </div>
@@ -223,21 +223,21 @@
 
 @section('scripts')
 <script>
-    function toggleDescription() {
-        const shortDesc = document.getElementById('shortDescription');
-        const fullDesc = document.getElementById('fullDescription');
-        const readMoreBtn = document.getElementById('readMoreBtn');
+    // function toggleDescription() {
+    //     const shortDesc = document.getElementById('shortDescription');
+    //     const fullDesc = document.getElementById('fullDescription');
+    //     const readMoreBtn = document.getElementById('readMoreBtn');
 
-        if (shortDesc.style.display !== 'none') {
-            shortDesc.style.display = 'none';
-            fullDesc.style.display = 'block';
-            readMoreBtn.textContent = 'Show Less';
-        } else {
-            shortDesc.style.display = 'block';
-            fullDesc.style.display = 'none';
-            readMoreBtn.textContent = 'Read More';
-        }
-    }
+    //     if (shortDesc.style.display !== 'none') {
+    //         shortDesc.style.display = 'none';
+    //         fullDesc.style.display = 'block';
+    //         readMoreBtn.textContent = 'Show Less';
+    //     } else {
+    //         shortDesc.style.display = 'block';
+    //         fullDesc.style.display = 'none';
+    //         readMoreBtn.textContent = 'Read More';
+    //     }
+    // }
 
     // $(document).ready(function() {
     //     $('#candidatesTable').DataTable({
@@ -249,68 +249,68 @@
     //     });
     // });
 
-    function showDateTimeField(candidateId) {
-        const dateTimeDiv = document.getElementById('mockDateTime' + candidateId);
-        dateTimeDiv.style.display = 'block';
-    }
+    // function showDateTimeField(candidateId) {
+    //     const dateTimeDiv = document.getElementById('mockDateTime' + candidateId);
+    //     dateTimeDiv.style.display = 'block';
+    // }
 
-    function submitMockSchedule(candidateId) {
-        const mockDateTime = document.getElementById('mockDateTimeInput' + candidateId).value;
+    // function submitMockSchedule(candidateId) {
+    //     const mockDateTime = document.getElementById('mockDateTimeInput' + candidateId).value;
        
-        if (!mockDateTime) {
-            alert('Please select date and time for mock interview');
-            return;
-        }
+    //     if (!mockDateTime) {
+    //         alert('Please select date and time for mock interview');
+    //         return;
+    //     }
 
-        // Format the date to ensure it's in the correct format for Laravel
-        const formattedDateTime = new Date(mockDateTime).toISOString().slice(0, 19).replace('T', ' ');
+    //     // Format the date to ensure it's in the correct format for Laravel
+    //     const formattedDateTime = new Date(mockDateTime).toISOString().slice(0, 19).replace('T', ' ');
 
-        // Send AJAX request to save the schedule
-        $.ajax({
-            url: "{{ route('interview-schedule.store', ['candidateId' => ':candidateId']) }}".replace(':candidateId', candidateId),
-            type: 'POST', 
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                candidate_id: candidateId,
-                requirement_id: {{ $requirement->id }},
-                proceed_for_mock: 1,
-                mock_datetime: formattedDateTime
-            },
-            success: function(response) {
-                console.log(response);
-                if (response.success) {
-                    // Update button appearance
-                    const button = document.getElementById('proceedForMockBtn' + candidateId);
-                    button.className = 'btn btn-danger';
-                    button.disabled = true;
-                    button.innerHTML = '<i class="fas fa-times-circle"></i> Interview Scheduled';
+    //     // Send AJAX request to save the schedule
+    //     $.ajax({
+           
+    //         type: 'POST', 
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         data: {
+    //             candidate_id: candidateId,
+    //             requirement_id: {{ $requirement->id }},
+    //             proceed_for_mock: 1,
+    //             mock_datetime: formattedDateTime
+    //         },
+    //         success: function(response) {
+    //             console.log(response);
+    //             if (response.success) {
+    //                 // Update button appearance
+    //                 const button = document.getElementById('proceedForMockBtn' + candidateId);
+    //                 button.className = 'btn btn-danger';
+    //                 button.disabled = true;
+    //                 button.innerHTML = '<i class="fas fa-times-circle"></i> Interview Scheduled';
                     
-                    // Close the modal
-                    const modal = document.getElementById('viewResumeModal' + candidateId);
-                    const modalInstance = bootstrap.Modal.getInstance(modal);
-                    modalInstance.hide();
+    //                 // Close the modal
+    //                 const modal = document.getElementById('viewResumeModal' + candidateId);
+    //                 const modalInstance = bootstrap.Modal.getInstance(modal);
+    //                 modalInstance.hide();
                     
-                    alert('Interview scheduled successfully');
-                } else {
-                    alert('Error scheduling interview');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                if (xhr.status === 422) {
-                    const errors = xhr.responseJSON.errors;
-                    let errorMessage = 'Validation errors:\n';
-                    for (let field in errors) {
-                        errorMessage += errors[field].join('\n') + '\n';
-                    }
-                    alert(errorMessage);
-                } else {
-                    alert('Error scheduling interview');
-                }
-            }
-        });
-    }
+    //                 alert('Interview scheduled successfully');
+    //             } else {
+    //                 alert('Error scheduling interview');
+    //             }
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error('Error:', error);
+    //             if (xhr.status === 422) {
+    //                 const errors = xhr.responseJSON.errors;
+    //                 let errorMessage = 'Validation errors:\n';
+    //                 for (let field in errors) {
+    //                     errorMessage += errors[field].join('\n') + '\n';
+    //                 }
+    //                 alert(errorMessage);
+    //             } else {
+    //                 alert('Error scheduling interview');
+    //             }
+    //         }
+    //     });
+    // }
 </script>
 @endsection

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade');
             $table->foreignId('requirement_id')->constrained()->onDelete('cascade');
             $table->foreignId('interviewer_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('candidate_id')->nullable()->constrained('candidate_sourcings')->onDelete('set null');
             $table->enum('type', ['mock', 'internal', 'client']);
             $table->timestamp('scheduled_at');
             $table->enum('status', ['scheduled', 'completed', 'cancelled'])->default('scheduled');

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Requirement;
+use App\Models\CandidateSourcing;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,6 +23,7 @@ class InterviewFactory extends Factory
         return [
             'vendor_id' => Vendor::factory(),
             'requirement_id' => Requirement::inRandomOrder()->first()->id,
+            'candidate_id' => CandidateSourcing::inRandomOrder()->first()->id ?? null,
             'interviewer_id' => User::inRandomOrder()->first()->id,
             'type' => fake()->randomElement(['mock', 'internal', 'client']),
             'scheduled_at' => fake()->dateTimeBetween('now', '+3 months'),

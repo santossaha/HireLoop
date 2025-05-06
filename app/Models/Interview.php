@@ -24,6 +24,7 @@ class Interview extends Model
         'result', // 'pass', 'fail'
         'feedback',
         'communication_rating',
+        'candidate_id',
         'technical_rating',
         'client_interview_ready',
         'previously_worked_with_client',
