@@ -191,7 +191,7 @@
                                 <i class="fas fa-clipboard-list me-1"></i> Requirements
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
+                        {{-- <li class="nav-item" role="presentation">
                             <button class="nav-link" id="interviews-tab" data-bs-toggle="tab" data-bs-target="#interviews" type="button" role="tab" aria-controls="interviews" aria-selected="false">
                                 <i class="fas fa-user-tie me-1"></i> Interviews
                             </button>
@@ -205,7 +205,7 @@
                             <button class="nav-link" id="invoices-tab" data-bs-toggle="tab" data-bs-target="#invoices" type="button" role="tab" aria-controls="invoices" aria-selected="false">
                                 <i class="fas fa-file-invoice me-1"></i> Invoices & Payments
                             </button>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
                 <div class="card-body">
@@ -217,30 +217,20 @@
                                     <table class="table table-bordered" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Job Description</th>
-                                                <th>Budget</th>
-                                                <th>Status</th>
+                                                <th>Company Name</th>
+                                                <th>Requirement ID</th>
                                                 <th>Department</th>
+                                                <th>Created By</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($vendor->requirements as $requirement)
                                             <tr>
+                                                <td>{{ $requirement->company->name }}</td>
                                                 <td>{{ $requirement->requirement_id }}</td>
-                                                <td>{{ \Illuminate\Support\Str::limit($requirement->job_description, 50) }}</td>
-                                                <td>${{ number_format($requirement->proposed_budget, 2) }}</td>
-                                                <td>
-                                                    @if($requirement->founder_approved && $requirement->hod_approved)
-                                                        <span class="badge bg-success">Approved</span>
-                                                    @elseif($requirement->hod_approved)
-                                                        <span class="badge bg-warning">HOD Approved</span>
-                                                    @else
-                                                        <span class="badge bg-secondary">Pending</span>
-                                                    @endif
-                                                </td>
                                                 <td>{{ $requirement->department->name ?? 'N/A' }}</td>
+                                                <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
                                                 <td>
                                                     <a href="{{ route('requirements.show', $requirement->id) }}" class="btn btn-info btn-sm">
                                                         <i class="fas fa-eye"></i>
@@ -256,15 +246,15 @@
                                     No requirements submitted yet for this vendor.
                                 </div>
                             @endif
-                            <div class="mt-3">
+                            {{-- <div class="mt-3">
                                 <a href="{{ route('requirements.create', ['vendor_id' => $vendor->id]) }}" class="btn btn-success">
                                     <i class="fas fa-plus-circle me-1"></i> Submit New Requirement
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
                         
                         <!-- Interviews Tab Content -->
-                        <div class="tab-pane fade" id="interviews" role="tabpanel" aria-labelledby="interviews-tab">
+                        {{-- <div class="tab-pane fade" id="interviews" role="tabpanel" aria-labelledby="interviews-tab">
                             @if($vendor->interviews->count() > 0)
                                 <div class="table-responsive">
                                     <table class="table table-bordered" width="100%" cellspacing="0">
@@ -490,7 +480,7 @@
                                     No payment records found for this vendor.
                                 </div>
                             @endif
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
