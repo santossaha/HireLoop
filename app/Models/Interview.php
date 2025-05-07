@@ -46,6 +46,11 @@ class Interview extends Model
         'selected_in_client' => 'boolean',
     ];
 
+    public function candidate()
+    {
+        return $this->belongsTo(CandidateSourcing::class, 'requirement_id');
+    }
+
     /**
      * Get the vendor for this interview
      */

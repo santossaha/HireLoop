@@ -187,7 +187,9 @@ class InterviewController extends Controller
      */
     public function show(Interview $interview)
     {
-        $interview->load(['vendor', 'requirement', 'interviewer']);
+        $interview->load(['vendor', 'requirement', 'candidate']);
+        //dd($interview);
+       
         
         return view('interview.show', compact('interview'));
     }
@@ -218,11 +220,12 @@ class InterviewController extends Controller
      */
     public function update(Request $request, Interview $interview)
     {
+       
         // Prevent updating completed interviews
-        if ($interview->status === 'completed') {
-            return redirect()->route('interviews.show', $interview->id)
-                ->with('error', 'Cannot update a completed interview.');
-        }
+        // if ($interview->status === 'completed') {
+        //     return redirect()->route('interviews.show', $interview->id)
+        //         ->with('error', 'Cannot update a completed interview.');
+        // }
         
         $validator = Validator::make($request->all(), [
             'vendor_id' => 'required|exists:vendors,id',
@@ -267,11 +270,12 @@ class InterviewController extends Controller
      */
     public function submitFeedback(Request $request, Interview $interview)
     {
+       
         // Verify that the user is the assigned interviewer or has permission
-        if (Auth::user()->role !== 'admin' && Auth::user()->id !== $interview->interviewer_id) {
-            return redirect()->route('interviews.show', $interview->id)
-                ->with('error', 'You are not authorized to submit feedback for this interview.');
-        }
+        // if (Auth::user()->role !== 'admin' && Auth::user()->id !== $interview->interviewer_id) {
+        //     return redirect()->route('interviews.show', $interview->id)
+        //         ->with('error', 'You are not authorized to submit feedback for this interview.');
+        // }
         
         $validator = Validator::make($request->all(), [
             'result' => 'required|in:pass,fail',
@@ -314,6 +318,7 @@ class InterviewController extends Controller
         
         $interview->status = 'completed';
         $interview->save();
+        
         
         // Update vendor ratings based on the interview feedback
         $vendor = $interview->vendor;
