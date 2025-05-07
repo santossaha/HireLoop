@@ -139,7 +139,7 @@
                                     <th>Phone</th>
                                     <th>Budget</th>
                                     <th>Uploaded By</th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     <th>Uploaded At</th>
                                     <th>Resume</th>
                                 </tr>
@@ -152,11 +152,11 @@
                                     <td>{{ $candidate->phone }}</td>
                                     <td>{{ number_format($candidate->budget, 2) }}</td>
                                     <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">
                                             {{ ucfirst($candidate->status) }}
                                         </span>
-                                    </td>
+                                    </td> --}}
                                     <td>{{ $candidate->created_at->format('Y-m-d H:i') }}</td>
                                     <td>
                                         @if($candidate->resume_path)
@@ -193,35 +193,44 @@
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Budget</th>
-                                    <th>Uploaded By</th>
-                                    <th>Status</th>
                                     <th>Uploaded At</th>
-                                    <th>Resume</th>
+                                    <th>Status</th>
+                                     <th>Interview DateTime</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($candidates as $candidate)
+                             
                                 <tr>
                                     <td>{{ $candidate->candidate_name }}</td>
                                     <td>{{ $candidate->email }}</td>
                                     <td>{{ $candidate->phone }}</td>
                                     <td>{{ number_format($candidate->budget, 2) }}</td>
                                     <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
+                                  
+                                  
                                     <td>
-                                        <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">
-                                            {{ ucfirst($candidate->status) }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $candidate->created_at->format('Y-m-d H:i') }}</td>
-                                    <td>
-                                        @if($candidate->resume_path)
-                                            <a href="{{ asset('storage/' . $candidate->resume_path) }}" class="btn btn-sm btn-primary" target="_blank">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
+                                        @if($candidate->interviews)
+                                                <div class="mb-1">
+                                                    <span class="badge bg-{{ $candidate->interviews->type === 'mock' ? 'info' : ($candidate->interviews->type === 'client' ? 'primary' : 'success') }}">
+                                                        {{ ucfirst($candidate->interviews->type) }}
+                                                    </span>
+                                                    <span class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
+                                                        {{ ucfirst($candidate->interviews->status) }}
+                                                    </span>
+                                                </div>
+                                           
                                         @else
-                                            N/A
+                                            <span class="text-muted">No interviews</span>
                                         @endif
                                     </td>
+                                   
+                                    <td> @if($candidate->interviews){{ $candidate->interviews->scheduled_at->format('Y-m-d H:i') }} @else
+                                        <span class="text-muted">No Date</span>
+                                    @endif</td>
+                                    
+                                  
                                 </tr>
                                 @empty
                                 <tr>

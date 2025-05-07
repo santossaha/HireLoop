@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    {{-- <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Interviews</h1>
         <a href="{{ route('interviews.create') }}" class="btn btn-primary">
             <i class="fas fa-calendar-plus me-1"></i> Schedule New Interview
         </a>
-    </div>
+    </div> --}}
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -153,7 +153,7 @@
                             <th>Requirement</th>
                             <th>Type</th>
                             <th>Date & Time</th>
-                            <th>Interviewer</th>
+                            <th>Candidate</th>
                             <th>Status</th>
                             <th>Result</th>
                             <th>Actions</th>
@@ -188,7 +188,7 @@ $(document).ready(function() {
             { data: 'requirement' },
             { data: 'type' },
             { data: 'scheduled_at' },
-            { data: 'interviewer' },
+            { data: 'candidate' },
             { data: 'status' },
             { data: 'result' },
             { data: 'actions', orderable: false, searchable: false }

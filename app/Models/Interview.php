@@ -48,7 +48,7 @@ class Interview extends Model
 
     public function candidate()
     {
-        return $this->belongsTo(CandidateSourcing::class, 'requirement_id');
+        return $this->belongsTo(CandidateSourcing::class, 'candidate_id');
     }
 
     /**

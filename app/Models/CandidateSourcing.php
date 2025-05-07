@@ -30,6 +30,11 @@ class CandidateSourcing extends Model
         'interview_scheduled_at' => 'datetime'
     ];
 
+    public function interviews()
+    {
+        return $this->hasOne(Interview::class, 'candidate_id');
+    }
+
     public function requirement()
     {
         return $this->belongsTo(Requirement::class);

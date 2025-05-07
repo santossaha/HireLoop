@@ -235,18 +235,25 @@ Route::middleware(['auth'])->group(function () {
     // Candidate Sourcing Routes
     Route::get('/candidate-sourcing', [CandidateSourcingController::class, 'index'])->name('candidate-sourcing.index')
         ->middleware('permission:view-candidate-sourcing');
+
     Route::get('/candidate-sourcing/{requirement}/create', [CandidateSourcingController::class, 'create'])->name('candidate-sourcing.create')
         ->middleware('permission:create-candidate-sourcing');
+
     Route::post('/candidate-sourcing/{requirement}', [CandidateSourcingController::class, 'store'])->name('candidate-sourcing.store')
         ->middleware('permission:create-candidate-sourcing');
+
     Route::get('/candidate-sourcing/{candidateSourcing}', [CandidateSourcingController::class, 'show'])->name('candidate-sourcing.show')
         ->middleware('permission:view-candidate-sourcing-details');
+
     Route::post('/candidate-sourcing/{candidateSourcing}/approve', [CandidateSourcingController::class, 'approve'])->name('candidate-sourcing.approve')
         ->middleware('permission:approve-candidate-sourcing');
+
     Route::post('/candidate-sourcing/{candidateSourcing}/reject', [CandidateSourcingController::class, 'reject'])->name('candidate-sourcing.reject')
         ->middleware('permission:reject-candidate-sourcing');
+
     Route::post('/candidate-sourcing/{candidateSourcing}/schedule-interview', [CandidateSourcingController::class, 'scheduleInterview'])->name('candidate-sourcing.schedule-interview')
         ->middleware('permission:schedule-candidate-interview');
+        
     Route::post('/candidate-sourcing/{requirement}/upload-candidate', [CandidateSourcingController::class, 'uploadCandidate'])->name('candidate-sourcing.upload-candidate')
         ->middleware('permission:upload-candidate');
 

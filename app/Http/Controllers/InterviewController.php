@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 use App\Models\CandidateSourcing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\MockInterviewScheduled;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InterviewFeedback;
+use Illuminate\Support\Facades\Log;
 
 class InterviewController extends Controller
 {
@@ -19,7 +23,7 @@ class InterviewController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Interview::query()->with(['vendor', 'requirement', 'interviewer'])->orderBy('created_at', 'desc');
+            $query = Interview::query()->with(['vendor', 'requirement', 'interviewer', 'candidate'])->orderBy('created_at', 'desc');
 
             // Apply filters
             if ($request->has('vendor_id') && !empty($request->vendor_id)) {
@@ -71,7 +75,7 @@ class InterviewController extends Controller
                                    $interview->requirement->requirement_id . '</a>' : 'N/A',
                     'type' => $this->getTypeBadge($interview->type),
                     'scheduled_at' => $interview->scheduled_at->format('M d, Y H:i'),
-                    'interviewer' => $interview->interviewer->name ?? 'N/A',
+                    'candidate' => $interview->candidate->candidate_name ?? 'N/A',
                     'status' => $this->getStatusBadge($interview->status),
                     'result' => $this->getResultBadge($interview->result),
                     'actions' => view('interview.partials.actions', ['interview' => $interview])->render()
@@ -177,6 +181,12 @@ class InterviewController extends Controller
             'scheduled_at' => $request->scheduled_at,
             'status' => $request->status,
         ]);
+
+        // Send email notification if it's a mock interview
+        if ($request->type === 'mock') {
+            $interview->load(['vendor', 'candidate', 'requirement']);
+            Mail::to($interview->vendor->email)->send(new MockInterviewScheduled($interview));
+        }
         
         return redirect()->route('interviews.index')
             ->with('success', 'Interview scheduled successfully.');
@@ -243,6 +253,16 @@ class InterviewController extends Controller
 
         // Update the interview
         $interview->update($request->all());
+
+        // Send email notification after update
+        $interview->load(['vendor', 'candidate', 'requirement']);
+        
+        try {
+            Mail::to($interview->vendor->email)->queue(new MockInterviewScheduled($interview));
+        } catch (\Exception $e) {
+            // Silently handle email sending failure
+            \Log::error('Failed to send interview email: ' . $e->getMessage());
+        }
         
         return redirect()->route('interviews.index')
             ->with('success', 'Interview updated successfully.');
@@ -270,13 +290,6 @@ class InterviewController extends Controller
      */
     public function submitFeedback(Request $request, Interview $interview)
     {
-       
-        // Verify that the user is the assigned interviewer or has permission
-        // if (Auth::user()->role !== 'admin' && Auth::user()->id !== $interview->interviewer_id) {
-        //     return redirect()->route('interviews.show', $interview->id)
-        //         ->with('error', 'You are not authorized to submit feedback for this interview.');
-        // }
-        
         $validator = Validator::make($request->all(), [
             'result' => 'required|in:pass,fail',
             'feedback' => 'required|string',
@@ -319,13 +332,20 @@ class InterviewController extends Controller
         $interview->status = 'completed';
         $interview->save();
         
-        
         // Update vendor ratings based on the interview feedback
         $vendor = $interview->vendor;
         $vendor->communication_rating = $request->communication_rating;
         $vendor->technical_rating = $request->technical_rating;
         $vendor->client_ready = $request->client_interview_ready;
         $vendor->save();
+
+        // Send email notification with feedback
+        try {
+            $interview->load(['vendor', 'candidate', 'requirement']);
+            Mail::to($interview->vendor->email)->queue(new InterviewFeedback($interview));
+        } catch (\Exception $e) {
+            Log::error('Failed to send interview feedback email: ' . $e->getMessage());
+        }
         
         return redirect()->route('interviews.show', $interview->id)
             ->with('success', 'Interview feedback submitted successfully.');

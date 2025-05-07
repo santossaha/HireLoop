@@ -51,10 +51,10 @@
                     <div class="col-md-6">
                         <label for="type" class="form-label">Interview Type <span class="text-danger">*</span></label>
                         <select id="type" name="type" class="form-select @error('type') is-invalid @enderror" required>
-                            <option value="">Select Type</option>
+                            {{-- <option value="">Select Type</option> --}}
                             <option value="mock" {{ old('type') == 'mock' ? 'selected' : '' }}>Mock Interview</option>
-                            <option value="internal" {{ old('type') == 'internal' ? 'selected' : '' }}>Internal Interview</option>
-                            <option value="client" {{ old('type') == 'client' ? 'selected' : '' }}>Client Interview</option>
+                            {{-- <option value="internal" {{ old('type') == 'internal' ? 'selected' : '' }}>Internal Interview</option> --}}
+                            {{-- <option value="client" {{ old('type') == 'client' ? 'selected' : '' }}>Client Interview</option> --}}
                         </select>
                         @error('type')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -85,8 +85,8 @@
                         <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                         <select id="status" name="status" class="form-select @error('status') is-invalid @enderror" required>
                             <option value="scheduled" {{ old('status') == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
-                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            {{-- <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option> --}}
                         </select>
                         @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>

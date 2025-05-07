@@ -88,7 +88,9 @@ class CandidateSourcingController extends Controller
     public function show(Requirement $requirement, $id)
     {
         $requirement = Requirement::find($id);
-        $candidates = CandidateSourcing::where('requirement_id', $id)->get();
+        $candidates = CandidateSourcing::with('interviews')->where('requirement_id', $id)->get();
+       
+      
         return view('candidate-sourcing.show', compact('requirement', 'candidates'));
     }
 
@@ -111,9 +113,7 @@ class CandidateSourcingController extends Controller
 
     public function approve(Request $request, CandidateSourcing $candidateSourcing)
     {
-        if (!Auth::user()->isBde()) {
-            abort(403, 'Unauthorized action.');
-        }
+       
 
         $request->validate([
             'review_notes' => 'required|string'
@@ -132,9 +132,7 @@ class CandidateSourcingController extends Controller
 
     public function reject(Request $request, CandidateSourcing $candidateSourcing)
     {
-        if (!Auth::user()->isBde()) {
-            abort(403, 'Unauthorized action.');
-        }
+        
 
         $request->validate([
             'review_notes' => 'required|string'
@@ -199,8 +197,17 @@ class CandidateSourcingController extends Controller
         // Send email notification
         $pocUsers = User::role('bde')->get();
         foreach ($pocUsers as $pocUser) {
-            Mail::to($pocUser->email)->send(new NewResumeUploaded($candidate));
+            try {
+                Mail::to($pocUser->email)->queue(new NewResumeUploaded($candidate));
+            } catch (\Exception $e) {
+                // Silently handle email sending failure
+                \Log::error('Failed to send interview email: ' . $e->getMessage());
+            }
+           
         }
+
+       
+        
 
         return redirect()->back()->with('success', 'Candidate details uploaded successfully.');
     }
