@@ -35,7 +35,7 @@ class VendorController extends Controller
     public function getVendorsData(Request $request)
     {
         $user = Auth::user();
-        $query = Vendor::query();
+        $query = Vendor::query()->orderBy('created_at', 'desc');
         $query->with('user');
 
         // Filter by status if provided
@@ -108,15 +108,17 @@ class VendorController extends Controller
      */
     private function createVendorWithUser(array $data)
     {
+      
         try {
             DB::beginTransaction();
 
             // Create user account
             $user = User::create([
-                'name' => $data['poc_name'],
+                'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
                 'role' => 'vendor',
+                'status' => 'approved',
             ]);
 
             // Assign vendor role and permissions
@@ -138,7 +140,7 @@ class VendorController extends Controller
             $vendor = Vendor::create([
                 'user_id' => $user->id,
                 'vendor_type' => $data['vendor_type'],
-                'contact_person' => $data['poc_name'],
+                'contact_person' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['contact_number'],
                 'skype_id' => $data['skype_id'],
@@ -147,7 +149,8 @@ class VendorController extends Controller
                 'budget_5_years' => $data['budget_5_years'],
                 'budget_7_years' => $data['budget_7_years'],
                 'budget_10_years' => $data['budget_10_years'],
-                'status' => $data['status'],
+                'status' => 'approved',
+                
             ]);
             
             if (isset($data['key_skills'])) {
@@ -171,7 +174,9 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
+       
         $validated = $request->validate([
+            'name' => 'string|max:255',
             'vendor_type' => 'required|in:company,freelancer',
             'poc_name' => 'required|string|max:255',
             'email' => 'required|email|unique:vendors|unique:users',
@@ -182,7 +187,7 @@ class VendorController extends Controller
             'budget_5_years' => 'required|numeric|min:0',
             'budget_7_years' => 'required|numeric|min:0',
             'budget_10_years' => 'required|numeric|min:0',
-            'status' => 'required|in:pending,approved,rejected',
+            //'status' => 'required|in:pending,approved,rejected',
             'key_skills' => 'array',
             'key_skills.*' => 'exists:key_skills,id',
             'password' => 'required|string|min:8'
@@ -309,7 +314,17 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
-        $vendor->delete();
+        // Get the vendor's email
+        $vendorEmail = $vendor->email;
+        
+        // Find and delete associated user with same email
+        $user = User::where('email', $vendorEmail)->first();
+        if ($user) {
+            $user->forceDelete();
+        }
+
+        // Force delete the vendor
+        $vendor->forceDelete();
 
         return redirect()->route('vendors.index')
             ->with('success', 'Vendor deleted successfully.');

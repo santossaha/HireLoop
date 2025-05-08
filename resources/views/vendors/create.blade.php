@@ -111,9 +111,9 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Initial Status</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                {{-- <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option> --}}
                                 <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                {{-- <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected</option> --}}
                             </select>
                         </div>
                     </div>

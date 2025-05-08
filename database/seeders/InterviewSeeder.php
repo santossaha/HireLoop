@@ -13,6 +13,6 @@ class InterviewSeeder extends Seeder
     public function run(): void
     {
         // Create 120 interview records
-        Interview::factory()->count(120)->create();
+        Interview::factory()->count(20)->create();
     }
 } 

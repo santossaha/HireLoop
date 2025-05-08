@@ -16,6 +16,6 @@ class VendorSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         // Create 100 vendors with associated users
-        Vendor::factory()->count(100)->create();
+        Vendor::factory()->count(12)->create();
     }
 } 

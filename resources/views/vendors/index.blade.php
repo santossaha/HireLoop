@@ -6,13 +6,13 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Vendor Management</h1>
-        @if(auth()->user()->isAdmin() || auth()->user()->isHod())
+        {{-- @if(auth()->user()->isAdmin() || auth()->user()->isHod()) --}}
         <div>
             <a href="{{ route('vendors.create') }}" class="btn btn-success">
                 <i class="fas fa-plus-circle me-1"></i> Add New Vendor
             </a>
         </div>
-        @endif
+        {{-- @endif --}}
     </div>
 
     <div class="card shadow mb-4">
@@ -43,7 +43,7 @@
                             <th>Contact Person</th>
                             <th>Contact Info</th>
                             <th>Internal POC</th>
-                            <th>Status</th>
+                            {{-- <th>Status</th> --}}
                             {{-- <th>Client Ready</th> --}}
                             <th>Actions</th>
                         </tr>
@@ -90,17 +90,17 @@
                     }
                 },
                 { data: 'internal_poc' },
-                { 
-                    data: 'status',
-                    render: function(data) {
-                        let badgeClass = 'bg-secondary';
-                        if (data === 'approved') badgeClass = 'bg-success';
-                        else if (data === 'pending') badgeClass = 'bg-warning';
-                        else if (data === 'rejected') badgeClass = 'bg-danger';
+                // { 
+                //     data: 'status',
+                //     render: function(data) {
+                //         let badgeClass = 'bg-secondary';
+                //         if (data === 'approved') badgeClass = 'bg-success';
+                //         else if (data === 'pending') badgeClass = 'bg-warning';
+                //         else if (data === 'rejected') badgeClass = 'bg-danger';
                         
-                        return `<span class="badge ${badgeClass}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
-                    }
-                },
+                //         return `<span class="badge ${badgeClass}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
+                //     }
+                // },
                 // { 
                 //     data: 'client_ready',
                 //     render: function(data) {

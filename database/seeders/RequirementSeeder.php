@@ -9,6 +9,6 @@ class RequirementSeeder extends Seeder
 {
     public function run(): void
     {
-        Requirement::factory()->count(100)->create();
+        Requirement::factory()->count(15)->create();
     }
 } 
