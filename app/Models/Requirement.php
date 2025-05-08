@@ -21,6 +21,10 @@ class Requirement extends Model
         'requirement_id',
         'job_description',
         'department_id',
+        'create_by',
+        'status',
+       // 'hod_approved',
+       // 'founder_approved',
     ];
 
     /**

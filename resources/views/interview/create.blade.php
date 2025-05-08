@@ -25,7 +25,7 @@
                         <select id="vendor_id" name="vendor_id" class="form-select @error('vendor_id') is-invalid @enderror" required>
                             {{-- <option value="">Select Vendor</option> --}}
                                 <option value="{{ $vendor->id }}">
-                                    {{ $vendor->company_name }}
+                                    {{ $vendor->contact_person }}
                                 </option>
                           
                         </select>

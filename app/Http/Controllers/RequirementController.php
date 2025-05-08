@@ -175,7 +175,8 @@ class RequirementController extends Controller
 
         // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
         $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
-
+       
+      
         // Create the requirement
         $requirement = Requirement::create([
             'company_id' => $request->company_id,
@@ -183,9 +184,7 @@ class RequirementController extends Controller
             'job_description' => $request->job_description,
             'department_id' => $request->department_id,
             'create_by' => Auth::user()->id,
-            'status' => 'approved',  
-            'hod_approved' => true,
-            'founder_approved' => true,
+           
 
             // 'status' => 'pending',  
             // 'hod_approved' => false,

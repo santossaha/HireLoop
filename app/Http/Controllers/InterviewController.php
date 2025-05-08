@@ -69,7 +69,7 @@ class InterviewController extends Controller
                 $data[] = [
                     'id' => $interview->id,
                     'vendor' => '<a href="' . route('vendors.show', $interview->vendor_id) . '">' . 
-                               $interview->vendor->company_name . '</a>',
+                               $interview->vendor->contact_person . '</a>',
                     'requirement' => $interview->requirement ? 
                                    '<a href="' . route('requirements.show', $interview->requirement_id) . '">' . 
                                    $interview->requirement->requirement_id . '</a>' : 'N/A',
@@ -144,10 +144,13 @@ class InterviewController extends Controller
     {
         $candidateId = $request->input('candidate_id');
         $requirementId = $request->input('requirement_id');
+
         $requirement = Requirement::where('id', $requirementId)->with('vendor:id,user_id,email')->first();
-        $vendor = Vendor::where('id', $requirement->vendor->user_id)->first();
-        $interviewers = User::where('role', 'poc')->get();
         $candidate = CandidateSourcing::where('id', $candidateId)->with('requirement:id,requirement_id')->first();
+        $vendor = Vendor::where('user_id', $candidate->uploaded_by)->first();
+        
+        $interviewers = User::where('role', 'poc')->get();
+        
        
         return view('interview.create', compact('vendor', 'requirement', 'interviewers', 'candidate'));
     }
