@@ -8,7 +8,7 @@
         <h1 class="h3 mb-0 text-gray-800">Vendor Dashboard</h1>
         <div>
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#uploadCandidateModal">
-                <i class="fas fa-plus me-1"></i> Upload Candidate
+                <i class="fas fa-plus me-1"></i> Upload Resume
             </button>
             <a href="{{ route('candidate-sourcing.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Back to List

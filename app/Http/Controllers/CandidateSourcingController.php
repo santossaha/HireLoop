@@ -24,7 +24,7 @@ class CandidateSourcingController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Requirement::query();
+            $query = Requirement::query()->orderBy('created_at', 'desc');
             
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {
@@ -60,7 +60,7 @@ class CandidateSourcingController extends Controller
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
-                    'created_at' => $requirement->created_at->format('M d, Y'),
+                    'created_at' => $requirement->created_at->format('M d, Y  H:i a'),
                     'actions' => view('candidate-sourcing.partials.actions', compact('requirement'))->render()
                 ];
             }
