@@ -98,7 +98,7 @@ class VendorController extends Controller
     {
         $this->authorize('create', Vendor::class);
         
-        $internalPocs = User::whereIn('role', ['admin', 'poc', 'hod'])->get();
+        $internalPocs = User::whereIn('role', ['admin', 'poc', 'hod', 'vendor'])->get();
         
         return view('vendors.create', compact('internalPocs'));
     }
@@ -224,7 +224,7 @@ class VendorController extends Controller
     {
         $this->authorize('update', $vendor);
         
-        $internalPocs = User::whereIn('role', ['admin', 'poc', 'hod'])->get();
+        $internalPocs = User::whereIn('role', ['admin', 'poc', 'hod', 'vendor'])->get();
         
         return view('vendors.edit', compact('vendor', 'internalPocs'));
     }
