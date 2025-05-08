@@ -74,6 +74,7 @@ class RequirementController extends Controller
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y  h:i a'),
+                    'candidate_count' => $requirement->candidateSourcing->count(),
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];
             }

@@ -68,6 +68,7 @@
                             <th>Department</th>
                             <th>Created</th>
                             <th>Created By</th>
+                            <th>Candidate Count</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -98,6 +99,7 @@
                 { data: 'department', name: 'department' },
                 { data: 'created_at', name: 'created_at' },
                 { data: 'created_by', name: 'created_by' },
+                { data: 'candidate_count', name: 'candidate_count' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
             order: [[0, 'desc']],

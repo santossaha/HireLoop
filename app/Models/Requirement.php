@@ -38,6 +38,11 @@ class Requirement extends Model
         'approved_at' => 'datetime',
     ];
 
+    public function candidateSourcing()
+    {
+        return $this->hasMany(CandidateSourcing::class, 'requirement_id', 'id');
+    }
+
     public function createBy()
     {
         return $this->belongsTo(User::class, 'create_by');
