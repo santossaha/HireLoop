@@ -205,11 +205,15 @@ class RequirementController extends Controller
         // }
         
         // Notify POC users in the same department
-        $pocUsers = User::role('poc')->get();
-        foreach ($pocUsers as $pocUser) {
-            $pocUser->notify(new NewRequirementNotification($requirement));
+        try {
+            $pocUsers = User::role('poc')->get();
+            foreach ($pocUsers as $pocUser) {
+                $pocUser->notify(new NewRequirementNotification($requirement));
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to send requirement notifications: ' . $e->getMessage());
+            // Continue execution without showing error to user
         }
-        
         return redirect()->route('requirements.index')
             ->with('success', 'Requirement created successfully and sent for HOD approval.');
     }
