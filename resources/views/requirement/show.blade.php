@@ -74,6 +74,7 @@
                             <th>Budget</th>
                             <th>Vendors</th>
                             <th>Status</th>
+                            <th>Interview Date</th>
                             <th>Uploaded At</th>
                             <th>Resume</th>
                             <th>Actions</th>
@@ -105,6 +106,7 @@
                             @endif
 
                             </td>
+                            <td>{{ $candidate->interviews->scheduled_at->format('M d, Y  h:i a') ?? 'N/A' }}</td>
                             <td>{{ $candidate->created_at->format('M d, Y  h:i a') }}</td>
                             <td>
                                 @if($candidate->resume_path)
