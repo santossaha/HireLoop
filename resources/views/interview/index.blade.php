@@ -151,9 +151,9 @@
                             <th>ID</th>
                             <th>Vendor</th>
                             <th>Requirement</th>
-                            <th>Type</th>
                             <th>Date & Time</th>
                             <th>Candidate</th>
+                            <th>Type</th>
                             <th>Status</th>
                             <th>Result</th>
                             <th>Actions</th>
@@ -186,9 +186,9 @@ $(document).ready(function() {
             { data: 'id' },
             { data: 'vendor' },
             { data: 'requirement' },
-            { data: 'type' },
             { data: 'scheduled_at' },
             { data: 'candidate' },
+            { data: 'type' },
             { data: 'status' },
             { data: 'result' },
             { data: 'actions', orderable: false, searchable: false }

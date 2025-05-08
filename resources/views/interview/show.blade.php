@@ -561,22 +561,22 @@
 @section('scripts')
 
     <script>
-        function confirmCompleteInterview() {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you want to mock this interview as completed?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, mock as completed!',
-                cancelButtonText: 'No, cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('completeInterviewForm').submit();
-                }
-            });
-        }
+        // function confirmCompleteInterview() {
+        //     Swal.fire({
+        //         title: 'Are you sure?',
+        //         text: "Do you want to mock this interview as completed?",
+        //         icon: 'question',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: 'Yes, mock as completed!',
+        //         cancelButtonText: 'No, cancel'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             document.getElementById('completeInterviewForm').submit();
+        //         }
+        //     });
+        // }
 
         function confirmCancelInterview() {
             Swal.fire({

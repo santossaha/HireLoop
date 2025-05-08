@@ -211,7 +211,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if(!$candidate->interviews)
                 <a href="{{ route('interviews.create', ['candidate_id' => $candidate->id, 'requirement_id' => $requirement->id]) }}" class="btn btn-primary">Schedule Interview</a>
+                @endif
+
+                @if($candidate->interviews)
+                <a href="{{ route('interviews.show', ['interview' => $candidate->interviews->id]) }}" class="btn btn-primary">View Interview</a>
+                @endif
+
             </div>
         </div>
     </div>
