@@ -31,6 +31,7 @@ class Interview extends Model
         'selected_in_internal',
         'selected_in_client',
         'last_approved_budget',
+        'mock_feedback',
     ];
 
     /**

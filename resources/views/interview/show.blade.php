@@ -98,7 +98,32 @@
                             </div>
                         </div>
 
-                        @if ($interview->status == 'completed')
+                        @if ($interview->status == 'completed' && $interview->result == 'fail')
+                            <hr>
+                            <h5 class="font-weight-bold mb-3">Mock Interview Results</h5>
+                        
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h6 class="font-weight-bold">Result</h6>
+                                    <p>
+                                        <span class="text-danger">Fail</span>
+                                    </p>
+                                </div>
+                                
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h6 class="font-weight-bold">Feedback</h6>
+                                    <p>
+                                        <span class="text-danger">{{$interview->mock_feedback ?? 'N/A'}}</span>
+                                    </p>
+                                </div>
+                                
+                            </div>
+
+                        @endif
+
+                        @if ($interview->status == 'completed' && $interview->result == 'pass')
                             <hr>
 
                             <h5 class="font-weight-bold mb-3">Interview Results</h5>
@@ -425,10 +450,12 @@
                                 <input type="hidden" name="scheduled_at"
                                     value="{{ $interview->scheduled_at->format('Y-m-d\TH:i') }}">
                                 <input type="hidden" name="status" value="completed">
+                                <input type="hidden" name="result" id="mockResult">
+                                <input type="hidden" name="mock_feedback" id="mockFeedback">
 
                                 <div class="mb-3">
                                     <button type="button" class="btn btn-success btn-block"
-                                        onclick="confirmCompleteInterview()">
+                                        onclick="showMockFeedbackModal()">
                                         <i class="fas fa-check-circle me-1"></i> Mock as Completed
                                     </button>
                                 </div>
@@ -459,7 +486,7 @@
                         </div>
                     </div>
                 @endif
-                @if ($interview->type == 'mock' && $interview->status == 'completed')
+                @if ($interview->type == 'mock' && $interview->status == 'completed' && $interview->result != 'fail')
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
@@ -556,28 +583,40 @@
             </div>
         </div>
     </div>
+
+    <!-- Mock Interview Feedback Modal -->
+    <div class="modal fade" id="mockFeedbackModal" tabindex="-1" aria-labelledby="mockFeedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mockFeedbackModalLabel">Mock Interview Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Result</label>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-success" onclick="setMockResult('pass')">Pass</button>
+                            <button type="button" class="btn btn-danger" onclick="setMockResult('fail')">Fail</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mockFeedbackText" class="form-label">Feedback</label>
+                        <textarea class="form-control" id="mockFeedbackText" rows="4" placeholder="Enter your feedback here..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitMockFeedback()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
 
     <script>
-        // function confirmCompleteInterview() {
-        //     Swal.fire({
-        //         title: 'Are you sure?',
-        //         text: "Do you want to mock this interview as completed?",
-        //         icon: 'question',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Yes, mock as completed!',
-        //         cancelButtonText: 'No, cancel'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             document.getElementById('completeInterviewForm').submit();
-        //         }
-        //     });
-        // }
-
         function confirmCancelInterview() {
             Swal.fire({
                 title: 'Are you sure?',
@@ -610,6 +649,58 @@
                     document.getElementById('clientCallForm').submit();
                 }
             });
+        }
+
+        function showMockFeedbackModal() {
+            const modal = new bootstrap.Modal(document.getElementById('mockFeedbackModal'));
+            modal.show();
+        }
+
+        function setMockResult(result) {
+            document.getElementById('mockResult').value = result;
+            // Highlight selected button
+            const buttons = document.querySelectorAll('#mockFeedbackModal .btn-success, #mockFeedbackModal .btn-danger');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function submitMockFeedback() {
+            const result = document.getElementById('mockResult').value;
+            const feedback = document.getElementById('mockFeedbackText').value;
+
+            if (!result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Please select a result (Pass/Fail)'
+                });
+                return;
+            }
+
+            if (!feedback.trim()) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Please enter feedback'
+                });
+                
+                return;
+            }
+
+            document.getElementById('mockFeedback').value = feedback;
+            document.getElementById('completeInterviewForm').submit();
         }
     </script>
 @endsection

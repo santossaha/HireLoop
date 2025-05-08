@@ -233,21 +233,15 @@ class InterviewController extends Controller
      */
     public function update(Request $request, Interview $interview)
     {
-       
-        // Prevent updating completed interviews
-        // if ($interview->status === 'completed') {
-        //     return redirect()->route('interviews.show', $interview->id)
-        //         ->with('error', 'Cannot update a completed interview.');
-        // }
-        
         $validator = Validator::make($request->all(), [
             'vendor_id' => 'required|exists:vendors,id',
             'requirement_id' => 'required|exists:requirements,id',
             'candidate_id' => 'required|exists:candidate_sourcings,id',
-            //'interviewer_id' => 'required|exists:users,id',
             'type' => 'required|in:mock,internal,client',
             'scheduled_at' => 'required|date',
             'status' => 'required|in:scheduled,completed,cancelled',
+            'result' => 'nullable|in:pass,fail',
+            'mock_feedback' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -257,17 +251,17 @@ class InterviewController extends Controller
         // Update the interview
         $interview->update($request->all());
 
-        // Send email notification after update
-        $interview->load(['vendor', 'candidate', 'requirement']);
-        
-        try {
-            Mail::to($interview->vendor->email)->queue(new MockInterviewScheduled($interview));
-        } catch (\Exception $e) {
-            // Silently handle email sending failure
-            \Log::error('Failed to send interview email: ' . $e->getMessage());
+        // If this is a mock interview being completed, send email notification
+        if ($interview->type === 'mock' && $interview->status === 'completed') {
+            $interview->load(['vendor', 'candidate', 'requirement']);
+            try {
+                Mail::to($interview->vendor->email)->queue(new MockInterviewScheduled($interview));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send interview email: ' . $e->getMessage());
+            }
         }
         
-        return redirect()->route('interviews.index')
+        return redirect()->route('interviews.show', $interview->id)
             ->with('success', 'Interview updated successfully.');
     }
 

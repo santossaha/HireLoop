@@ -2,6 +2,9 @@
 
 @section('title', 'Vendor Dashboard')
 
+
+
+
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -196,6 +199,7 @@
                                     <th>Uploaded At</th>
                                     <th>Status</th>
                                      <th>Interview DateTime</th>
+                                     <th>Feedback</th>
                                    
                                 </tr>
                             </thead>
@@ -219,6 +223,9 @@
                                                     <span class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
                                                         {{ ucfirst($candidate->interviews->status) }}
                                                     </span>
+                                                    <span class="badge bg-{{ $candidate->interviews->result === 'pass' ? 'success' : ($candidate->interviews->result === 'fail' ? 'danger' : 'danger') }}">
+                                                        {{ ucfirst($candidate->interviews->result) }}
+                                                    </span>
                                                 </div>
                                            
                                         @else
@@ -229,6 +236,16 @@
                                     <td> @if($candidate->interviews){{ $candidate->interviews->scheduled_at->format('Y-m-d H:i') }} @else
                                         <span class="text-muted">No Date</span>
                                     @endif</td>
+                                    <td>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-info"
+                                                data-bs-toggle="popover"
+                                                data-bs-trigger="hover focus"
+                                                data-bs-content="{{$candidate->interviews->mock_feedback ?? 'N/A'}}"
+                                                title="{{$candidate->interviews->mock_feedback ?? 'N/A'}}">
+                                            <i class="fas fa-comment"></i>
+                                        </button>
+                                    </td>
                                     
                                   
                                 </tr>
