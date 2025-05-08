@@ -57,7 +57,7 @@
                 <li><strong>Name:</strong> {{ $candidate->candidate_name }}</li>
                 <li><strong>Email:</strong> {{ $candidate->email }}</li>
                 <li><strong>Phone:</strong> {{ $candidate->phone }}</li>
-                <li><strong>Candidate Budget:</strong> ${{ number_format($candidate->budget, 2) }}</li>
+                <li><strong>Candidate Budget:</strong> {{ number_format($candidate->budget, 2) }}</li>
             </ul>
 
             <p><strong>Uploaded by:</strong> {{ $uploadedBy->name }}</p>

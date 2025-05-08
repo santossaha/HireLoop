@@ -72,7 +72,7 @@
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Budget</th>
-                            <th>Uploaded By</th>
+                            <th>Vendors</th>
                             <th>Status</th>
                             <th>Uploaded At</th>
                             <th>Resume</th>
@@ -88,11 +88,24 @@
                             <td>{{ number_format($candidate->budget, 2) }}</td>
                             <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
                             <td>
-                                <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">
+                                {{-- <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">
                                     {{ ucfirst($candidate->status) }}
-                                </span>
+                                </span> --}}
+                            @if($candidate->interviews)
+                                    <div class="mb-1">
+                                        <span class="badge bg-{{ $candidate->interviews->type === 'mock' ? 'info' : ($candidate->interviews->type === 'client' ? 'primary' : 'success') }}">
+                                            {{ ucfirst($candidate->interviews->type) }}
+                                        </span>
+                                        <span class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
+                                            {{ ucfirst($candidate->interviews->status) }}
+                                        </span>
+                                    </div>    
+                            @else
+                                <span class="text-muted">No interviews</span>
+                            @endif
+
                             </td>
-                            <td>{{ $candidate->created_at->format('Y-m-d H:i') }}</td>
+                            <td>{{ $candidate->created_at->format('M d, Y  h:i a') }}</td>
                             <td>
                                 @if($candidate->resume_path)
                                     <a href="{{ asset('storage/' . $candidate->resume_path) }}" class="btn btn-sm btn-primary" target="_blank">
@@ -192,7 +205,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a href="{{ route('interviews.create', ['candidate_id' => $candidate->id, 'requirement_id' => $requirement->id]) }}" class="btn btn-primary">Schedule New Interview</a>
+                <a href="{{ route('interviews.create', ['candidate_id' => $candidate->id, 'requirement_id' => $requirement->id]) }}" class="btn btn-primary">Schedule Interview</a>
             </div>
         </div>
     </div>

@@ -224,7 +224,11 @@ class RequirementController extends Controller
      */
     public function show(Requirement $requirement)
     {
-        $candidates = CandidateSourcing::with(['requirement', 'requirement.vendor'])->where('requirement_id', $requirement->id)->get();
+        $candidates = CandidateSourcing::with(['requirement', 'requirement.vendor', 'interviews'])
+                    ->where('requirement_id', $requirement->id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                   // dd($candidates);
       
         
         return view('requirement.show', compact('requirement', 'candidates'));

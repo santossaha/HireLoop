@@ -91,7 +91,7 @@
             <p>{{ $interview->feedback }}</p>
 
             @if($interview->last_approved_budget)
-            <p><strong>Last Approved Budget:</strong> ${{ number_format($interview->last_approved_budget, 2) }}</p>
+            <p><strong>Last Approved Budget:</strong> {{ number_format($interview->last_approved_budget, 2) }}</p>
             @endif
             
             {{-- <a href="{{ route('interviews.show', $interview->id) }}" class="button">View Full Interview Details</a> --}}
