@@ -88,7 +88,7 @@ class CandidateSourcingController extends Controller
     public function show(Requirement $requirement, $id)
     {
         $requirement = Requirement::find($id);
-        $candidates = CandidateSourcing::with('interviews')->where('requirement_id', $id)->get();
+        $candidates = CandidateSourcing::with('interviews')->where('uploaded_by', Auth::id())->where('requirement_id', $id)->get();
        
       
         return view('candidate-sourcing.show', compact('requirement', 'candidates'));
