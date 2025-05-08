@@ -60,7 +60,7 @@ class CandidateSourcingController extends Controller
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
-                    'created_at' => $requirement->created_at->format('M d, Y  H:i a'),
+                    'created_at' => $requirement->created_at->format('M d, Y  h:i a'),
                     'actions' => view('candidate-sourcing.partials.actions', compact('requirement'))->render()
                 ];
             }

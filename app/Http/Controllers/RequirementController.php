@@ -24,7 +24,7 @@ class RequirementController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Requirement::query();
+            $query = Requirement::query()->orderBy('created_at', 'desc');
             
             // Apply filters
             if ($request->has('company_id') && !empty($request->company_id)) {
@@ -73,7 +73,7 @@ class RequirementController extends Controller
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
-                    'created_at' => $requirement->created_at->format('M d, Y'),
+                    'created_at' => $requirement->created_at->format('M d, Y  h:i a'),
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];
             }
