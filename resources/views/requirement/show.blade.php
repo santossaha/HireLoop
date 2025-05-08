@@ -106,7 +106,11 @@
                             @endif
 
                             </td>
-                            <td>{{ $candidate->interviews->scheduled_at->format('M d, Y  h:i a') ?? 'N/A' }}</td>
+                            @if($candidate->interviews)
+                            <td>{{ $candidate->interviews->scheduled_at->format('M d, Y  h:i a')}}</td>
+                            @else
+                            <td>N/A</td>
+                            @endif
                             <td>{{ $candidate->created_at->format('M d, Y  h:i a') }}</td>
                             <td>
                                 @if($candidate->resume_path)
