@@ -522,19 +522,19 @@
                         <h6 class="m-0 font-weight-bold text-primary">Candidate Info</h6>
                     </div>
                     <div class="card-body">
-                        <h5>{{ $interview->candidate->candidate_name }}</h5>
+                        <h5>{{ $interview->candidate->candidate_name ?? 'N/A' }}</h5>
                         <hr>
 
-                        <p><strong>Email:</strong> {{ $interview->candidate->email }}</p>
-                        <p><strong>Phone:</strong> {{ $interview->candidate->phone }}</p>
-                        <p><strong>Budget:</strong> {{ $interview->candidate->budget }}</p>
+                        <p><strong>Email:</strong> {{ $interview->candidate->email ?? 'N/A' }}</p>
+                        <p><strong>Phone:</strong> {{ $interview->candidate->phone ?? 'N/A' }}</p>
+                        <p><strong>Budget:</strong> {{ $interview->candidate->budget ?? 'N/A' }}</p>
 
 
                         <div class="mb-3">
-                            <p>{{ $interview->candidate->candidate_details }}</p>
+                            <p>{{ $interview->candidate->candidate_details ?? 'N/A' }}</p>
                         </div>
 
-                        @if ($interview->candidate->resume_path)
+                        @if ($interview->candidate && $interview->candidate->resume_path)
                             <a href="{{ asset('storage/' . $interview->candidate->resume_path) }}"
                                 class="btn btn-primary btn-sm" target="_blank">
                                 <i class="fas fa-file-pdf me-1"></i> View Resume
@@ -549,18 +549,19 @@
                         <h6 class="m-0 font-weight-bold text-primary">Vendor Info</h6>
                     </div>
                     <div class="card-body">
-                        <h5>{{ $interview->vendor->company_name }}</h5>
+                       
+                        <h5>{{ $interview->vendor->company_name ?? 'N/A' }}</h5>
                         <p class="badge bg-{{ $interview->vendor->vendor_type == 'company' ? 'primary' : 'secondary' }}">
-                            {{ ucfirst($interview->vendor->vendor_type) }}
+                            {{ ucfirst($interview->vendor->vendor_type ?? 'N/A') }}
                         </p>
-
+                        
                         <hr>
 
-                        <p><strong>Contact Person:</strong> {{ $interview->vendor->contact_person }}</p>
-                        <p><strong>Email:</strong> {{ $interview->vendor->email }}</p>
-                        <p><strong>Phone:</strong> {{ $interview->vendor->phone }}</p>
+                        <p><strong>Contact Person:</strong> {{ $interview->vendor->contact_person ?? 'N/A'  }}</p>
+                        <p><strong>Email:</strong> {{ $interview->vendor->email ?? 'N/A' }}</p>
+                        <p><strong>Phone:</strong> {{ $interview->vendor->phone ?? 'N/A' }}</p>
 
-                        <div class="mb-3">
+                        <div class="mb-3">  
                             <strong>Ratings:</strong><br>
                             <span
                                 class="badge bg-{{ $interview->vendor->communication_rating == 'excellent' ? 'success' : ($interview->vendor->communication_rating == 'good' ? 'primary' : ($interview->vendor->communication_rating == 'average' ? 'warning' : 'danger')) }}">
@@ -595,9 +596,13 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Result</label>
-                        <div class="d-grid gap-2">
-                            <button type="button" class="btn btn-success" onclick="setMockResult('pass')">Pass</button>
-                            <button type="button" class="btn btn-danger" onclick="setMockResult('fail')">Fail</button>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-secondary result-btn w-100" onclick="setMockResult('pass')">Pass</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-secondary result-btn w-100" onclick="setMockResult('fail')">Fail</button>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -658,10 +663,15 @@
 
         function setMockResult(result) {
             document.getElementById('mockResult').value = result;
-            // Highlight selected button
-            const buttons = document.querySelectorAll('#mockFeedbackModal .btn-success, #mockFeedbackModal .btn-danger');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            // Reset all buttons to gray
+            const buttons = document.querySelectorAll('.result-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-secondary');
+            });
+            // Set clicked button to red
+            event.target.classList.remove('btn-secondary');
+            event.target.classList.add('btn-danger');
         }
 
         function submitMockFeedback() {
