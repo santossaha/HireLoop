@@ -223,7 +223,7 @@
                                                     <span class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
                                                         {{ ucfirst($candidate->interviews->status) }}
                                                     </span>
-                                                    <span class="badge bg-{{ $candidate->interviews->result === 'pass' ? 'success' : ($candidate->interviews->result === 'fail' ? 'danger' : 'danger') }}">
+                                                    <span class="badge bg-{{ $candidate->interviews->result === 'pass' ? 'success' : ($candidate->interviews->result === 'fail' ? 'danger' : ' ') }}">
                                                         {{ ucfirst($candidate->interviews->result) }}
                                                     </span>
                                                 </div>
@@ -239,16 +239,34 @@
                                     <td>
                                         <button type="button" 
                                                 class="btn btn-sm btn-info"
-                                                data-bs-toggle="popover"
-                                                data-bs-trigger="hover focus"
-                                                data-bs-content="{{$candidate->interviews->mock_feedback ?? 'N/A'}}"
-                                                title="{{$candidate->interviews->mock_feedback ?? 'N/A'}}">
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#mockFeedbackModal{{$candidate->id}}">
                                             <i class="fas fa-comment"></i>
                                         </button>
                                     </td>
                                     
                                   
                                 </tr>
+
+                                <!-- Mock Feedback Modal -->
+                                <div class="modal fade" id="mockFeedbackModal{{$candidate->id}}" tabindex="-1" aria-labelledby="mockFeedbackModalLabel{{$candidate->id}}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="mockFeedbackModalLabel{{$candidate->id}}">Mock Interview Feedback</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="p-3 bg-light rounded">
+                                                    {{$candidate->interviews->mock_feedback ?? 'No Feedback Available'}}
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @empty
                                 <tr>
                                     <td colspan="8" class="text-center">No resumes uploaded yet.</td>

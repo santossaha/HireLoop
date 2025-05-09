@@ -22,6 +22,7 @@
                             <th>Department</th>
                             <th>Created By</th>
                             <th>Created</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -53,6 +54,7 @@
                 { data: 'department', name: 'department' },
                 { data: 'created_by', name: 'created_by' },
                 { data: 'created_at', name: 'created_at' },
+                { data: 'status', name: 'status' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
             order: [[0, 'desc']],

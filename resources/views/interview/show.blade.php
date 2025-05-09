@@ -671,7 +671,7 @@
             });
             // Set clicked button to red
             event.target.classList.remove('btn-secondary');
-            event.target.classList.add('btn-danger');
+            event.target.classList.add('btn-primary');
         }
 
         function submitMockFeedback() {

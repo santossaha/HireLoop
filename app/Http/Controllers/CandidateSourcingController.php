@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CandidateSourcing;
-use App\Models\Requirement;
 use App\Models\User;
+use App\Models\Interview;
+use App\Models\Requirement;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\NewResumeUploaded;
+use App\Models\CandidateSourcing;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class CandidateSourcingController extends Controller
 {
@@ -21,8 +22,24 @@ class CandidateSourcingController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function getTypeBadge($status) : string
+    {
+        
+        if($status){
+            return '<span class="badge bg-success">Applied</span> <span class="badge bg-secondary">'.$status.' Resume</span>';
+        }else{
+            return '<span class="badge bg-info">Not Applied</span>';
+        }
+       
+      
+    }
+
+    
     public function index(Request $request)
     {
+      
+      
         if ($request->ajax()) {
             $query = Requirement::query()->orderBy('created_at', 'desc');
             
@@ -54,6 +71,8 @@ class CandidateSourcingController extends Controller
 
             $data = [];
             foreach ($requirements as $requirement) {
+                
+                
                 $data[] = [
                     'id' => $requirement->id,
                     'company' => $requirement->company->name,
@@ -61,6 +80,8 @@ class CandidateSourcingController extends Controller
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y  h:i a'),
+                    'status' => $this->getTypeBadge($requirement->candidateSourcing->count() > 0 ? $requirement->candidateSourcing->count() : 0),
+
                     'actions' => view('candidate-sourcing.partials.actions', compact('requirement'))->render()
                 ];
             }
@@ -89,6 +110,8 @@ class CandidateSourcingController extends Controller
     {
         $requirement = Requirement::find($id);
         $candidates = CandidateSourcing::with('interviews')->where('uploaded_by', Auth::id())->where('requirement_id', $id)->get();
+        //$interviews = Interview::where('id', 25)->first();
+       
        
       
         return view('candidate-sourcing.show', compact('requirement', 'candidates'));
