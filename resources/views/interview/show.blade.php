@@ -502,17 +502,40 @@
                                 <input type="hidden" name="requirement_id" value="{{ $interview->requirement_id }}">
                                 <input type="hidden" name="interviewer_id" value="{{ $interview->interviewer_id }}">
                                 <input type="hidden" name="type" value="client">
-                                <input type="hidden" name="scheduled_at"
-                                    value="{{ $interview->scheduled_at->format('Y-m-d\TH:i') }}">
+                                <input type="hidden" name="client_interview_date_time" id="selectedDateTime">
                                 <input type="hidden" name="status" value="scheduled">
                                 <input type="hidden" name="result" value=" ">
                                 <div class="mb-3">
                                     <button type="button" class="btn btn-warning btn-block"
-                                        onclick="confirmClientCall()">
-                                        <i class="fas fa-phone me-1"></i> Client Scheduled
+                                        data-bs-toggle="modal" data-bs-target="#clientInterviewModal">
+                                        <i class="fas fa-phone me-1"></i> Schedule for Client Round
                                     </button>
                                 </div>
                             </form>
+
+                            <!-- Client Interview Modal -->
+                            <div class="modal fade" id="clientInterviewModal" tabindex="-1" aria-labelledby="clientInterviewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="clientInterviewModalLabel">Schedule Client Interview</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="interviewDateTime" class="form-label">Select Interview Date & Time</label>
+                                                <input type="datetime-local" class="form-control" id="interviewDateTime" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="submitClientInterview()">Schedule Interview</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
                     </div>
                 </div>
                 @endif
@@ -621,7 +644,17 @@
 @endsection
 
 @section('scripts')
-
+    <script>
+        function submitClientInterview() {
+            const dateTime = document.getElementById('interviewDateTime').value;
+            if (!dateTime) {
+                alert('Please select date and time');
+                return;
+            }
+            document.getElementById('selectedDateTime').value = dateTime;
+            document.getElementById('clientCallForm').submit();
+        }
+    </script>
     <script>
         function confirmCancelInterview() {
             Swal.fire({
@@ -636,23 +669,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('cancelInterviewForm').submit();
-                }
-            });
-        }
-
-        function confirmClientCall() {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you want to make this interview for client call?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#ffc107',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, mark for client call!',
-                cancelButtonText: 'No, cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('clientCallForm').submit();
                 }
             });
         }

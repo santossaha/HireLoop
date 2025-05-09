@@ -238,10 +238,11 @@ class InterviewController extends Controller
             'requirement_id' => 'required|exists:requirements,id',
             'candidate_id' => 'required|exists:candidate_sourcings,id',
             'type' => 'required|in:mock,internal,client',
-            'scheduled_at' => 'required|date',
+            'scheduled_at' => 'nullable|date',
             'status' => 'required|in:scheduled,completed,cancelled',
             'result' => 'nullable|in:pass,fail',
             'mock_feedback' => 'nullable|string',
+            'client_interview_date_time' => 'nullable|date',
             'result' => 'nullable'
         ]);
 
@@ -252,7 +253,7 @@ class InterviewController extends Controller
        if (empty($request->result) || $request->result === ' ') {
            $request->merge(['result' => null]);
        }
-       //dd($request->all());
+     
 
         // Update the interview
         $interview->update($request->all());

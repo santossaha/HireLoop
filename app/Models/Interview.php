@@ -32,6 +32,7 @@ class Interview extends Model
         'selected_in_client',
         'last_approved_budget',
         'mock_feedback',
+        'client_interview_date_time',
     ];
 
     /**
