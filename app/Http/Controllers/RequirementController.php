@@ -21,6 +21,15 @@ class RequirementController extends Controller
     /**
      * Display a listing of the requirements
      */
+    public function getTypeBadge($status) : string
+    {
+        if($status){
+            return '<span class="badge bg-success">Applied</span> <span class="badge bg-secondary">'.$status.' Resume</span>';
+        }else{
+            return '<span class="badge bg-info">Not Applied</span>';
+        }
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -67,6 +76,9 @@ class RequirementController extends Controller
 
             $data = [];
             foreach ($requirements as $requirement) {
+                $userResumeCount = $requirement->candidateSourcing()
+               // ->where('uploaded_by', Auth::id())
+                ->count();
                 $data[] = [
                     'id' => $requirement->id,
                     'company' => $requirement->company->name,
@@ -74,7 +86,7 @@ class RequirementController extends Controller
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y  h:i a'),
-                    'candidate_count' => $requirement->candidateSourcing->count(),
+                    'candidate_count' => $this->getTypeBadge($userResumeCount > 0 ? $userResumeCount : 0),
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];
             }

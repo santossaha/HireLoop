@@ -242,11 +242,17 @@ class InterviewController extends Controller
             'status' => 'required|in:scheduled,completed,cancelled',
             'result' => 'nullable|in:pass,fail',
             'mock_feedback' => 'nullable|string',
+            'result' => 'nullable'
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
+       // Set result to null if empty or blank
+       if (empty($request->result) || $request->result === ' ') {
+           $request->merge(['result' => null]);
+       }
+       //dd($request->all());
 
         // Update the interview
         $interview->update($request->all());

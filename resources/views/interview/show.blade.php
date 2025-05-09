@@ -505,6 +505,7 @@
                                 <input type="hidden" name="scheduled_at"
                                     value="{{ $interview->scheduled_at->format('Y-m-d\TH:i') }}">
                                 <input type="hidden" name="status" value="scheduled">
+                                <input type="hidden" name="result" value=" ">
                                 <div class="mb-3">
                                     <button type="button" class="btn btn-warning btn-block"
                                         onclick="confirmClientCall()">
