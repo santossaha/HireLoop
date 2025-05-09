@@ -219,6 +219,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse($candidates as $candidate)
+                                    {{-- @dd($candidate->interviews); --}}
                                         <tr>
                                             <td>{{ $candidate->candidate_name }}</td>
                                             <td>{{ $candidate->email }}</td>
@@ -228,7 +229,7 @@
 
 
                                             <td>
-                                                @if ($candidate->interviews && $candidate->interviews->type == 'mock')
+                                                @if ($candidate->interviews && $candidate->interviews->type == 'mock' && $candidate->interviews->status == 'scheduled')
                                                     <div class="mb-1">
                                                         <span
                                                             class="badge bg-{{ $candidate->interviews->type === 'mock' ? 'info' : ($candidate->interviews->type === 'client' ? 'primary' : 'success') }}">
@@ -243,7 +244,7 @@
                                                             {{ ucfirst($candidate->interviews->result) }}
                                                         </span>
                                                     </div>
-                                                @else
+                                                @elseif ($candidate->interviews && $candidate->interviews->type == 'client')
                                                     <div class="mb-1">
                                                         <span class="badge bg-info">
                                                             Mock
@@ -345,7 +346,7 @@
 
 
                                             <td>
-                                                @if ($candidate->interviews && $candidate->interviews->type == 'client')
+                                                @if ($candidate->interviews && $candidate->interviews->type == 'client' && $candidate->interviews->status == 'scheduled')
                                                     <div class="mb-1">
                                                         <span
                                                             class="badge bg-{{ $candidate->interviews->type === 'mock' ? 'info' : ($candidate->interviews->type === 'client' ? 'primary' : 'success') }}">
@@ -360,7 +361,7 @@
                                                             {{ ucfirst($candidate->interviews->result) }}
                                                         </span>
                                                     </div>
-                                                @else
+                                                @elseif($candidate->interviews && $candidate->interviews->type == 'client' && $candidate->interviews->status == 'completed')
                                                     <div class="mb-1">
                                                         <span class="badge bg-primary">
                                                             Client
