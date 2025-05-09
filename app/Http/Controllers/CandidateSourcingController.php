@@ -25,14 +25,11 @@ class CandidateSourcingController extends Controller
 
      public function getTypeBadge($status) : string
     {
-        
         if($status){
             return '<span class="badge bg-success">Applied</span> <span class="badge bg-secondary">'.$status.' Resume</span>';
         }else{
             return '<span class="badge bg-info">Not Applied</span>';
         }
-       
-      
     }
 
     
@@ -71,7 +68,9 @@ class CandidateSourcingController extends Controller
 
             $data = [];
             foreach ($requirements as $requirement) {
-                
+                $userResumeCount = $requirement->candidateSourcing()
+                    ->where('uploaded_by', Auth::id())
+                    ->count();
                 
                 $data[] = [
                     'id' => $requirement->id,
@@ -80,8 +79,7 @@ class CandidateSourcingController extends Controller
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y  h:i a'),
-                    'status' => $this->getTypeBadge($requirement->candidateSourcing->count() > 0 ? $requirement->candidateSourcing->count() : 0),
-
+                    'status' => $this->getTypeBadge($userResumeCount > 0 ? $userResumeCount : 0),
                     'actions' => view('candidate-sourcing.partials.actions', compact('requirement'))->render()
                 ];
             }
