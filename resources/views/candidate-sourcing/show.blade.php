@@ -229,22 +229,7 @@
 
 
                                             <td>
-                                                @if ($candidate->interviews && $candidate->interviews->type == 'mock' && $candidate->interviews->status == 'scheduled')
-                                                    <div class="mb-1">
-                                                        <span
-                                                            class="badge bg-{{ $candidate->interviews->type === 'mock' ? 'info' : ($candidate->interviews->type === 'client' ? 'primary' : 'success') }}">
-                                                            {{ ucfirst($candidate->interviews->type) }}
-                                                        </span>
-                                                        <span
-                                                            class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
-                                                            {{ ucfirst($candidate->interviews->status) }}
-                                                        </span>
-                                                        <span
-                                                            class="badge bg-{{ $candidate->interviews->result === 'pass' ? 'success' : ($candidate->interviews->result === 'fail' ? 'danger' : ' ') }}">
-                                                            {{ ucfirst($candidate->interviews->result) }}
-                                                        </span>
-                                                    </div>
-                                                @elseif ($candidate->interviews && $candidate->interviews->type == 'client')
+                                                @if ($candidate->interviews && $candidate->interviews->type == 'client')
                                                     <div class="mb-1">
                                                         <span class="badge bg-info">
                                                             Mock
@@ -256,7 +241,25 @@
                                                             Pass
                                                         </span>
                                                     </div>
-                                                @endif
+                                                @elseif($candidate->interviews && $candidate->interviews->type == 'mock')
+                                                    <span class="badge bg-info">Mock</span>
+                                                    @if($candidate->interviews->status == 'scheduled')
+                                                    <span class="badge bg-warning">{{ ucfirst($candidate->interviews->status) }}</span>
+                                                    @elseif($candidate->interviews->status == 'completed')
+                                                    <span class="badge bg-success">{{ ucfirst($candidate->interviews->status) }}</span>
+                                                        
+
+                                                        @if($candidate->interviews->result == 'pass')
+                                                        <span class="badge bg-success">{{ ucfirst($candidate->interviews->result) }}</span>
+                                                        @elseif($candidate->interviews->result == 'fail')
+                                                        <span class="badge bg-danger">{{ ucfirst($candidate->interviews->result) }}</span>
+                                                        @endif
+                                                        
+                                                    @elseif($candidate->interviews->status == 'cancelled')
+                                                    <span class="badge bg-danger">{{ ucfirst($candidate->interviews->status) }}</span>
+                                                    @endif
+
+                                                @endif   
                                             </td>
 
                                             <td>
@@ -337,6 +340,8 @@
                                 </thead>
                                 <tbody>
                                     @forelse($candidates as $candidate)
+                                    @if($candidate->interviews && $candidate->interviews->type == 'client')
+                                   
                                         <tr>
                                             <td>{{ $candidate->candidate_name }}</td>
                                             <td>{{ $candidate->email }}</td>
@@ -393,6 +398,8 @@
 
 
                                         </tr>
+                                    @endif
+                                    
 
                                         <!-- Mock Feedback Modal -->
                                         <div class="modal fade" id="clientFeedbackModal{{ $candidate->id }}"
@@ -421,7 +428,7 @@
                                         </div>
                                     @empty
                                         <tr>
-                                            <td colspan="8" class="text-center">No resumes uploaded yet.</td>
+                                            <td colspan="8" class="text-center">No data found.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
