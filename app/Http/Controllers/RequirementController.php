@@ -35,6 +35,13 @@ class RequirementController extends Controller
         if ($request->ajax()) {
             $query = Requirement::query()->orderBy('created_at', 'desc');
             
+            // Filter by create_by only if user is a vendor
+            if (Auth::user()->role === 'bde') {
+                $query->withWhereHas('createBy', function($query) {
+                    $query->where('create_by', Auth::user()->id);
+                });
+            }
+            
             // Apply filters
             if ($request->has('company_id') && !empty($request->company_id)) {
                 $query->where('company_id', $request->company_id);
