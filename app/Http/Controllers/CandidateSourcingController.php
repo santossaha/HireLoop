@@ -192,8 +192,8 @@ class CandidateSourcingController extends Controller
     {
         $request->validate([
             'candidate_name' => 'required|string|max:255',
-            'email' => 'email|max:255',
-            'phone' => 'string|max:20',
+            //'email' => 'email|max:255',
+            //'phone' => 'string|max:20',
             'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
             'budget' => 'required|numeric|min:0',
             'notes' => 'nullable|string'
@@ -207,11 +207,11 @@ class CandidateSourcingController extends Controller
             'requirement_id' => $requirement->id,
             'uploaded_by' => Auth::id(),
             'candidate_name' => $request->candidate_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
+            'email' => $request->email ?? null,
+            'phone' => $request->phone ?? null,
             'resume_path' => $resumePath,
             'budget' => $request->budget,
-            'candidate_details' => $request->notes,
+            'candidate_details' => $request->notes ?? null,
             'status' => 'pending'
         ]);
 
