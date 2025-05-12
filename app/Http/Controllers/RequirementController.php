@@ -36,7 +36,7 @@ class RequirementController extends Controller
             $query = Requirement::query()->orderBy('created_at', 'desc');
             
             // Filter by create_by only if user is a vendor
-            if (Auth::user()->role === 'bde') {
+            if (Auth::user()->hasRole('bde')) {
                 $query->withWhereHas('createBy', function($query) {
                     $query->where('create_by', Auth::user()->id);
                 });

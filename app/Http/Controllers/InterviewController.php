@@ -26,12 +26,12 @@ class InterviewController extends Controller
             $query = Interview::query()->with(['vendor', 'requirement', 'interviewer', 'candidate'])->orderBy('created_at', 'desc');
 
             // Filter by vendor_id only if user is a vendor
-            if (Auth::user()->role === 'bde') {
+            if (Auth::user()->hasRole('bde')) {
                 $query->withWhereHas('requirement', function($query) {
-                    $query->where('create_by', Auth::user()->id);
+                    $query->where('create_by', Auth::id());
                 });
             }
-
+            
             // Apply filters
             if ($request->has('vendor_id') && !empty($request->vendor_id)) {
                 $query->where('vendor_id', $request->vendor_id);
