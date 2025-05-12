@@ -351,32 +351,20 @@
 
 
                                             <td>
-                                                @if ($candidate->interviews && $candidate->interviews->type == 'client' && $candidate->interviews->status == 'scheduled')
+                                                @if ($candidate->interviews && $candidate->interviews->type == 'client')
                                                     <div class="mb-1">
-                                                        <span
-                                                            class="badge bg-{{ $candidate->interviews->type === 'mock' ? 'info' : ($candidate->interviews->type === 'client' ? 'primary' : 'success') }}">
-                                                            {{ ucfirst($candidate->interviews->type) }}
-                                                        </span>
-                                                        <span
-                                                            class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
-                                                            {{ ucfirst($candidate->interviews->status) }}
-                                                        </span>
-                                                        <span
-                                                            class="badge bg-{{ $candidate->interviews->result === 'pass' ? 'success' : ($candidate->interviews->result === 'fail' ? 'danger' : ' ') }}">
-                                                            {{ ucfirst($candidate->interviews->result) }}
-                                                        </span>
-                                                    </div>
-                                                @elseif($candidate->interviews && $candidate->interviews->type == 'client' && $candidate->interviews->status == 'completed')
-                                                    <div class="mb-1">
-                                                        <span class="badge bg-primary">
-                                                            Client
-                                                        </span>
-                                                        <span class="badge bg-success">
-                                                            Completed
-                                                        </span>
-                                                        <span class="badge bg-success">
-                                                            Pass
-                                                        </span>
+                                                        <span class="badge bg-primary">Client</span>
+                                                        @if ($candidate->interviews->status == 'scheduled')
+                                                            <span class="badge bg-warning">Scheduled</span>
+                                                            <span class="badge bg-secondary">Pending</span>
+                                                        @elseif ($candidate->interviews->status == 'completed')
+                                                            <span class="badge bg-success">Completed</span>
+                                                            @if ($candidate->interviews->result == 'pass')
+                                                                <span class="badge bg-success">Pass</span>
+                                                            @elseif ($candidate->interviews->result == 'fail')
+                                                                <span class="badge bg-danger">Fail</span>
+                                                            @endif
+                                                        @endif
                                                     </div>
                                                 @endif
                                             </td>

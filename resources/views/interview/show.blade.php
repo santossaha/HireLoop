@@ -114,16 +114,20 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <h6 class="font-weight-bold">Feedback</h6>
-                                    <p>
-                                        <span class="text-danger">{{$interview->mock_feedback ?? 'N/A'}}</span>
-                                    </p>
+                                    
+                                    <div class="p-3 bg-light rounded">
+                                        {!! nl2br(e($interview->mock_feedback ?? 'N/A')) !!}
+                                    </div>
                                 </div>
                                 
                             </div>
 
                         @endif
+                       
 
-                        @if ($interview->status == 'completed' && $interview->result == 'pass')
+                       
+
+                        @if ($interview->type != 'mock' && $interview->status == 'completed' && ($interview->result == 'pass' || $interview->result == 'fail'))
                             <hr>
 
                             <h5 class="font-weight-bold mb-3">Interview Results</h5>
