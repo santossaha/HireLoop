@@ -21,6 +21,32 @@
     
     <!-- Custom CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        footer {    position: fixed;
+        bottom: 0;
+        width: 100%;
+        }
+        .sidebar {
+    height: 100vh;
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    overflow-y: auto;
+}
+.content-wrapper {
+    margin-left: 240px;
+}
+/* Key Skills Select2 Fix */
+.select2-container--default .select2-selection--multiple {
+    max-height: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+    </style>
     
     @yield('styles')
 </head>
@@ -144,7 +170,7 @@
             </main>
             
             <!-- Footer -->
-            <footer class="bg-light py-3 text-center">
+            <footer class="bg-light py-3 text-center" >
                 <div class="container">
                     <p class="mb-0">&copy; {{ date('Y') }} Vendor Management System. All rights reserved.</p>
                 </div>

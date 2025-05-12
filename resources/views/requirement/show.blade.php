@@ -97,9 +97,14 @@
                                         <span class="badge bg-{{ $candidate->interviews->type === 'mock' ? 'info' : ($candidate->interviews->type === 'client' ? 'primary' : 'success') }}">
                                             {{ ucfirst($candidate->interviews->type) }}
                                         </span>
-                                        <span class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
-                                            {{ ucfirst($candidate->interviews->status) }}
-                                        </span>
+                                            <span class="badge bg-{{ $candidate->interviews->status === 'scheduled' ? 'warning' : ($candidate->interviews->status === 'completed' ? 'success' : 'danger') }}">
+                                                {{ ucfirst($candidate->interviews->status) }}
+                                            </span>
+                                            @if( $candidate->interviews->status == 'completed' && ($candidate->interviews->result == 'pass' || $candidate->interviews->result == 'fail'))
+                                                <span class="badge bg-{{ $candidate->interviews->result === 'pass' ? 'success' : 'danger' }}">
+                                                    {{ ucfirst($candidate->interviews->result) }}
+                                                </span>
+                                            @endif
                                     </div>    
                             @else
                                 <span class="text-muted">No interviews</span>
