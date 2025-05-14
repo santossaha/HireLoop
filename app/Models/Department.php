@@ -18,6 +18,7 @@ class Department extends Model
         'name',
         'description',
         'hod_id',
+        'percentage',
     ];
 
     /**

@@ -28,12 +28,26 @@
                             <th>Company</th>
                             <th>Department</th>
                             <th>Created By</th>
+                            @if(auth()->user()->hasRole('hod'))
+                            <th>Actions</th>
+                            @endif
                         </tr>
                         <tr>
                             <td>{{ $requirement->requirement_id }}</td>
                             <td>{{ $requirement->company->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->department->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
+                            @if(auth()->user()->hasRole('hod') && $requirement->needs_hod_approval && !$requirement->is_approved)
+                            <td>
+                                <form action="{{ route('requirements.approve', $requirement->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check"></i> Approve Custom Percentage
+                                    </button>
+                                </form>
+                            </td>
+                            @endif
                         </tr>
                     </table>
                 </div>

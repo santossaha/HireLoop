@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Notifications\NewRequirementNotification;
 use App\Notifications\ApprovalRequiredNotification;
 use App\Models\Company;
+use App\Notifications\RequirementApprovalNotification;
 
 class RequirementController extends Controller
 {
@@ -167,39 +168,24 @@ class RequirementController extends Controller
      */
     public function store(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
+            'client_budget' => 'required|numeric|min:0',
+            'final_budget' => 'required|numeric|min:0',
+            'show_budget_to_vendor' => 'boolean',
+            'needs_hod_approval' => 'boolean',
+            'custom_percentage_value' => 'nullable|numeric|min:0|max:100',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        // Generate the next Requirement ID
-        $year = date('Y');
-        $month = date('m');
+        // Generate requirement ID...
+        $requirement_id = $this->generateRequirementId();
         
-        // Get the last requirement ID for this year and month
-        $lastRequirement = Requirement::where('requirement_id', 'like', "REQ-{$year}-{$month}-%")
-            ->orderBy('requirement_id', 'desc')
-            ->first();
-
-        if ($lastRequirement) {
-            // Extract the sequence number and increment it
-            $parts = explode('-', $lastRequirement->requirement_id);
-            $sequence = (int) $parts[3] + 1;
-        } else {
-            // Start with sequence 1 if no requirements exist for this month
-            $sequence = 1;
-        }
-
-        // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
-        $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
-       
-      
         // Create the requirement
         $requirement = Requirement::create([
             'company_id' => $request->company_id,
@@ -207,13 +193,24 @@ class RequirementController extends Controller
             'job_description' => $request->job_description,
             'department_id' => $request->department_id,
             'create_by' => Auth::user()->id,
+            'needs_hod_approval' => $request->needs_hod_approval,
+            'custom_percentage' => $request->custom_percentage_value,
+            'show_budget_to_vendor' => $request->show_budget_to_vendor ?? false,
+            'final_budget' => $request->final_budget,
+            'is_approved' => !$request->needs_hod_approval, // Auto-approve if no HOD approval needed
         ]);
         
-        // Dispatch the event
-        event(new \App\Events\RequirementCreated($requirement));
-
+        // If HOD approval is needed, send notification
+        if ($request->needs_hod_approval) {
+            $department = Department::find($request->department_id);
+            if ($department && $department->hod) {
+                $department->hod->notify(new RequirementApprovalNotification($requirement));
+            }
+        }
+        
         return redirect()->route('requirements.index')
-            ->with('success', 'Requirement created successfully.');
+            ->with('success', 'Requirement created successfully.' . 
+                ($request->needs_hod_approval ? ' Waiting for HOD approval.' : ''));
     }
 
     /**
@@ -463,5 +460,22 @@ class RequirementController extends Controller
         return response()->json([
             'requirement_id' => sprintf("REQ-%s-%s-%03d", $year, $month, $sequence)
         ]);
+    }
+
+    public function approve(Requirement $requirement)
+    {
+        // Check if user is HOD of the department
+        if (!auth()->user()->hasRole('hod') || auth()->user()->id !== $requirement->department->hod_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $requirement->update([
+            'is_approved' => true
+        ]);
+
+        // Here you can add notification logic for vendors if needed
+
+        return redirect()->route('requirements.show', $requirement)
+            ->with('success', 'Requirement approved successfully.');
     }
 }

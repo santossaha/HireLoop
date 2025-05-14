@@ -173,6 +173,8 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/requirements/next-id', [RequirementController::class, 'getNextRequirementId'])->name('requirements.next-id');
     
+    Route::patch('/requirements/{requirement}/approve', [RequirementController::class, 'approve'])->name('requirements.approve');
+    
     // Interview routes
     Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index')
         ->middleware('permission:view-interviews');

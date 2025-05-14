@@ -52,6 +52,7 @@ class DepartmentSeeder extends Seeder
                 'name' => $dept['name'],
                 'description' => $dept['description'],
                 'hod_id' => $hod->id,
+                'percentage' => 40,
             ]);
         }
     }
