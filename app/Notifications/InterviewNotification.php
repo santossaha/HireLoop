@@ -76,7 +76,8 @@ class InterviewNotification extends Notification implements ShouldQueue
             'title' => $data['title'],
             'message' => $data['message'],
             'type' => $this->type,
-            'created_at' => now()
+            'created_at' => now(),
+            'redirect_url' => route('interviews.show', $this->interview->id)
         ];
     }
 
@@ -89,7 +90,8 @@ class InterviewNotification extends Notification implements ShouldQueue
             'title' => $data['title'],
             'message' => $data['message'],
             'type' => $this->type,
-            'created_at' => now()
+            'created_at' => now(),
+            'redirect_url' => route('interviews.show', $this->interview->id)
         ]);
     }
 } 

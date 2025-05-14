@@ -89,7 +89,7 @@
                                         <i class="fas fa-bell"></i>
                                         <span class="badge bg-danger rounded-pill notification-badge" style="display: none;">0</span>
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+                                    <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationsDropdown" style=" max-height: 400px; overflow-y: auto;">
                                         <div class="notification-list">
                                             <!-- Notifications will be loaded here -->
                                         </div>
@@ -210,7 +210,14 @@
                             <div class="d-flex flex-column">
                                 <div class="notification-title fw-bold">${notification.data.title || 'New Notification'}</div>
                                 <div class="notification-message">${notification.data.message || notification.data.job_description || 'New requirement has been created'}</div>
-                                <small class="text-muted">${new Date(notification.created_at).toLocaleString()}</small>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <small class="text-muted">${new Date(notification.created_at).toLocaleString()}</small>
+                                    ${notification.data.redirect_url ? `
+                                        <a href="${notification.data.redirect_url}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    ` : ''}
+                                </div>
                             </div>
                         </a>
                     `).join('');

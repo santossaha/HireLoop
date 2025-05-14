@@ -24,16 +24,26 @@
                                         {{ $notification->data['title'] }}
                                     </h6>
                                     <p class="mb-1 text-muted">{{ $notification->data['message'] }}</p>
-                                    <small class="text-muted">
-                                        <i class="far fa-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
-                                    </small>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="far fa-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
+                                        </small>
+                                        <div>
+                                            
+                                            @if(isset($notification->data['redirect_url']))
+                                                <a href="{{ $notification->data['redirect_url'] }}" class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="fas fa-external-link-alt me-1"></i> View Details
+                                                </a>
+                                            @endif
+                                            @if(!$notification->read_at)
+                                                <button class="btn btn-outline-primary btn-sm rounded-pill" 
+                                                        onclick="markAsRead('{{ $notification->id }}')">
+                                                    <i class="fas fa-check me-1"></i> Mark as Read
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                @if(!$notification->read_at)
-                                    <button class="btn btn-outline-primary btn-sm rounded-pill ms-3" 
-                                            onclick="markAsRead('{{ $notification->id }}')">
-                                        <i class="fas fa-check me-1"></i> Mark as Read
-                                    </button>
-                                @endif
                             </div>
                         </div>
                     @empty
@@ -62,9 +72,17 @@
     }
     .notification-item {
         border-left: 3px solid transparent;
+        position: relative;
     }
     .notification-item:not(.bg-light) {
         border-left-color: #0d6efd;
+    }
+    .notification-item .btn {
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+    }
+    .notification-item:hover .btn {
+        opacity: 1;
     }
 </style>
 @endpush

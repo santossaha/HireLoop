@@ -51,7 +51,7 @@ class RequirementNotification extends Notification implements ShouldQueue
         );
     }
 
-    protected function getMessage()
+    protected function getMessage($notifiable)
     {
         $replacements = [
             ':company_name' => $this->requirement->company->name,
@@ -59,7 +59,7 @@ class RequirementNotification extends Notification implements ShouldQueue
         ];
 
         // Choose message based on user role and type
-        if ($this->notifiable->role === 'vendor') {
+        if ($notifiable->role === 'vendor') {
             return NotificationMessages::format(
                 NotificationMessages::NEW_REQUIREMENT_MESSAGE_VENDOR,
                 $replacements
@@ -74,25 +74,25 @@ class RequirementNotification extends Notification implements ShouldQueue
 
     public function toArray($notifiable)
     {
-        $this->notifiable = $notifiable;
         return [
             'requirement_id' => $this->requirement->id,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'type' => $this->type,
-            'created_at' => now()
+            'created_at' => now(),
+            'redirect_url' => route('candidate-sourcing.show', $this->requirement->id)
         ];
     }
 
     public function toBroadcast($notifiable)
     {
-        $this->notifiable = $notifiable;
         return new BroadcastMessage([
             'requirement_id' => $this->requirement->id,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'type' => $this->type,
-            'created_at' => now()
+            'created_at' => now(),
+            'redirect_url' => route('candidate-sourcing.show', $this->requirement->id)
         ]);
     }
 } 
