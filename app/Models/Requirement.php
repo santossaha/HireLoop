@@ -6,6 +6,8 @@ use App\Traits\AutoGeneratesRequirementId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Notifications\RequirementNotification;
+use App\Models\User;
 
 class Requirement extends Model
 {
@@ -37,6 +39,26 @@ class Requirement extends Model
         'founder_approved' => 'boolean',
         'approved_at' => 'datetime',
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($requirement) {
+            // Notify all vendor users when a new requirement is created
+            $vendorUsers =  User::role('vendor')->get();
+            foreach ($vendorUsers as $user) {
+                $user->notify(new RequirementNotification($requirement, 'created'));
+            }
+        });
+    }
+
+    public function notifyResumeUploaded()
+    {
+        // Notify BDE user when a resume is uploaded
+        $bdeUser = User::role('bde')->first();
+        if ($bdeUser) {
+            $bdeUser->notify(new RequirementNotification($this, 'resume_uploaded'));
+        }
+    }
 
     public function candidateSourcing()
     {

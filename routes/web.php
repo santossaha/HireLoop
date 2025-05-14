@@ -15,6 +15,7 @@ use App\Http\Controllers\VendorPaymentController;
 use App\Http\Controllers\VendorAttendanceController;
 use App\Http\Controllers\CandidateSourcingController;
 use App\Http\Controllers\InterviewScheduleController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -274,6 +275,12 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:company-delete');
 
     //Route::post('/interview-schedule/{candidateId}', [InterviewScheduleController::class, 'store'])->name('interview-schedule.store'); 
+
+    // Notification Routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/latest', [NotificationController::class, 'getLatest']);
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 });
 
 /*

@@ -32,6 +32,7 @@ class RequirementController extends Controller
 
     public function index(Request $request)
     {
+       
         if ($request->ajax()) {
             $query = Requirement::query()->orderBy('created_at', 'desc');
             
@@ -97,6 +98,7 @@ class RequirementController extends Controller
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];
             }
+           
 
             
 
@@ -153,6 +155,7 @@ class RequirementController extends Controller
             $sequence = 1;
         }
 
+
         // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
         $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
         
@@ -164,7 +167,7 @@ class RequirementController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+        
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
             'job_description' => 'required|string',
@@ -204,38 +207,13 @@ class RequirementController extends Controller
             'job_description' => $request->job_description,
             'department_id' => $request->department_id,
             'create_by' => Auth::user()->id,
-           
-
-            // 'status' => 'pending',  
-            // 'hod_approved' => false,
-            // 'founder_approved' => false,
         ]);
         
-        // Notify the HOD for approval
-        // $department = Department::find($request->department_id);
-        // $hod = $department->hod;
-        
-        // if ($hod) {
-        //     $hod->notify(new ApprovalRequiredNotification(
-        //         'requirement',
-        //         $requirement->id,
-        //         'HOD Approval Required',
-        //         "A new requirement has been submitted for vendor " . $requirement->vendor->company_name . " that requires your approval."
-        //     ));
-        // }
-        
-        // Notify POC users in the same department
-        try {
-            $pocUsers = User::role('poc')->get();
-            foreach ($pocUsers as $pocUser) {
-                $pocUser->notify(new NewRequirementNotification($requirement));
-            }
-        } catch (\Exception $e) {
-            \Log::error('Failed to send requirement notifications: ' . $e->getMessage());
-            // Continue execution without showing error to user
-        }
+        // Dispatch the event
+        event(new \App\Events\RequirementCreated($requirement));
+
         return redirect()->route('requirements.index')
-            ->with('success', 'Requirement created successfully and sent for HOD approval.');
+            ->with('success', 'Requirement created successfully.');
     }
 
     /**
