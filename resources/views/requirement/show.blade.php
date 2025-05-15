@@ -28,6 +28,9 @@
                             <th>Company</th>
                             <th>Department</th>
                             <th>Created By</th>
+                            <th>Client Budget</th>
+                            <th>Final Budget</th>
+                            <th>Custom Percentage</th>
                             @if(auth()->user()->hasRole('hod'))
                             <th>Actions</th>
                             @endif
@@ -37,6 +40,15 @@
                             <td>{{ $requirement->company->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->department->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
+                            <td>{{ number_format($requirement->client_budget, 2) }}</td>
+                            <td>{{ number_format($requirement->final_budget, 2) }}</td>
+                            <td>
+                                @if($requirement->needs_hod_approval)
+                                    <span class="badge bg-warning">Custom: {{ $requirement->custom_percentage }}%</span>
+                                @else
+                                    <span class="badge bg-info">Default: {{ $requirement->department->percentage }}%</span>
+                                @endif
+                            </td>
                             @if(auth()->user()->hasRole('hod') && $requirement->needs_hod_approval && !$requirement->is_approved)
                             <td>
                                 <form action="{{ route('requirements.approve', $requirement->id) }}" method="POST" class="d-inline">

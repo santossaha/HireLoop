@@ -76,7 +76,7 @@
                         
                         <div class="mt-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="show_budget_to_vendor" name="show_budget_to_vendor">
+                                <input class="form-check-input" type="checkbox" id="show_budget_to_vendor" name="show_budget_to_vendor" value="1">
                                 <label class="form-check-label" for="show_budget_to_vendor">
                                     Show Final Budget for Vendor
                                 </label>
@@ -147,7 +147,7 @@
             
             if (clientBudget > 0 && percentage > 0) {
                 const finalBudget = (clientBudget * percentage) / 100;
-                finalBudgetInput.value = finalBudget.toLocaleString('en-US');
+                finalBudgetInput.value = finalBudget;
             } else {
                 finalBudgetInput.value = '';
             }

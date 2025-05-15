@@ -16,6 +16,7 @@ use App\Notifications\NewRequirementNotification;
 use App\Notifications\ApprovalRequiredNotification;
 use App\Models\Company;
 use App\Notifications\RequirementApprovalNotification;
+use App\Events\RequirementApproved;
 
 class RequirementController extends Controller
 {
@@ -168,13 +169,14 @@ class RequirementController extends Controller
      */
     public function store(Request $request)
     {
+       // dd($request->all());
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
             'client_budget' => 'required|numeric|min:0',
             'final_budget' => 'required|numeric|min:0',
-            'show_budget_to_vendor' => 'boolean',
+            'show_budget_to_vendor' => 'nullable|boolean',
             'needs_hod_approval' => 'boolean',
             'custom_percentage_value' => 'nullable|numeric|min:0|max:100',
         ]);
@@ -184,7 +186,8 @@ class RequirementController extends Controller
         }
 
         // Generate requirement ID...
-        $requirement_id = $this->generateRequirementId();
+        $requirement_id = $this->getNextRequirementId();
+
         
         // Create the requirement
         $requirement = Requirement::create([
@@ -195,17 +198,23 @@ class RequirementController extends Controller
             'create_by' => Auth::user()->id,
             'needs_hod_approval' => $request->needs_hod_approval,
             'custom_percentage' => $request->custom_percentage_value,
-            'show_budget_to_vendor' => $request->show_budget_to_vendor ?? false,
+            'show_budget_to_vendor' => $request->boolean('show_budget_to_vendor'),
+            'client_budget' => $request->client_budget,
             'final_budget' => $request->final_budget,
             'is_approved' => !$request->needs_hod_approval, // Auto-approve if no HOD approval needed
         ]);
         
+        
         // If HOD approval is needed, send notification
         if ($request->needs_hod_approval) {
             $department = Department::find($request->department_id);
+
             if ($department && $department->hod) {
                 $department->hod->notify(new RequirementApprovalNotification($requirement));
             }
+        } else {
+            // If no HOD approval needed, dispatch the event immediately
+            event(new RequirementApproved($requirement));
         }
         
         return redirect()->route('requirements.index')
@@ -457,10 +466,11 @@ class RequirementController extends Controller
         }
 
         // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
-        return response()->json([
-            'requirement_id' => sprintf("REQ-%s-%s-%03d", $year, $month, $sequence)
-        ]);
+        return sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
+      
     }
+
+
 
     public function approve(Requirement $requirement)
     {
@@ -473,7 +483,8 @@ class RequirementController extends Controller
             'is_approved' => true
         ]);
 
-        // Here you can add notification logic for vendors if needed
+        // Dispatch the event after HOD approval
+        event(new RequirementApproved($requirement));
 
         return redirect()->route('requirements.show', $requirement)
             ->with('success', 'Requirement approved successfully.');

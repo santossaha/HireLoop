@@ -20,11 +20,19 @@ class Requirement extends Model
      */
     protected $fillable = [
         'company_id',
-        'requirement_id',
+        'requrequirement_id',
         'job_description',
-        'department_id',
         'create_by',
-        'status',
+        'department_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'needs_hod_approval',
+        'is_approved',
+        'custom_percentage',
+        'show_budget_to_vendor',
+        'final_budget',
+        'client_budget',
        // 'hod_approved',
        // 'founder_approved',
     ];
