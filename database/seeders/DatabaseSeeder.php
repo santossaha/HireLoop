@@ -17,17 +17,20 @@ class DatabaseSeeder extends Seeder
         // Create Departments
         $mobileTech = Department::create([
             'name' => 'Mobile Technology',
-            'description' => 'iOS, Android, Flutter, React Native, Unity, Unreal, AI/ML, QA, AR/VR/MR'
+            'description' => 'iOS, Android, Flutter, React Native, Unity, Unreal, AI/ML, QA, AR/VR/MR',
+            'percentage' => 40
         ]);
         
         $openSource = Department::create([
             'name' => 'Open Source',
-            'description' => 'PHP, Laravel, React.js, Node.js, Vue.js, Next.js, SalesForce, Magento, WordPress'
+            'description' => 'PHP, Laravel, React.js, Node.js, Vue.js, Next.js, SalesForce, Magento, WordPress',
+            'percentage' => 40
         ]);
         
         $dotNet = Department::create([
             'name' => 'DotNet',
-            'description' => 'C#, .Net, Xamarin, SiteCore, NuGet, ASP.Net, Microsoft Azure'
+            'description' => 'C#, .Net, Xamarin, SiteCore, NuGet, ASP.Net, Microsoft Azure',
+            'percentage' => 40
         ]);
 
 

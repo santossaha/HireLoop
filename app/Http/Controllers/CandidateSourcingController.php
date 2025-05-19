@@ -38,7 +38,7 @@ class CandidateSourcingController extends Controller
       
       
         if ($request->ajax()) {
-            $query = Requirement::query()->orderBy('created_at', 'desc');
+            $query = Requirement::query()->where('is_approved', 1)->orderBy('created_at', 'desc');
             
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {
@@ -106,7 +106,10 @@ class CandidateSourcingController extends Controller
      */
     public function show(Requirement $requirement, $id)
     {
-        $requirement = Requirement::find($id);
+       
+        $requirement = Requirement::where('is_approved', 1)->find($id);
+       
+       
         $candidates = CandidateSourcing::with('interviews')->where('uploaded_by', Auth::id())->where('requirement_id', $id)->get();
         //$interviews = Interview::where('id', 25)->first();
        

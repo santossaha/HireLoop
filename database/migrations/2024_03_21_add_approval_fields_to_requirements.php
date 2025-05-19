@@ -22,10 +22,10 @@ return new class extends Migration
                 $table->boolean('show_budget_to_vendor')->default(false);
             }
             if (!Schema::hasColumn('requirements', 'final_budget')) {
-                $table->decimal('final_budget', 10, 2)->nullable();
+                $table->decimal('final_budget', 20, 2)->nullable();
             }
             if (!Schema::hasColumn('requirements', 'client_budget')) {
-                $table->decimal('client_budget', 10, 2)->nullable();
+                $table->decimal('client_budget', 20, 2)->nullable();
             }
         });
     }

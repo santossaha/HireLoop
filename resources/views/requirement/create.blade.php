@@ -19,6 +19,30 @@
             <form action="{{ route('requirements.store') }}" method="POST">
                 @csrf
 
+                <!-- Top Section -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
+                        @error('title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-6">
+                        <label for="key_skills" class="form-label">Key Skills <span class="text-danger">*</span></label>
+                        <select class="form-select select2 @error('key_skills') is-invalid @enderror" id="key_skills" name="key_skills[]" multiple required>
+                            @foreach(App\Models\KeySkill::all() as $skill)
+                                <option value="{{ $skill->id }}" {{ in_array($skill->id, old('key_skills', [])) ? 'selected' : '' }}>
+                                    {{ $skill->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('key_skills')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="company_id" class="form-label">Company <span class="text-danger">*</span></label>
@@ -35,16 +59,6 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="client_budget" class="form-label">Client Budget <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control @error('client_budget') is-invalid @enderror" id="client_budget" name="client_budget" value="{{ old('client_budget') }}" required>
-                        @error('client_budget')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
                         <label for="department_id" class="form-label">Department <span class="text-danger">*</span></label>
                         <select id="department_id" name="department_id" class="form-select @error('department_id') is-invalid @enderror" required disabled>
                             <option value="">Select Department</option>
@@ -57,39 +71,18 @@
                         @error('department_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        
-                        <div class="mt-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="custom_percentage_check">
-                                <label class="form-check-label" for="custom_percentage_check">
-                                    Custom Percentage
-                                </label>
-                            </div>
-                            <div id="percentage_input_container" class="mt-2" style="display: none;">
-                                <input type="number" class="form-control" id="custom_percentage" min="0" max="100" step="0.01">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="final_budget" class="form-label">Final Budget</label>
-                        <input type="text" class="form-control" id="final_budget" name="final_budget" readonly>
-                        
-                        <div class="mt-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="show_budget_to_vendor" name="show_budget_to_vendor" value="1">
-                                <label class="form-check-label" for="show_budget_to_vendor">
-                                    Show Final Budget for Vendor
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="requirement_id" class="form-label">Requirement ID</label>
-                        <input type="text" class="form-control" id="requirement_id" value="{{ $requirement_id }}" >
+                        <input type="text" class="form-control" id="requirement_id" value="{{ $requirement_id }}" readonly>
                         <div class="form-text">Requirement ID will be automatically generated</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="bde_name" class="form-label">BDE Name</label>
+                        <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
                     </div>
                 </div>
 
@@ -101,9 +94,44 @@
                     @enderror
                 </div>
 
-                {{-- <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i> This requirement will be submitted for approval to the respective department HOD, followed by founder approval.
-                </div> --}}
+                <hr class="my-4">
+
+                <!-- Bottom Section -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="client_budget" class="form-label">Client Budget <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control @error('client_budget') is-invalid @enderror" id="client_budget" name="client_budget" value="{{ old('client_budget') }}" required>
+                        @error('client_budget')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-6">
+                        <label for="final_budget" class="form-label">Final Budget</label>
+                        <input type="text" class="form-control" id="final_budget" name="final_budget" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="show_budget_to_vendor" name="show_budget_to_vendor" value="1">
+                            <label class="form-check-label" for="show_budget_to_vendor">
+                                Show Final Budget for Vendor
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="custom_percentage_check">
+                            <label class="form-check-label" for="custom_percentage_check">
+                                Custom Percentage
+                            </label>
+                        </div>
+                        <div id="percentage_input_container" class="mt-2" style="display: none;">
+                            <input type="number" class="form-control" id="custom_percentage" min="0" max="100" step="0.01">
+                        </div>
+                    </div>
+                </div>
 
                 <input type="hidden" name="needs_hod_approval" id="needs_hod_approval" value="0">
                 <input type="hidden" name="custom_percentage_value" id="custom_percentage_value">
@@ -120,6 +148,14 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: 'Select key skills',
+            allowClear: true,
+            width: '100%'
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const clientBudgetInput = document.getElementById('client_budget');
         const departmentSelect = document.getElementById('department_id');

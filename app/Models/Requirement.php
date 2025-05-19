@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\RequirementNotification;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Requirement extends Model
 {
@@ -20,7 +21,8 @@ class Requirement extends Model
      */
     protected $fillable = [
         'company_id',
-        'requrequirement_id',
+        'title',
+        'requirement_id',
         'job_description',
         'create_by',
         'department_id',
@@ -121,6 +123,14 @@ class Requirement extends Model
     public function candidateSourcings()
     {
         return $this->hasMany(CandidateSourcing::class);
+    }
+
+    /**
+     * Get the key skills for this requirement
+     */
+    public function keySkills(): BelongsToMany
+    {
+        return $this->belongsToMany(KeySkill::class, 'requirement_key_skills');
     }
 
     /**

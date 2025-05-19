@@ -31,7 +31,7 @@
                             <th>Client Budget</th>
                             <th>Final Budget</th>
                             <th>Custom Percentage</th>
-                            @if(auth()->user()->hasRole('hod'))
+                            @if(auth()->user()->hasRole('hod') && !$requirement->is_approved)
                             <th>Actions</th>
                             @endif
                         </tr>

@@ -169,9 +169,11 @@ class RequirementController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request->all());
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
+            'title' => 'required|string|max:255',
+            'key_skills' => 'required|array|min:1',
+            'key_skills.*' => 'exists:key_skills,id',
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
             'client_budget' => 'required|numeric|min:0',
@@ -188,10 +190,10 @@ class RequirementController extends Controller
         // Generate requirement ID...
         $requirement_id = $this->getNextRequirementId();
 
-        
         // Create the requirement
         $requirement = Requirement::create([
             'company_id' => $request->company_id,
+            'title' => $request->title,
             'requirement_id' => $requirement_id,
             'job_description' => $request->job_description,
             'department_id' => $request->department_id,
@@ -203,7 +205,11 @@ class RequirementController extends Controller
             'final_budget' => $request->final_budget,
             'is_approved' => !$request->needs_hod_approval, // Auto-approve if no HOD approval needed
         ]);
-        
+
+        // Sync key skills
+        if ($request->has('key_skills')) {
+            $requirement->keySkills()->sync($request->key_skills);
+        }
         
         // If HOD approval is needed, send notification
         if ($request->needs_hod_approval) {
@@ -267,9 +273,17 @@ class RequirementController extends Controller
         
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
+            'title' => 'required|string|max:255',
+            'key_skills' => 'required|array|min:1',
+            'key_skills.*' => 'exists:key_skills,id',
             'requirement_id' => 'required|string|max:50|unique:requirements,requirement_id,' . $requirement->id,
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
+            'client_budget' => 'required|numeric|min:0',
+            'final_budget' => 'required|numeric|min:0',
+            'show_budget_to_vendor' => 'nullable|boolean',
+            'needs_hod_approval' => 'boolean',
+            'custom_percentage_value' => 'nullable|numeric|min:0|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -277,12 +291,24 @@ class RequirementController extends Controller
         }
 
         // Update the requirement
-        $requirement->company_id = $request->company_id;
-        $requirement->requirement_id = $request->requirement_id;
-        $requirement->job_description = $request->job_description;
-        $requirement->department_id = $request->department_id;
-        $requirement->create_by = Auth::user()->id;
-        $requirement->save();
+        $requirement->update([
+            'company_id' => $request->company_id,
+            'title' => $request->title,
+            'requirement_id' => $request->requirement_id,
+            'job_description' => $request->job_description,
+            'department_id' => $request->department_id,
+            'create_by' => Auth::user()->id,
+            'needs_hod_approval' => $request->needs_hod_approval,
+            'custom_percentage' => $request->custom_percentage_value,
+            'show_budget_to_vendor' => $request->boolean('show_budget_to_vendor'),
+            'client_budget' => $request->client_budget,
+            'final_budget' => $request->final_budget,
+        ]);
+
+        // Sync key skills
+        if ($request->has('key_skills')) {
+            $requirement->keySkills()->sync($request->key_skills);
+        }
         
         // If department changed, notify the new HOD
         if ($requirement->wasChanged('department_id')) {
