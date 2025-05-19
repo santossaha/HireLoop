@@ -60,7 +60,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="department_id" class="form-label">Department <span class="text-danger">*</span></label>
-                        <select id="department_id" name="department_id" class="form-select @error('department_id') is-invalid @enderror" required disabled>
+                        <select id="department_id" name="department_id" class="form-select @error('department_id') is-invalid @enderror" required >
                             <option value="">Select Department</option>
                             @foreach($departments as $department)
                                 <option value="{{ $department->id }}" data-percentage="{{ $department->percentage }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
@@ -77,12 +77,12 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="requirement_id" class="form-label">Requirement ID</label>
-                        <input type="text" class="form-control" id="requirement_id" value="{{ $requirement_id }}" readonly>
+                        <input type="text" class="form-control" id="requirement_id" value="{{ $requirement_id }}" >
                         <div class="form-text">Requirement ID will be automatically generated</div>
                     </div>
                     <div class="col-md-6">
                         <label for="bde_name" class="form-label">BDE Name</label>
-                        <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
+                        <input type="text" class="form-control"  name="bde_name" id="bde_name">
                     </div>
                 </div>
 

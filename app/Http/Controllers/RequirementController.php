@@ -138,6 +138,7 @@ class RequirementController extends Controller
     {
         $companies = Company::all();
         $departments = Department::all();
+        //dd($companies);
         
         // Generate the next Requirement ID
         $year = date('Y');
@@ -169,6 +170,7 @@ class RequirementController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
             'title' => 'required|string|max:255',
@@ -181,6 +183,7 @@ class RequirementController extends Controller
             'show_budget_to_vendor' => 'nullable|boolean',
             'needs_hod_approval' => 'boolean',
             'custom_percentage_value' => 'nullable|numeric|min:0|max:100',
+            'bde_name' => 'nullable|string|max:225'
         ]);
 
         if ($validator->fails()) {
@@ -204,6 +207,7 @@ class RequirementController extends Controller
             'client_budget' => $request->client_budget,
             'final_budget' => $request->final_budget,
             'is_approved' => !$request->needs_hod_approval, // Auto-approve if no HOD approval needed
+            'bde_name' => $request->bde_name
         ]);
 
         // Sync key skills

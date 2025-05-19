@@ -35,6 +35,7 @@ class Requirement extends Model
         'show_budget_to_vendor',
         'final_budget',
         'client_budget',
+        'bde_name'
        // 'hod_approved',
        // 'founder_approved',
     ];

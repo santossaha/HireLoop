@@ -85,7 +85,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="bde_name" class="form-label">BDE Name</label>
-                        <input type="text" class="form-control" value="{{ $requirement->createBy->name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $requirement->bde_name }}" >
                     </div>
                 </div>
 

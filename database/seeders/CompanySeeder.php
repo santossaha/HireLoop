@@ -15,6 +15,7 @@ class CompanySeeder extends Seeder
                 'detail' => 'Manektech Solution Pvt. Ltd.',
                 'created_at' => now(),
                 'updated_at' => now(),
+                
             ],
             [
                 'name' => 'EAD',
