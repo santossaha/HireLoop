@@ -25,9 +25,12 @@
                     <table class="table table-bordered">
                         <tr>
                             <th>Requirement ID</th>
+                            <th>Title</th>
+                            <th>Key Skills</th>
                             <th>Company</th>
                             <th>Department</th>
                             <th>Created By</th>
+                            <th>BDE Name</th>
                             <th>Client Budget</th>
                             <th>Final Budget</th>
                             <th>Custom Percentage</th>
@@ -37,9 +40,16 @@
                         </tr>
                         <tr>
                             <td>{{ $requirement->requirement_id }}</td>
+                            <td>{{ $requirement->title }}</td>
+                            <td>
+                                @foreach($requirement->keySkills as $skill)
+                                    <span class="badge bg-info me-1">{{ $skill->name }}</span>
+                                @endforeach
+                            </td>
                             <td>{{ $requirement->company->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->department->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
+                            <td>{{ $requirement->bde_name ?? 'N/A' }}</td>
                             <td>{{ number_format($requirement->client_budget, 2) }}</td>
                             <td>{{ number_format($requirement->final_budget, 2) }}</td>
                             <td>
@@ -186,6 +196,8 @@
                         <table class="table table-bordered">
                             <tr>
                                 <th>Requirement ID</th>
+                                <th>Title</th>
+                                <th>Key Skills</th>
                                 <th>Company</th>
                                 <th>Department</th>
                                 <th>Created By</th>
@@ -193,6 +205,12 @@
                             </tr>
                             <tr>
                                 <td>{{ $requirement->requirement_id }}</td>
+                                <td>{{ $requirement->title }}</td>
+                                <td>
+                                    @foreach($requirement->keySkills as $skill)
+                                        <span class="badge bg-info me-1">{{ $skill->name }}</span>
+                                    @endforeach
+                                </td>
                                 <td>{{ $requirement->company->name }}</td>
                                 <td>{{ $requirement->department->name }}</td>
                                 <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>

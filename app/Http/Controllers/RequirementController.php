@@ -17,6 +17,8 @@ use App\Notifications\ApprovalRequiredNotification;
 use App\Models\Company;
 use App\Notifications\RequirementApprovalNotification;
 use App\Events\RequirementApproved;
+use App\Mail\HodApprovalConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class RequirementController extends Controller
 {
@@ -206,7 +208,7 @@ class RequirementController extends Controller
             'show_budget_to_vendor' => $request->boolean('show_budget_to_vendor'),
             'client_budget' => $request->client_budget,
             'final_budget' => $request->final_budget,
-            'is_approved' => !$request->needs_hod_approval, // Auto-approve if no HOD approval needed
+            'is_approved' => 1, // Auto-approve if no HOD approval needed
             'bde_name' => $request->bde_name
         ]);
 
@@ -215,12 +217,12 @@ class RequirementController extends Controller
             $requirement->keySkills()->sync($request->key_skills);
         }
         
-        // If HOD approval is needed, send notification
+        // If HOD approval is needed, send email
         if ($request->needs_hod_approval) {
             $department = Department::find($request->department_id);
 
             if ($department && $department->hod) {
-                $department->hod->notify(new RequirementApprovalNotification($requirement));
+                Mail::to($department->hod->email)->send(new HodApprovalConfirmation($requirement));
             }
         } else {
             // If no HOD approval needed, dispatch the event immediately
