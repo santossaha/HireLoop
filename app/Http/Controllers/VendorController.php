@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VendorInviteMail;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Department;
+use App\Models\VendorInviteTemporaryToken;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -82,13 +86,8 @@ class VendorController extends Controller
                 'actions' => view('vendors.partials.actions', compact('vendor'))->render()
             ];
         }
-
-        return response()->json([
-            'draw' => $request->draw,
-            'recordsTotal' => $totalRecords,
-            'recordsFiltered' => $totalRecords,
-            'data' => $data
-        ]);
+        
+        return view('vendors.index', compact('vendors'));
     }
 
     /**
@@ -108,7 +107,7 @@ class VendorController extends Controller
      */
     private function createVendorWithUser(array $data)
     {
-      
+
         try {
             DB::beginTransaction();
 
@@ -125,7 +124,7 @@ class VendorController extends Controller
             $role = Role::where('name', 'vendor')
                 ->where('guard_name', 'web')
                 ->firstOrFail();
-                
+
             $user->assignRole($role);
 
             // Sync permissions based on the role
@@ -133,7 +132,7 @@ class VendorController extends Controller
                 ->where('guard_name', 'web')
                 ->pluck('name')
                 ->toArray();
-                
+
             $user->syncPermissions($permissions);
 
             // Create vendor profile
@@ -151,9 +150,9 @@ class VendorController extends Controller
                 'budget_7_years' => $data['budget_7_years'],
                 'budget_10_years' => $data['budget_10_years'],
                 'status' => 'approved',
-                
+
             ]);
-            
+
             if (isset($data['key_skills'])) {
                 $vendor->keySkills()->sync($data['key_skills']);
             }
@@ -164,7 +163,7 @@ class VendorController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return [
-                'success' => false, 
+                'success' => false,
                 'message' => 'Error creating vendor: ' . $e->getMessage()
             ];
         }
@@ -175,7 +174,7 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         $validated = $request->validate([
             'name' => 'string|max:255',
             'vendor_type' => 'required|in:company,freelancer',
@@ -211,10 +210,10 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-       
+
         $this->authorize('view', $vendor);
-       
-        
+
+
         return view('vendors.show', compact('vendor'));
     }
 
@@ -254,7 +253,7 @@ class VendorController extends Controller
         ]);
 
         $vendor->update($validated);
-        
+
         if (isset($validated['key_skills'])) {
             $vendor->keySkills()->sync($validated['key_skills']);
         }
@@ -317,7 +316,7 @@ class VendorController extends Controller
     {
         // Get the vendor's email
         $vendorEmail = $vendor->email;
-        
+
         // Find and delete associated user with same email
         $user = User::where('email', $vendorEmail)->first();
         if ($user) {
@@ -337,7 +336,7 @@ class VendorController extends Controller
     public function approve(Request $request, Vendor $vendor)
     {
         $this->authorize('update', $vendor);
-        
+
         $request->validate([
             'client_ready' => 'required|boolean',
             'communication_rating' => 'required|in:excellent,good,average,bad',
@@ -359,5 +358,113 @@ class VendorController extends Controller
 
         return redirect()->route('vendors.show', $vendor)
             ->with('success', 'Vendor status updated successfully.');
+}
+    public function vendorInvite(Request $request,$id)
+    {
+        $now = Carbon::now();
+        $token_vendor_invite = VendorInviteTemporaryToken::where('invite_token','like',$id)->where('expiry_time','>',$now)->orderBy('id','desc')->first();
+//        print_r($token_vendor_invite); exit();
+        if(empty($token_vendor_invite)){
+            return redirect()->route('login')
+                ->with('error', 'Vendor invite expired.');
+        }
+        return view('vendor_invite.vendor_invite',compact('id'));
     }
+
+    public function vendorEmailInvite(Request $request)
+    {
+            $email = $request->email;
+            if(!empty($email)){
+                $data = base64_encode($email);
+                Mail::to($email)->send(new VendorInviteMail($data));
+
+                $invite = new VendorInviteTemporaryToken();
+                $invite->invite_token = $data;
+                $invite->user_id = Auth::id();
+                $invite->expiry_time = Carbon::now()->addDays(1);
+                $invite->save();
+
+                return redirect()->route('vendors.index')
+                    ->with('success', 'Vendor invite sent successfully.');
+            }
+    }
+    public function vendorPostInvite(Request $request)
+    {
+//print_r($request->all()); exit();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'nullable|string|min:8|confirmed',
+            'address' => 'required|string|max:255',
+            'website' => 'nullable|string|max:255',
+            'account_owner_name' => 'nullable|string|max:255',
+            'account_number' => 'nullable|string|max:255',
+            'bank_name' => 'nullable|string|max:255',
+            'ifsc_code' => 'nullable|string|max:255',
+            'gst_number' => 'nullable|string|max:255',
+            'pan' => 'nullable|string|max:255',
+            'teams_id' => 'nullable|string|max:255',
+            'invite_token' => 'required|string|max:255',
+
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // Create or find user
+        if ($request->filled('existing_user_id')) {
+            $user = User::findOrFail($request->existing_user_id);
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password ?? Str::random(12)),
+                'role' => 'vendor',
+            ]);
+        }
+
+        $vendor_invite = VendorInviteTemporaryToken::with('user_detail')->where('invite_token','like',$request->invite_token)->first();
+
+        // Create vendor profile
+        $vendor = Vendor::create([
+
+            'company_name' => $request->name, // Using name as company_name
+//            'contact_person' => $request->poc_name,
+            'email' => $request->email,
+            'address' => $request->address,
+            'website' => $request->website,
+            'account_owner_name' => $request->account_owner_name,
+            'account_number' => $request->account_number,
+            'bank_name' => $request->bank_name,
+            'ifsc_code' => $request->ifsc_code,
+            'gst_number' => $request->gst_number,
+            'pan' => $request->pan,
+            'teams_id' => $request->teams_id,
+//            'email' => $request->email
+
+            'contact_person' => !empty($vendor_invite) ? !empty($vendor_invite->user_detail) ? $vendor_invite->user_detail->name : 0 : 0,
+//            'email' => $request->email ?? null,
+            'phone' => $request->contact_number??rand(100000000,999999999),
+            'skype_id' => $request->skype??1,
+            'slack_id' => $request->slack??1,
+            'internal_poc_id' => $request->internal_poc_id??1,
+            'budget_3_years' => $request->budget_3_years??1,
+            'budget_5_years' => $request->budget_5_years??1,
+            'budget_7_years' => $request->budget_7_years??1,
+            'budget_10_years' => $request->budget_10_years??1,
+            'status' => $request->status??'pending',
+        ]);
+
+        VendorInviteTemporaryToken::where('invite_token','like',$request->invite_token)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Vendor registered successfully.');
+    }
+
+
 }

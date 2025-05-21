@@ -11,6 +11,9 @@
             <a href="{{ route('vendors.create') }}" class="btn btn-success">
                 <i class="fas fa-plus-circle me-1"></i> Add New Vendor
             </a>
+            <a href="#" data-toggle="modal" data-target="#vendorInvite" class="btn btn-info" onclick="$('#vendorInvite').modal('toggle')">
+                <i class="fas fa-user me-1"></i> Invite Vendor
+            </a>
         </div>
         {{-- @endif --}}
     </div>
@@ -53,6 +56,7 @@
         </div>
     </div>
 </div>
+    @include('vendor_invite.modals')
 
 <style>
     .dataTables_filter {
@@ -82,7 +86,7 @@
                 { data: 'name' },
                 { data: 'vendor_type' },
                 { data: 'contact_person' },
-                { 
+                {
                     data: 'contact_info',
                     render: function(data) {
                         return `<span class="d-block"><i class="fas fa-envelope me-1"></i> ${data.email}</span>
@@ -90,26 +94,26 @@
                     }
                 },
                 { data: 'internal_poc' },
-                // { 
+                // {
                 //     data: 'status',
                 //     render: function(data) {
                 //         let badgeClass = 'bg-secondary';
                 //         if (data === 'approved') badgeClass = 'bg-success';
                 //         else if (data === 'pending') badgeClass = 'bg-warning';
                 //         else if (data === 'rejected') badgeClass = 'bg-danger';
-                        
+
                 //         return `<span class="badge ${badgeClass}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
                 //     }
                 // },
-                // { 
+                // {
                 //     data: 'client_ready',
                 //     render: function(data) {
-                //         return data ? 
-                //             '<span class="badge bg-success">Ready</span>' : 
+                //         return data ?
+                //             '<span class="badge bg-success">Ready</span>' :
                 //             '<span class="badge bg-secondary">Not Ready</span>';
                 //     }
                 // },
-                { 
+                {
                     data: 'actions',
                     orderable: false,
                     searchable: false
