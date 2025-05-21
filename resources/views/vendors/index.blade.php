@@ -11,6 +11,9 @@
             <a href="{{ route('vendors.create') }}" class="btn btn-success">
                 <i class="fas fa-plus-circle me-1"></i> Add New Vendor
             </a>
+            <a href="#" data-toggle="modal" data-target="#vendorInvite" class="btn btn-info" onclick="$('#vendorInvite').modal('toggle')">
+                <i class="fas fa-user me-1"></i> Invite Vendor
+            </a>
         </div>
         @endif
     </div>
@@ -109,6 +112,7 @@
         </div>
     </div>
 </div>
+    @include('vendor_invite.modals')
 @endsection
 
 @section('scripts')
