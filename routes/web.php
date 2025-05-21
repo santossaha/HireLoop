@@ -32,6 +32,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Vendor Invite
+Route::get('/vendor-invite/{id}', [VendorController::class, 'vendorInvite'])->name('vendor-invite');
+Route::post('/vendor-email-invite', [VendorController::class, 'vendorEmailInvite'])->name('vendor-email-invite');
+Route::post('/vendor-post-invite', [VendorController::class, 'vendorPostInvite'])->name('vendor-post-invite');
+
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
