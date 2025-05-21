@@ -358,8 +358,9 @@ class VendorController extends Controller
 
         return redirect()->route('vendors.show', $vendor)
             ->with('success', 'Vendor status updated successfully.');
-}
-    public function vendorInvite(Request $request,$id)
+    }
+
+    public function vendorInvite(Request $request, $id)
     {
         $now = Carbon::now();
         $token_vendor_invite = VendorInviteTemporaryToken::where('invite_token','like',$id)->where('expiry_time','>',$now)->orderBy('id','desc')->first();
