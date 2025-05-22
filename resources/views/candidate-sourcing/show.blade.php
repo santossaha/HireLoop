@@ -107,23 +107,28 @@
                                             <input type="text" class="form-control" id="candidate_name"
                                                 name="candidate_name" required>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label for="email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="email" name="email"
-                                                >
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <label for="phone" class="form-label">Phone</label>
-                                            <input type="tel" class="form-control" id="phone" name="phone">
-                                        </div>
+{{--                                        <div class="col-md-6">--}}
+{{--                                            <label for="email" class="form-label">Email</label>--}}
+{{--                                            <input type="email" class="form-control" id="email" name="email"--}}
+{{--                                                >--}}
+{{--                                        </div>--}}
                                         <div class="col-md-6">
                                             <label for="resume" class="form-label">Resume*</label>
                                             <input type="file" class="form-control" id="resume" name="resume"
-                                                accept=".pdf,.doc,.docx" required>
+                                                   accept=".pdf,.doc,.docx" required>
                                         </div>
                                     </div>
+{{--                                    <div class="row mb-3">--}}
+{{--                                        <div class="col-md-6">--}}
+{{--                                            <label for="phone" class="form-label">Phone</label>--}}
+{{--                                            <input type="tel" class="form-control" id="phone" name="phone">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-6">--}}
+{{--                                            <label for="resume" class="form-label">Resume*</label>--}}
+{{--                                            <input type="file" class="form-control" id="resume" name="resume"--}}
+{{--                                                accept=".pdf,.doc,.docx" required>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="budget" class="form-label">Budget*</label>

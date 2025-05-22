@@ -48,20 +48,20 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Protected routes (require authentication)
 Route::middleware(['auth'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')
-        ->middleware('permission:view-dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+//        ->middleware('permission:view-dashboard');
     
     // Vendor routes
-    Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index')
-        ->middleware('permission:view-vendors');
-    Route::get('/vendors/data', [VendorController::class, 'getVendorsData'])->name('vendors.data')
-        ->middleware('permission:view-vendors');
-    Route::get('/vendors/create', [VendorController::class, 'create'])->name('vendors.create')
-        ->middleware('permission:create-vendor');
-    Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store')
-        ->middleware('permission:create-vendor');
-    Route::delete('/vendors/{vendor}', [VendorController::class, 'destroy'])->name('vendors.destroy')
-        ->middleware('permission:delete-vendor');
+    Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index');
+//        ->middleware('permission:view-vendors');
+    Route::get('/vendors/data', [VendorController::class, 'getVendorsData'])->name('vendors.data');
+//        ->middleware('permission:view-vendors');
+    Route::get('/vendors/create', [VendorController::class, 'create'])->name('vendors.create');
+//        ->middleware('permission:create-vendor');
+    Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store');
+//        ->middleware('permission:create-vendor');
+    Route::delete('/vendors/{vendor}', [VendorController::class, 'destroy'])->name('vendors.destroy');
+//        ->middleware('permission:delete-vendor');
 
     Route::get('/vendors/{vendor}', [VendorController::class, 'show'])->name('vendors.show')
         ->middleware('permission:view-vendor-details');

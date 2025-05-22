@@ -204,7 +204,7 @@ class VendorController extends Controller
 
         $validated = $request->validate([
             'name' => 'string|max:255',
-            'vendor_type' => 'required|in:company,freelancer',
+            'vendor_type' => 'required|in:company,individual',
 //            'poc_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users|unique:vendors',
             'phone' => 'required|string|max:20',
@@ -275,21 +275,50 @@ class VendorController extends Controller
     public function update(Request $request, Vendor $vendor)
     {
         $validated = $request->validate([
-            'vendor_type' => 'required|in:company,freelancer',
-            //'company_name' => 'required|string|max:255',
-            'poc_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:vendors,email,' . $vendor->id,
-            'contact_number' => 'required|string|max:20',
-            'skype_id' => 'nullable|string|max:255',
-            'slack_id' => 'nullable|string|max:255',
+
+            'name' => 'string|max:255',
+            'vendor_type' => 'required|in:company,individual',
+//            'poc_name' => 'required|string|max:255',
+//            'email' => 'required|email|unique:users|unique:vendors',
+            'phone' => 'required|string|max:20',
+//            'skype_id' => 'nullable|string|max:255',
             'internal_poc_id' => 'required|exists:users,id',
-            'budget_3_years' => 'required|numeric|min:0',
-            'budget_5_years' => 'required|numeric|min:0',
-            'budget_7_years' => 'required|numeric|min:0',
-            'budget_10_years' => 'required|numeric|min:0',
-            'status' => 'required|in:pending,approved,rejected',
-            'key_skills' => 'array',
-            'key_skills.*' => 'exists:key_skills,id'
+//            'budget_3_years' => 'required|numeric|min:0',
+//            'budget_5_years' => 'required|numeric|min:0',
+//            'budget_7_years' => 'required|numeric|min:0',
+//            'budget_10_years' => 'required|numeric|min:0',
+            //'status' => 'required|in:pending,approved,rejected',
+//            'key_skills' => 'array',
+//            'key_skills.*' => 'exists:key_skills,id',
+            'password' => 'nullable|string|min:8|confirmed',
+            'company_name' => 'required|string|max:255',
+            'company_email' => 'required|string|email|max:255',
+            'password' => 'nullable|string|min:8|confirmed',
+            'address' => 'required|string|max:255',
+            'website' => 'nullable|string|max:255',
+            'account_owner_name' => 'nullable|string|max:255',
+            'account_number' => 'nullable|string|max:255',
+            'bank_name' => 'nullable|string|max:255',
+            'ifsc_code' => 'nullable|string|max:255',
+            'gst_number' => 'nullable|string|max:255',
+            'pan' => 'nullable|string|max:255',
+            'teams_id' => 'nullable|string|max:255'
+
+//            'vendor_type' => 'required|in:company,freelancer',
+            //'company_name' => 'required|string|max:255',
+//            'poc_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:vendors,email,' . $vendor->id,
+//            'contact_number' => 'required|string|max:20',
+//            'skype_id' => 'nullable|string|max:255',
+//            'slack_id' => 'nullable|string|max:255',
+//            'internal_poc_id' => 'required|exists:users,id',
+//            'budget_3_years' => 'required|numeric|min:0',
+//            'budget_5_years' => 'required|numeric|min:0',
+//            'budget_7_years' => 'required|numeric|min:0',
+//            'budget_10_years' => 'required|numeric|min:0',
+//            'status' => 'required|in:pending,approved,rejected',
+//            'key_skills' => 'array',
+//            'key_skills.*' => 'exists:key_skills,id'
         ]);
 
         $vendor->update($validated);
