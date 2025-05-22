@@ -474,6 +474,7 @@ class VendorController extends Controller
         // Create vendor profile
         $vendor = Vendor::create([
 
+            'user_id' => $user->id, // Using name as company_name
             'company_name' => $request->company_name, // Using name as company_name
             'vendor_type' => $request->vendor_type, // Using name as company_name
 //            'contact_person' => $request->poc_name,
@@ -487,6 +488,7 @@ class VendorController extends Controller
             'gst_number' => $request->gst_number,
             'pan' => $request->pan,
             'teams_id' => $request->teams_id,
+            'internal_poc_id' => !empty($vendor_invite) ? !empty($vendor_invite->user_detail) ? $vendor_invite->user_detail->id : 0 : 0,
 //            'email' => $request->email
 
             'contact_person' => !empty($vendor_invite) ? !empty($vendor_invite->user_detail) ? $vendor_invite->user_detail->name : 0 : 0,
@@ -494,7 +496,7 @@ class VendorController extends Controller
             'phone' => $request->phone??rand(100000000,999999999),
             'skype_id' => $request->skype??1,
             'slack_id' => $request->slack??1,
-            'internal_poc_id' => $request->internal_poc_id??1,
+//            'internal_poc_id' => $request->internal_poc_id??1,
             'budget_3_years' => $request->budget_3_years??1,
             'budget_5_years' => $request->budget_5_years??1,
             'budget_7_years' => $request->budget_7_years??1,
