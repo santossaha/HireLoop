@@ -21,7 +21,7 @@ class VendorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('vendorInvite','vendorPostInvite');
     }
     
     /**
@@ -39,55 +39,71 @@ class VendorController extends Controller
     public function getVendorsData(Request $request)
     {
         $user = Auth::user();
-        $query = Vendor::query()->orderBy('created_at', 'desc');
-        $query->with('user');
+        if($request->ajax()){
+            $query = Vendor::query()->orderBy('created_at', 'desc');
+            $query->with('user');
 
-        // Filter by status if provided
-        if ($request->has('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
+            // Filter by status if provided
+            if ($request->has('status') && $request->status !== 'all') {
+                $query->where('status', $request->status);
+            }
+
+            // Search functionality
+            if ($request->has('search') && !empty($request->search['value'])) {
+                $search = $request->search['value'];
+                $query->where(function($q) use ($search) {
+                    $q->where('company_name', 'like', "%{$search}%")
+                        ->orWhere('contact_person', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhereHas('user', function($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
+                });
+            }
+
+            // Get total records count
+            $totalRecords = $query->count();
+
+            // Apply pagination
+            $vendors = $query->skip($request->start)
+                ->take($request->length)
+                ->get();
+
+            $data = [];
+            foreach ($vendors as $vendor) {
+                $data[] = [
+                    'id' => $vendor->id,
+                    'name' => !empty($vendor->user) ? $vendor->user->name : '-',
+                    'vendor_type' => ucfirst($vendor->vendor_type),
+                    'contact_person' => $vendor->contact_person,
+                    'contact_info' => [
+                        'email' => $vendor->email,
+                        'phone' => $vendor->phone
+                    ],
+                    'internal_poc' => $vendor->internalPoc ? $vendor->internalPoc->name : 'N/A',
+//                    'status' => $vendor->status,
+//                    'client_ready' => $vendor->client_ready,
+                    'actions' => view('vendors.partials.actions', compact('vendor'))->render()
+                ];
+            }
+            $draw = $request->get('draw');
+            $datas = array(
+                'draw' => $draw,
+                'recordsTotal' => count($data),
+                'recordsFiltered' => count($data),
+                'data' => $data,
+            );
+
+            echo json_encode($datas);
+        }
+        else{
+
+            return view('vendors.index');
         }
 
-        // Search functionality
-        if ($request->has('search') && !empty($request->search['value'])) {
-            $search = $request->search['value'];
-            $query->where(function($q) use ($search) {
-                $q->where('company_name', 'like', "%{$search}%")
-                  ->orWhere('contact_person', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  });
-            });
-        }
-
-        // Get total records count
-        $totalRecords = $query->count();
-
-        // Apply pagination
-        $vendors = $query->skip($request->start)
-                        ->take($request->length)
-                        ->get();
-
-        $data = [];
-        foreach ($vendors as $vendor) {
-            $data[] = [
-                'id' => $vendor->id,
-                'name' => $vendor->user->name,
-                'vendor_type' => ucfirst($vendor->vendor_type),
-                'contact_person' => $vendor->contact_person,
-                'contact_info' => [
-                    'email' => $vendor->email,
-                    'phone' => $vendor->phone
-                ],
-                'internal_poc' => $vendor->internalPoc ? $vendor->internalPoc->name : 'N/A',
-                'status' => $vendor->status,
-                'client_ready' => $vendor->client_ready,
-                'actions' => view('vendors.partials.actions', compact('vendor'))->render()
-            ];
-        }
         
-        return view('vendors.index', compact('vendors'));
+
     }
 
     /**
@@ -141,14 +157,25 @@ class VendorController extends Controller
                 'company_name' => $data['name'],
                 'vendor_type' => $data['vendor_type'],
                 'contact_person' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['contact_number'],
-                'skype_id' => $data['skype_id'],
+                'email' => $data['company_email'],
+                'phone' => $data['phone'],
+//                'skype_id' => $data['skype_id'],
                 'internal_poc_id' => $data['internal_poc_id'],
-                'budget_3_years' => $data['budget_3_years'],
-                'budget_5_years' => $data['budget_5_years'],
-                'budget_7_years' => $data['budget_7_years'],
-                'budget_10_years' => $data['budget_10_years'],
+                'company_name' => $data['company_name'],
+                'address' => $data['address'],
+                'website' => $data['website'],
+                'account_owner_name' => $data['account_owner_name'],
+                'account_number' => $data['account_number'],
+                'bank_name' => $data['bank_name'],
+                'ifsc_code' => $data['ifsc_code'],
+                'gst_number' => $data['gst_number'],
+                'pan' => $data['pan'],
+                'teams_id' => $data['teams_id'],
+//                'internal_poc_id' => $data['internal_poc_id'],
+//                'budget_3_years' => $data['budget_3_years'],
+//                'budget_5_years' => $data['budget_5_years'],
+//                'budget_7_years' => $data['budget_7_years'],
+//                'budget_10_years' => $data['budget_10_years'],
                 'status' => 'approved',
 
             ]);
@@ -178,19 +205,32 @@ class VendorController extends Controller
         $validated = $request->validate([
             'name' => 'string|max:255',
             'vendor_type' => 'required|in:company,freelancer',
-            'poc_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:vendors|unique:users',
-            'contact_number' => 'required|string|max:20',
-            'skype_id' => 'nullable|string|max:255',
+//            'poc_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users|unique:vendors',
+            'phone' => 'required|string|max:20',
+//            'skype_id' => 'nullable|string|max:255',
             'internal_poc_id' => 'required|exists:users,id',
-            'budget_3_years' => 'required|numeric|min:0',
-            'budget_5_years' => 'required|numeric|min:0',
-            'budget_7_years' => 'required|numeric|min:0',
-            'budget_10_years' => 'required|numeric|min:0',
+//            'budget_3_years' => 'required|numeric|min:0',
+//            'budget_5_years' => 'required|numeric|min:0',
+//            'budget_7_years' => 'required|numeric|min:0',
+//            'budget_10_years' => 'required|numeric|min:0',
             //'status' => 'required|in:pending,approved,rejected',
-            'key_skills' => 'array',
-            'key_skills.*' => 'exists:key_skills,id',
-            'password' => 'required|string|min:8'
+//            'key_skills' => 'array',
+//            'key_skills.*' => 'exists:key_skills,id',
+            'password' => 'nullable|string|min:8|confirmed',
+             'company_name' => 'required|string|max:255',
+            'company_email' => 'required|string|email|max:255',
+            'password' => 'nullable|string|min:8|confirmed',
+            'address' => 'required|string|max:255',
+            'website' => 'nullable|string|max:255',
+            'account_owner_name' => 'nullable|string|max:255',
+            'account_number' => 'nullable|string|max:255',
+            'bank_name' => 'nullable|string|max:255',
+            'ifsc_code' => 'nullable|string|max:255',
+            'gst_number' => 'nullable|string|max:255',
+            'pan' => 'nullable|string|max:255',
+            'teams_id' => 'nullable|string|max:255'
+
         ]);
 
         $result = $this->createVendorWithUser($validated);
@@ -434,9 +474,10 @@ class VendorController extends Controller
         // Create vendor profile
         $vendor = Vendor::create([
 
-            'company_name' => $request->name, // Using name as company_name
+            'company_name' => $request->company_name, // Using name as company_name
+            'vendor_type' => $request->vendor_type, // Using name as company_name
 //            'contact_person' => $request->poc_name,
-            'email' => $request->email,
+            'email' => $request->company_email,
             'address' => $request->address,
             'website' => $request->website,
             'account_owner_name' => $request->account_owner_name,
@@ -450,7 +491,7 @@ class VendorController extends Controller
 
             'contact_person' => !empty($vendor_invite) ? !empty($vendor_invite->user_detail) ? $vendor_invite->user_detail->name : 0 : 0,
 //            'email' => $request->email ?? null,
-            'phone' => $request->contact_number??rand(100000000,999999999),
+            'phone' => $request->phone??rand(100000000,999999999),
             'skype_id' => $request->skype??1,
             'slack_id' => $request->slack??1,
             'internal_poc_id' => $request->internal_poc_id??1,

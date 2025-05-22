@@ -21,6 +21,8 @@ class CheckRole
             return redirect()->route('login');
         }
 
+//        print_r($roles); exit();
+
         foreach ($roles as $role) {
             if ($request->user()->hasRole($role)) {
                 return $next($request);
