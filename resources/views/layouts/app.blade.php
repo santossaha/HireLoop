@@ -58,7 +58,7 @@
         
         <div class="content-wrapper flex-grow-1">
             <!-- Top Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container-fluid">
                     @auth
                         <button class="btn btn-outline-secondary me-2" id="sidebar-toggle">
@@ -70,11 +70,11 @@
                         <span>Vendor Management System</span>
                     </a>
                     
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     
-                    <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto">
                             @guest
                                 <li class="nav-item">
@@ -85,28 +85,17 @@
                                 </li>
                             @else
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="fas fa-bell"></i>
-                                        <span class="badge rounded-pill bg-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                        <span class="badge bg-danger rounded-pill notification-badge" style="display: none;">0</span>
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
-                                            <li>
-                                                <a class="dropdown-item" href="{{ $notification->data['action_url'] ?? '#' }}">
-                                                    <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
-                                                    <p class="mb-0">{{ $notification->data['message'] ?? 'New notification' }}</p>
-                                                </a>
-                                            </li>
-                                        @empty
-                                            <li><span class="dropdown-item">No new notifications</span></li>
-                                        @endforelse
-                                        @if(auth()->user()->unreadNotifications->count() > 0)
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item text-center" href="#">View all notifications</a>
-                                            </li>
-                                        @endif
-                                    </ul>
+                                    <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationsDropdown" style=" max-height: 400px; overflow-y: auto;">
+                                        <div class="notification-list">
+                                            <!-- Notifications will be loaded here -->
+                                        </div>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-center" href="{{ route('notifications.index') }}">View All Notifications</a>
+                                    </div>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
@@ -200,6 +189,74 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script src="{{ asset('js/app.js') }}"></script>
+
+    <script>
+        let notificationUrl  = "{{ url('notifications/latest') }}";
+    function loadNotifications() {
+      
+        fetch(notificationUrl)
+            .then(response => response.json())
+            .then(notifications => {
+                const notificationList = document.querySelector('.notification-list');
+                const badge = document.querySelector('.notification-badge');
+                
+                if (notifications.length > 0) {
+                    badge.style.display = 'inline';
+                    badge.textContent = notifications.length;
+                    
+                    notificationList.innerHTML = notifications.map(notification => `
+                        <a class="dropdown-item notification-item ${notification.read_at ? 'read' : ''}" 
+                           href="#" onclick="markAsRead('${notification.id}')">
+                            <div class="d-flex flex-column">
+                                <div class="notification-title fw-bold">${notification.data.title || 'New Notification'}</div>
+                                <div class="notification-message">${notification.data.message || notification.data.job_description || 'New requirement has been created'}</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <small class="text-muted">${new Date(notification.created_at).toLocaleString()}</small>
+                                    ${notification.data.redirect_url ? `
+                                        <a href="${notification.data.redirect_url}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </a>
+                    `).join('');
+                } else {
+                    badge.style.display = 'none';
+                    notificationList.innerHTML = '<div class="dropdown-item text-center">No new notifications</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading notifications:', error);
+            });
+    }
+
+    function markAsRead(id) {
+        fetch(`/notifications/${id}/mark-as-read`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                loadNotifications(); // Reload notifications after marking as read
+            }
+        })
+        .catch(error => {
+            console.error('Error marking notification as read:', error);
+        });
+    }
+
+    // Load notifications every 5 seconds
+    setInterval(loadNotifications, 10000);
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', loadNotifications);
+    </script>
     
     @yield('scripts')
 </body>

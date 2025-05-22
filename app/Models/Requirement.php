@@ -6,6 +6,9 @@ use App\Traits\AutoGeneratesRequirementId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Notifications\RequirementNotification;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Requirement extends Model
 {
@@ -18,11 +21,21 @@ class Requirement extends Model
      */
     protected $fillable = [
         'company_id',
+        'title',
         'requirement_id',
         'job_description',
-        'department_id',
         'create_by',
-        'status',
+        'department_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'needs_hod_approval',
+        'is_approved',
+        'custom_percentage',
+        'show_budget_to_vendor',
+        'final_budget',
+        'client_budget',
+        'bde_name'
        // 'hod_approved',
        // 'founder_approved',
     ];
@@ -37,6 +50,26 @@ class Requirement extends Model
         'founder_approved' => 'boolean',
         'approved_at' => 'datetime',
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($requirement) {
+            // Notify all vendor users when a new requirement is created
+            $vendorUsers =  User::role('vendor')->get();
+            foreach ($vendorUsers as $user) {
+                $user->notify(new RequirementNotification($requirement, 'created'));
+            }
+        });
+    }
+
+    public function notifyResumeUploaded()
+    {
+        // Notify BDE user when a resume is uploaded
+        $bdeUser = User::role('bde')->first();
+        if ($bdeUser) {
+            $bdeUser->notify(new RequirementNotification($this, 'resume_uploaded'));
+        }
+    }
 
     public function candidateSourcing()
     {
@@ -91,6 +124,14 @@ class Requirement extends Model
     public function candidateSourcings()
     {
         return $this->hasMany(CandidateSourcing::class);
+    }
+
+    /**
+     * Get the key skills for this requirement
+     */
+    public function keySkills(): BelongsToMany
+    {
+        return $this->belongsToMany(KeySkill::class, 'requirement_key_skills');
     }
 
     /**

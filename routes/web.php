@@ -15,6 +15,7 @@ use App\Http\Controllers\VendorPaymentController;
 use App\Http\Controllers\VendorAttendanceController;
 use App\Http\Controllers\CandidateSourcingController;
 use App\Http\Controllers\InterviewScheduleController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +178,8 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/requirements/next-id', [RequirementController::class, 'getNextRequirementId'])->name('requirements.next-id');
     
+    Route::patch('/requirements/{requirement}/approve', [RequirementController::class, 'approve'])->name('requirements.approve');
+    
     // Interview routes
     Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index')
         ->middleware('permission:view-interviews');
@@ -279,6 +282,12 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:company-delete');
 
     //Route::post('/interview-schedule/{candidateId}', [InterviewScheduleController::class, 'store'])->name('interview-schedule.store'); 
+
+    // Notification Routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/latest', [NotificationController::class, 'getLatest']);
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 });
 
 /*

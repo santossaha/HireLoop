@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Validator;
 use App\Notifications\NewRequirementNotification;
 use App\Notifications\ApprovalRequiredNotification;
 use App\Models\Company;
+use App\Notifications\RequirementApprovalNotification;
+use App\Events\RequirementApproved;
+use App\Mail\HodApprovalConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class RequirementController extends Controller
 {
@@ -32,6 +36,7 @@ class RequirementController extends Controller
 
     public function index(Request $request)
     {
+       
         if ($request->ajax()) {
             $query = Requirement::query()->orderBy('created_at', 'desc');
             
@@ -97,6 +102,7 @@ class RequirementController extends Controller
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];
             }
+           
 
             
 
@@ -134,6 +140,7 @@ class RequirementController extends Controller
     {
         $companies = Company::all();
         $departments = Department::all();
+        //dd($companies);
         
         // Generate the next Requirement ID
         $year = date('Y');
@@ -152,6 +159,7 @@ class RequirementController extends Controller
             // Start with sequence 1 if no requirements exist for this month
             $sequence = 1;
         }
+
 
         // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
         $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
@@ -167,75 +175,63 @@ class RequirementController extends Controller
         //dd($request->all());
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
+            'title' => 'required|string|max:255',
+            'key_skills' => 'required|array|min:1',
+            'key_skills.*' => 'exists:key_skills,id',
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
+            'client_budget' => 'required|numeric|min:0',
+            'final_budget' => 'required|numeric|min:0',
+            'show_budget_to_vendor' => 'nullable|boolean',
+            'needs_hod_approval' => 'boolean',
+            'custom_percentage_value' => 'nullable|numeric|min:0|max:100',
+            'bde_name' => 'nullable|string|max:225'
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        // Generate the next Requirement ID
-        $year = date('Y');
-        $month = date('m');
-        
-        // Get the last requirement ID for this year and month
-        $lastRequirement = Requirement::where('requirement_id', 'like', "REQ-{$year}-{$month}-%")
-            ->orderBy('requirement_id', 'desc')
-            ->first();
+        // Generate requirement ID...
+        $requirement_id = $this->getNextRequirementId();
 
-        if ($lastRequirement) {
-            // Extract the sequence number and increment it
-            $parts = explode('-', $lastRequirement->requirement_id);
-            $sequence = (int) $parts[3] + 1;
-        } else {
-            // Start with sequence 1 if no requirements exist for this month
-            $sequence = 1;
-        }
-
-        // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
-        $requirement_id = sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
-       
-      
         // Create the requirement
         $requirement = Requirement::create([
             'company_id' => $request->company_id,
+            'title' => $request->title,
             'requirement_id' => $requirement_id,
             'job_description' => $request->job_description,
             'department_id' => $request->department_id,
             'create_by' => Auth::user()->id,
-           
-
-            // 'status' => 'pending',  
-            // 'hod_approved' => false,
-            // 'founder_approved' => false,
+            'needs_hod_approval' => $request->needs_hod_approval,
+            'custom_percentage' => $request->custom_percentage_value,
+            'show_budget_to_vendor' => $request->boolean('show_budget_to_vendor'),
+            'client_budget' => $request->client_budget,
+            'final_budget' => $request->final_budget,
+            'is_approved' => 1, // Auto-approve if no HOD approval needed
+            'bde_name' => $request->bde_name
         ]);
-        
-        // Notify the HOD for approval
-        // $department = Department::find($request->department_id);
-        // $hod = $department->hod;
-        
-        // if ($hod) {
-        //     $hod->notify(new ApprovalRequiredNotification(
-        //         'requirement',
-        //         $requirement->id,
-        //         'HOD Approval Required',
-        //         "A new requirement has been submitted for vendor " . $requirement->vendor->company_name . " that requires your approval."
-        //     ));
-        // }
-        
-        // Notify POC users in the same department
-        try {
-            $pocUsers = User::role('poc')->get();
-            foreach ($pocUsers as $pocUser) {
-                $pocUser->notify(new NewRequirementNotification($requirement));
-            }
-        } catch (\Exception $e) {
-            \Log::error('Failed to send requirement notifications: ' . $e->getMessage());
-            // Continue execution without showing error to user
+
+        // Sync key skills
+        if ($request->has('key_skills')) {
+            $requirement->keySkills()->sync($request->key_skills);
         }
+        
+        // If HOD approval is needed, send email
+        if ($request->needs_hod_approval) {
+            $department = Department::find($request->department_id);
+
+            if ($department && $department->hod) {
+                Mail::to($department->hod->email)->send(new HodApprovalConfirmation($requirement));
+            }
+        } else {
+            // If no HOD approval needed, dispatch the event immediately
+            event(new RequirementApproved($requirement));
+        }
+        
         return redirect()->route('requirements.index')
-            ->with('success', 'Requirement created successfully and sent for HOD approval.');
+            ->with('success', 'Requirement created successfully.' . 
+                ($request->needs_hod_approval ? ' Waiting for HOD approval.' : ''));
     }
 
     /**
@@ -283,9 +279,17 @@ class RequirementController extends Controller
         
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
+            'title' => 'required|string|max:255',
+            'key_skills' => 'required|array|min:1',
+            'key_skills.*' => 'exists:key_skills,id',
             'requirement_id' => 'required|string|max:50|unique:requirements,requirement_id,' . $requirement->id,
             'job_description' => 'required|string',
             'department_id' => 'required|exists:departments,id',
+            'client_budget' => 'required|numeric|min:0',
+            'final_budget' => 'required|numeric|min:0',
+            'show_budget_to_vendor' => 'nullable|boolean',
+            'needs_hod_approval' => 'boolean',
+            'custom_percentage_value' => 'nullable|numeric|min:0|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -293,12 +297,24 @@ class RequirementController extends Controller
         }
 
         // Update the requirement
-        $requirement->company_id = $request->company_id;
-        $requirement->requirement_id = $request->requirement_id;
-        $requirement->job_description = $request->job_description;
-        $requirement->department_id = $request->department_id;
-        $requirement->create_by = Auth::user()->id;
-        $requirement->save();
+        $requirement->update([
+            'company_id' => $request->company_id,
+            'title' => $request->title,
+            'requirement_id' => $request->requirement_id,
+            'job_description' => $request->job_description,
+            'department_id' => $request->department_id,
+            'create_by' => Auth::user()->id,
+            'needs_hod_approval' => $request->needs_hod_approval,
+            'custom_percentage' => $request->custom_percentage_value,
+            'show_budget_to_vendor' => $request->boolean('show_budget_to_vendor'),
+            'client_budget' => $request->client_budget,
+            'final_budget' => $request->final_budget,
+        ]);
+
+        // Sync key skills
+        if ($request->has('key_skills')) {
+            $requirement->keySkills()->sync($request->key_skills);
+        }
         
         // If department changed, notify the new HOD
         if ($requirement->wasChanged('department_id')) {
@@ -482,8 +498,27 @@ class RequirementController extends Controller
         }
 
         // Format: REQ-YYYY-MM-XXX (where XXX is a 3-digit sequence number)
-        return response()->json([
-            'requirement_id' => sprintf("REQ-%s-%s-%03d", $year, $month, $sequence)
+        return sprintf("REQ-%s-%s-%03d", $year, $month, $sequence);
+      
+    }
+
+
+
+    public function approve(Requirement $requirement)
+    {
+        // Check if user is HOD of the department
+        if (!auth()->user()->hasRole('hod') || auth()->user()->id !== $requirement->department->hod_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $requirement->update([
+            'is_approved' => true
         ]);
+
+        // Dispatch the event after HOD approval
+        event(new RequirementApproved($requirement));
+
+        return redirect()->route('requirements.show', $requirement)
+            ->with('success', 'Requirement approved successfully.');
     }
 }

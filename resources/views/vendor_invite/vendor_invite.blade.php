@@ -81,6 +81,25 @@
                                 <hr>
                             </div>
                             <div class="col-md-12 mb-3">
+                                <label for="type" class="form-label">Vendor Type</label>
+                                <select class="form-select" id="type" name="vendor_type" required>
+                                    <option value="company" {{ old('type') == 'company' ? 'selected' : '' }}>Company</option>
+                                    <option value="freelancer" {{ old('type') == 'individual' ? 'selected' : '' }}>Individual</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="company_name" class="form-label company_name">Person/Founder Name</label>
+                                <input type="text" class="form-control" id="company_name" name="company_name" value="{{ old('company_name') }}" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="phone" class="form-label founder_number_label"> Contact Number</label>
+                                <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="company_email" class="form-label founder_email_label"> Email</label>
+                                <input type="email" class="form-control" id="founder_email" name="company_email" value="{{ old('company_email') }}" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
                                 <label for="address" class="form-label">Address</label>
                                 <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" required maxlength="150">
                             </div>

@@ -193,7 +193,7 @@ class InterviewController extends Controller
         ]);
 
         // Send email notification if it's a mock interview
-        if ($request->type === 'mock') {
+        if ($request->type === 'mock') {    
             try {
                 $interview->load(['vendor', 'candidate', 'requirement']);
                 Mail::to($interview->vendor->email)->send(new MockInterviewScheduled($interview));

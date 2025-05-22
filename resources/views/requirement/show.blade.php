@@ -25,15 +25,51 @@
                     <table class="table table-bordered">
                         <tr>
                             <th>Requirement ID</th>
+                            <th>Title</th>
+                            <th>Key Skills</th>
                             <th>Company</th>
                             <th>Department</th>
                             <th>Created By</th>
+                            <th>BDE Name</th>
+                            <th>Client Budget</th>
+                            <th>Final Budget</th>
+                            <th>Custom Percentage</th>
+                            @if(auth()->user()->hasRole('hod') && !$requirement->is_approved)
+                            <th>Actions</th>
+                            @endif
                         </tr>
                         <tr>
                             <td>{{ $requirement->requirement_id }}</td>
+                            <td>{{ $requirement->title }}</td>
+                            <td>
+                                @foreach($requirement->keySkills as $skill)
+                                    <span class="badge bg-info me-1">{{ $skill->name }}</span>
+                                @endforeach
+                            </td>
                             <td>{{ $requirement->company->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->department->name ?? 'N/A' }}</td>
                             <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
+                            <td>{{ $requirement->bde_name ?? 'N/A' }}</td>
+                            <td>{{ number_format($requirement->client_budget, 2) }}</td>
+                            <td>{{ number_format($requirement->final_budget, 2) }}</td>
+                            <td>
+                                @if($requirement->needs_hod_approval)
+                                    <span class="badge bg-warning">Custom: {{ $requirement->custom_percentage }}%</span>
+                                @else
+                                    <span class="badge bg-info">Default: {{ $requirement->department->percentage }}%</span>
+                                @endif
+                            </td>
+                            @if(auth()->user()->hasRole('hod') && $requirement->needs_hod_approval && !$requirement->is_approved)
+                            <td>
+                                <form action="{{ route('requirements.approve', $requirement->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check"></i> Approve Custom Percentage
+                                    </button>
+                                </form>
+                            </td>
+                            @endif
                         </tr>
                     </table>
                 </div>
@@ -160,6 +196,8 @@
                         <table class="table table-bordered">
                             <tr>
                                 <th>Requirement ID</th>
+                                <th>Title</th>
+                                <th>Key Skills</th>
                                 <th>Company</th>
                                 <th>Department</th>
                                 <th>Created By</th>
@@ -167,6 +205,12 @@
                             </tr>
                             <tr>
                                 <td>{{ $requirement->requirement_id }}</td>
+                                <td>{{ $requirement->title }}</td>
+                                <td>
+                                    @foreach($requirement->keySkills as $skill)
+                                        <span class="badge bg-info me-1">{{ $skill->name }}</span>
+                                    @endforeach
+                                </td>
                                 <td>{{ $requirement->company->name }}</td>
                                 <td>{{ $requirement->department->name }}</td>
                                 <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>

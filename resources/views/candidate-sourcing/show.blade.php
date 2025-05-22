@@ -35,12 +35,18 @@
                                         <th>Requirement ID</th>
                                         <th>Department</th>
                                         <th>Company</th>
+                                        @if($requirement->show_budget_to_vendor == 1)
+                                        <th>Final Budget</th>
+                                        @endif
                                         <th>Created By</th>
                                     </tr>
                                     <tr>
                                         <td>{{ $requirement->requirement_id }}</td>
                                         <td>{{ $requirement->department->name ?? 'N/A' }}</td>
                                         <td>{{ $requirement->company->name ?? 'N/A' }}</td>
+                                        @if($requirement->show_budget_to_vendor == 1)
+                                        <th>{{$requirement->final_budget ?? ''}}</th>
+                                        @endif
                                         <td>{{ $requirement->createBy->name ?? 'N/A' }}</td>
                                     </tr>
                                 </table>

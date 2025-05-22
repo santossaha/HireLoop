@@ -31,7 +31,7 @@
             <form action="{{ route('vendors.store') }}" method="POST">
                 @csrf
 
-                <div class="row">
+                <div class="row mb-4">
                     <div class="col-md-6">
                         <h5 class="mb-3">User Account Details</h5>
                         <div class="mb-3">
@@ -51,6 +51,11 @@
                             <label for="password_confirmation" class="form-label">Confirm Password</label>
                             <input type="password" class="form-control" id="password_confirmation" value="{{ old('password_confirmation') }}" name="password_confirmation">
                         </div>
+                        <div class="mb-3">
+                            <label for="poc_name" class="form-label">POC Name</label>
+                            <input type="text" class="form-control" id="poc_name" name="poc_name" value="{{ Auth::user()->name }}" required disabled>
+                            <input type="hidden" id="internal_poc_id" name="internal_poc_id" value="{{Auth::id()}}" required>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -59,105 +64,83 @@
                             <label for="type" class="form-label">Vendor Type</label>
                             <select class="form-select" id="type" name="vendor_type" required>
                                 <option value="company" {{ old('type') == 'company' ? 'selected' : '' }}>Company</option>
-                                <option value="freelancer" {{ old('type') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
+                                <option value="freelancer" {{ old('type') == 'individual' ? 'selected' : '' }}>Individual</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="contact_number" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ old('contact_number') }}" required>
+                            <label for="company_name" class="form-label company_name">Person/Founder Name</label>
+                            <input type="text" class="form-control" id="company_name" name="company_name" value="{{ old('company_name') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="skype_id" class="form-label">Skype ID</label>
-                            <input type="text" class="form-control" id="skype_id" name="skype_id" value="{{ old('skype_id') }}">
+                            <label for="phone" class="form-label founder_number_label"> Contact Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="key_skills" class="form-label">Key Skills <span class="text-danger">*</span></label>
-                            <select class="form-select select2 @error('key_skills') is-invalid @enderror" id="key_skills" name="key_skills[]" multiple required>
-                                @foreach(App\Models\KeySkill::all() as $skill)
-                                    <option value="{{ $skill->id }}" {{ in_array($skill->id, old('key_skills', [])) ? 'selected' : '' }}>
-                                        {{ $skill->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('key_skills')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <label for="company_email" class="form-label founder_email_label"> Email</label>
+                            <input type="email" class="form-control" id="founder_email" name="company_email" value="{{ old('company_email') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" required maxlength="150">
+                        </div>
+                        <div class="mb-3">
+                            <label for="website" class="form-label">Website</label>
+                            <input type="url" class="form-control" id="website" name="website" value="{{ old('website') }}" maxlength="50">
                         </div>
                     </div>
                 </div>
 
-                <hr>
+{{--                <hr>--}}
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="poc_name" class="form-label">POC Name</label>
-                            <input type="text" class="form-control" id="poc_name" name="poc_name" value="{{ old('poc_name') }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="internal_poc_id" class="form-label">Internal POC</label>
-                            <select class="form-select" id="internal_poc_id" name="internal_poc_id" required>
-                                <option value="">Select Internal POC</option>
-                                @foreach($internalPocs as $poc)
-                                <option value="{{ $poc->id }}" {{ old('internal_poc_id') == $poc->id ? 'selected' : '' }}>
-                                    {{ $poc->name }} ({{ ucfirst($poc->role) }})
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+{{--                <div class="row mb-4">--}}
+{{--                    <div class="col-12">--}}
+{{--                        <h5>Company Details</h5>--}}
+{{--                        <hr>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-md-12 mb-3">--}}
+{{--                        <label for="address" class="form-label">Address</label>--}}
+{{--                        <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" required maxlength="150">--}}
+{{--                    </div>--}}
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Initial Status</label>
-                            <select class="form-select" id="status" name="status" required>
-                                {{-- <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option> --}}
-                                <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                                {{-- <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected</option> --}}
-                            </select>
-                        </div>
-                    </div>
-                </div>
+{{--                    <div class="col-md-12 mb-3">--}}
+{{--                        <label for="website" class="form-label">Website</label>--}}
+{{--                        <input type="url" class="form-control" id="website" name="website" value="{{ old('website') }}" maxlength="50">--}}
+{{--                    </div>--}}
 
-                <hr>
+{{--                </div>--}}
 
-                <h5 class="mb-3">Budget Information</h5>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="budget_3_years" class="form-label">3 Years Experience</label>
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="number" step="0.01" class="form-control" id="budget_3_years" name="budget_3_years" value="{{ old('budget_3_years') }}" required>
-                            </div>
-                        </div>
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Bank Details</h5>
+                        <hr>
                     </div>
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="budget_5_years" class="form-label">5 Years Experience</label>
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="number" step="0.01" class="form-control" id="budget_5_years" name="budget_5_years" value="{{ old('budget_5_years') }}" required>
-                            </div>
-                        </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="account_owner_name" class="form-label">Account Owner Name</label>
+                        <input type="text" class="form-control" id="account_owner_name" name="account_owner_name" value="{{ old('account_owner_name') }}"  maxlength="70">
                     </div>
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="budget_7_years" class="form-label">7+ Years Experience</label>
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="number" step="0.01" class="form-control" id="budget_7_years" name="budget_7_years" value="{{ old('budget_7_years') }}" required>
-                            </div>
-                        </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="account_owner_name" class="form-label">Account Number</label>
+                        <input type="text" class="form-control" id="account_number" name="account_number" value="{{ old('account_number') }}" maxlength="70">
                     </div>
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="budget_10_years" class="form-label">10+ Years Experience</label>
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="number" step="0.01" class="form-control" id="budget_10_years" name="budget_10_years" value="{{ old('budget_10_years') }}" required>
-                            </div>
-                        </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="website" class="form-label">Bank Name</label>
+                        <input type="text" class="form-control" id="bank_name" name="bank_name" value="{{ old('bank_name') }}" maxlength="70">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="ifsc_code" class="form-label">IFSC Code</label>
+                        <input type="text" class="form-control" id="ifsc_code" name="ifsc_code" value="{{ old('ifsc_code') }}" maxlength="70">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="gst_number" class="form-label">GST Number</label>
+                        <input type="text" class="form-control" id="gst_number" name="gst_number" value="{{ old('gst_number') }}" maxlength="70">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="pan" class="form-label">PAN</label>
+                        <input type="text" class="form-control" id="pan" name="pan" value="{{ old('pan') }}" maxlength="70">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="teams_id" class="form-label">Teams ID</label>
+                        <input type="text" class="form-control" id="teams_id" name="teams_id" value="{{ old('teams_id') }}" maxlength="30">
                     </div>
                 </div>
 
