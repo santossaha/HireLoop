@@ -64,8 +64,8 @@
                             <label for="type" class="form-label">Vendor Type</label>
                             <select class="form-select" id="type" name="vendor_type" required onchange="vendorType(this.value);">
                                 <option value="">Select Vendor Type</option>
-                                <option value="company" {{ old('type') == 'company' ? 'selected' : '' }}>Company</option>
-                                <option value="individual" {{ old('type') == 'individual' ? 'selected' : '' }}>Individual</option>
+                                <option value="company" {{ old('vendor_type') == 'company' ? 'selected' : '' }}>Company</option>
+                                <option value="individual" {{ old('vendor_type') == 'individual' ? 'selected' : '' }}>Individual</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -95,8 +95,8 @@
                                 <input type="number" min="0" class="form-control" id="year_of_experience" name="year_of_experience" value="{{ old('year_of_experience') }}" maxlength="10">
                             </div>
                             <div class="mb-3">
-                                <label for="website" class="form-label">Budget</label>
-                                <input type="url" class="form-control" id="website" name="website" value="{{ old('website') }}" maxlength="50">
+                                <label for="budget" class="form-label">Budget</label>
+                                <input type="number" class="form-control" id="budget" name="budget" value="{{ old('budget') }}" maxlength="70">
                             </div>
                         </div>
 

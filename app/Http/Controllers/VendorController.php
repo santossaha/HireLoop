@@ -171,11 +171,13 @@ class VendorController extends Controller
                 'gst_number' => $data['gst_number'],
                 'pan' => $data['pan'],
                 'teams_id' => $data['teams_id'],
+                'year_of_experience' => $data['year_of_experience']??0,
+                'budget' => $data['budget']??0,
 //                'internal_poc_id' => $data['internal_poc_id'],
-//                'budget_3_years' => $data['budget_3_years'],
-//                'budget_5_years' => $data['budget_5_years'],
-//                'budget_7_years' => $data['budget_7_years'],
-//                'budget_10_years' => $data['budget_10_years'],
+               'budget_3_years' => $data['budget_3_years']??0,
+               'budget_5_years' => $data['budget_5_years']??0,
+               'budget_7_years' => $data['budget_7_years']??0,
+               'budget_10_years' => $data['budget_10_years']??0,
                 'status' => 'approved',
 
             ]);
@@ -302,7 +304,7 @@ class VendorController extends Controller
             'ifsc_code' => 'nullable|string|max:255',
             'gst_number' => 'nullable|string|max:255',
             'pan' => 'nullable|string|max:255',
-            'teams_id' => 'nullable|string|max:255'
+            'teams_id' => 'nullable|string|max:255',
 
 //            'vendor_type' => 'required|in:company,freelancer',
             //'company_name' => 'required|string|max:255',
@@ -321,11 +323,11 @@ class VendorController extends Controller
 //            'key_skills.*' => 'exists:key_skills,id'
         ]);
 
-        $vendor->update($validated);
+        $vendor->update($request->all());
 
-        if (isset($validated['key_skills'])) {
-            $vendor->keySkills()->sync($validated['key_skills']);
-        }
+        // if (isset($validated['key_skills'])) {
+        //     $vendor->keySkills()->sync($validated['key_skills']);
+        // }
 
         return redirect()->route('vendors.show', $vendor)
             ->with('success', 'Vendor updated successfully.');
@@ -526,10 +528,14 @@ class VendorController extends Controller
             'skype_id' => $request->skype??1,
             'slack_id' => $request->slack??1,
 //            'internal_poc_id' => $request->internal_poc_id??1,
-            'budget_3_years' => $request->budget_3_years??1,
-            'budget_5_years' => $request->budget_5_years??1,
-            'budget_7_years' => $request->budget_7_years??1,
-            'budget_10_years' => $request->budget_10_years??1,
+            'budget_3_years' => $request->budget_3_years??0,
+            'budget_5_years' => $request->budget_5_years??0,
+            'budget_7_years' => $request->budget_7_years??0,
+            'budget_10_years' => $request->budget_10_years??0,
+
+            'year_of_experience' => $request->year_of_experience??0,
+            'budget' => $request->budget??0,
+
             'status' => $request->status??'pending',
         ]);
 

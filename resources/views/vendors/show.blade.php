@@ -52,12 +52,14 @@
                         <p class="mb-1"><strong>Contact Information:</strong></p>
                         <p><i class="fas fa-envelope me-2"></i> {{ $vendor->email }}</p>
                         <p><i class="fas fa-phone me-2"></i> {{ $vendor->phone }}</p>
-                        @if($vendor->skype_id)
+                        <p><i class="fas fa-map-pin me-2"></i> {{ $vendor->address }}</p>
+                        <p><i class="fas fa-globe me-2"></i> {{ $vendor->website }}</p>
+                        {{--  @if($vendor->skype_id)
                         <p><i class="fab fa-skype me-2"></i> {{ $vendor->skype_id }}</p>
-                        @endif
-                        @if($vendor->slack_id)
+                        @endif  --}}
+                        {{--  @if($vendor->slack_id)
                         <p><i class="fab fa-slack me-2"></i> {{ $vendor->slack_id }}</p>
-                        @endif
+                        @endif  --}}
                     </div>
                     
                     <div class="mb-3">
@@ -66,7 +68,7 @@
                     </div>
                     
                     <hr>
-                    
+                    @if($vendor->vendor_type == 'company')
                     <h6 class="font-weight-bold">Budget Information</h6>
                     <div class="table-responsive">
                         <table class="table table-bordered table-sm">
@@ -96,6 +98,16 @@
                             </tbody>
                         </table>
                     </div>
+                    @else
+                    <div class="mb-3">
+                        <p class="mb-1"><strong>Year of Experience:</strong></p>
+                        <p>{{ $vendor->year_of_experience }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="mb-1"><strong>Budget:</strong></p>
+                        <p>{{ '$'.$vendor->budget??0 }}</p>
+                    </div>
+                    @endif
                     
                     <hr>
                     

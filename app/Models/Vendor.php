@@ -35,7 +35,19 @@ class Vendor extends Model
         'technical_rating',
         'client_ready',
         'availability',
-        'mt_ead_status'
+        'mt_ead_status',
+        'year_of_experience',
+        'budget',
+        'address',
+        'website',
+        'account_owner_name',
+        'account_number',
+        'bank_name',
+        'ifsc_code',
+        'gst_number',
+        'pan',
+        'teams_id',
+        'invite_token',
     ];
 
     /**

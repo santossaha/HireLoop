@@ -162,8 +162,8 @@
                                 <thead>
                                     <tr>
                                         <th>Candidate Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
+                                        <!-- <th>Email</th> -->
+                                        <!-- <th>Phone</th> -->
                                         <th>Budget</th>
                                         <th>Uploaded By</th>
                                         {{-- <th>Status</th> --}}
@@ -175,8 +175,8 @@
                                     @forelse($candidates as $candidate)
                                         <tr>
                                             <td>{{ $candidate->candidate_name }}</td>
-                                            <td>{{ $candidate->email }}</td>
-                                            <td>{{ $candidate->phone }}</td>
+                                            <!-- <td>{{ $candidate->email }}</td> -->
+                                            <!-- <td>{{ $candidate->phone }}</td> -->
                                             <td>{{ number_format($candidate->budget, 2) }}</td>
                                             <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
                                             {{-- <td>
