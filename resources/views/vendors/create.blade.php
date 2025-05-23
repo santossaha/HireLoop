@@ -62,9 +62,10 @@
                         <h5 class="mb-3">Vendor Profile</h5>
                         <div class="mb-3">
                             <label for="type" class="form-label">Vendor Type</label>
-                            <select class="form-select" id="type" name="vendor_type" required>
+                            <select class="form-select" id="type" name="vendor_type" required onchange="vendorType(this.value);">
+                                <option value="">Select Vendor Type</option>
                                 <option value="company" {{ old('type') == 'company' ? 'selected' : '' }}>Company</option>
-                                <option value="freelancer" {{ old('type') == 'individual' ? 'selected' : '' }}>Individual</option>
+                                <option value="individual" {{ old('type') == 'individual' ? 'selected' : '' }}>Individual</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -87,6 +88,18 @@
                             <label for="website" class="form-label">Website</label>
                             <input type="url" class="form-control" id="website" name="website" value="{{ old('website') }}" maxlength="50">
                         </div>
+
+                        <div class="individual_vendor" style="display: none">
+                            <div class="mb-3">
+                                <label for="year_of_experience" class="form-label">Year of Experience</label>
+                                <input type="number" min="0" class="form-control" id="year_of_experience" name="year_of_experience" value="{{ old('year_of_experience') }}" maxlength="10">
+                            </div>
+                            <div class="mb-3">
+                                <label for="website" class="form-label">Budget</label>
+                                <input type="url" class="form-control" id="website" name="website" value="{{ old('website') }}" maxlength="50">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -144,6 +157,49 @@
                     </div>
                 </div>
 
+
+                <div class="company_budget" style="display: none">
+                    <h5 class="mb-3">Budget Information</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="budget_3_years" class="form-label">3 Years Experience</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" class="form-control" id="budget_3_years" name="budget_3_years" value="{{ old('budget_3_years') }}" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="budget_5_years" class="form-label">5 Years Experience</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" class="form-control" id="budget_5_years" name="budget_5_years" value="{{ old('budget_5_years') }}" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="budget_7_years" class="form-label">7+ Years Experience</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" class="form-control" id="budget_7_years" name="budget_7_years" value="{{ old('budget_7_years') }}" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="budget_10_years" class="form-label">10+ Years Experience</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" class="form-control" id="budget_10_years" name="budget_10_years" value="{{ old('budget_10_years') }}" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                     <button type="reset" class="btn btn-secondary me-md-2">Reset</button>
                     <button type="submit" class="btn btn-primary">Create Vendor</button>
@@ -162,5 +218,16 @@
             width: '100%'
         });
     });
+
+    function vendorType(vtype){
+        if(vtype == 'individual'){
+            $('.company_budget').hide();
+            $('.individual_vendor').show();
+        }
+        else if(vtype == 'company'){
+            $('.company_budget').show();
+            $('.individual_vendor').hide();
+        }
+    }
 </script>
 @endsection
