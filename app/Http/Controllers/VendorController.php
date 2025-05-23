@@ -295,7 +295,7 @@ class VendorController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'company_name' => 'required|string|max:255',
             'company_email' => 'required|string|email|max:255',
-            'password' => 'nullable|string|min:8|confirmed',
+//            'password' => 'nullable|string|min:8|confirmed',
             'address' => 'required|string|max:255',
             'website' => 'nullable|string|max:255',
             'account_owner_name' => 'nullable|string|max:255',

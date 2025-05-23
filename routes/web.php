@@ -288,6 +288,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/latest', [NotificationController::class, 'getLatest']);
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+
+
+//    Vendor Top Candidates
+    Route::get('/vendor/top-candidates', [\App\Http\Controllers\VendorTopCandidateController::class, 'index'])->name('vendor.top-candidates.index');
+    Route::get('/vendor/top-candidates/delete/{id}', [\App\Http\Controllers\VendorTopCandidateController::class, 'delete'])->name('vendor.top-candidates.delete');
+
 });
 
 /*

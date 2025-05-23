@@ -74,6 +74,14 @@
                     </a>
                 </li>
                 @endcan
+
+                    @can('view-vendor-top-candidates')
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('vendor.top-candidates.*') ? 'active' : '' }}" href="{{ route('vendor.top-candidates.index') }}">
+                                <i class="fas fa-users me-2"></i> Vendor Top Candidates
+                            </a>
+                        </li>
+                    @endcan
                 
                 @can('view-client-payments')
                 <li class="nav-section mt-2">

@@ -37,7 +37,8 @@
                         <div class="display-4 mb-2">
                             <i class="fas {{ $vendor->vendor_type == 'company' ? 'fa-building' : 'fa-user-tie' }}"></i>
                         </div>
-                        <h4>{{ $vendor->company_name }}</h4>
+                        <h4>{{ !empty($vendor->user) ? $vendor->user->name : '' }}</h4>
+                        <h5>{{ $vendor->company_name }}</h5>
                         <span class="badge bg-primary">{{ ucfirst($vendor->vendor_type) }}</span>
                     </div>
                     
