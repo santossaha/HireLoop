@@ -91,8 +91,20 @@ class RequirementController extends Controller
                 $userResumeCount = $requirement->candidateSourcing()
                // ->where('uploaded_by', Auth::id())
                 ->count();
+                $skills = [];
+                if(!empty($requirement->keySkills)){
+                    foreach ($requirement->keySkills as $keySkill) {
+                        $skills[] = $keySkill->name;
+                    }
+                }
+
                 $data[] = [
                     'id' => $requirement->id,
+                    'title' => $requirement->title,
+                    'skills' => implode(', ',$skills),
+                    'bde_name' => $requirement->bde_name,
+                    'client_budget' => $requirement->client_budget,
+                    'final_budget' => $requirement->final_budget,
                     'company' => $requirement->company->name,
                     'requirement_id' => $requirement->requirement_id,
                     'department' => $requirement->department->name ?? 'N/A',

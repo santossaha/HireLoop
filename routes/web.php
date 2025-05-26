@@ -293,6 +293,7 @@ Route::middleware(['auth'])->group(function () {
 //    Vendor Top Candidates
     Route::get('/vendor/top-candidates', [\App\Http\Controllers\VendorTopCandidateController::class, 'index'])->name('vendor.top-candidates.index');
     Route::get('/vendor/top-candidates/delete/{id}', [\App\Http\Controllers\VendorTopCandidateController::class, 'delete'])->name('vendor.top-candidates.delete');
+    Route::get('/vendor/top-candidates/view/{id}', [\App\Http\Controllers\VendorTopCandidateController::class, 'view'])->name('vendor.top-candidates.view');
 
 });
 

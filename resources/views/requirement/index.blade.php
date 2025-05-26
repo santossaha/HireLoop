@@ -62,11 +62,15 @@
                 <table class="table table-bordered" id="requirementsTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Company</th>
                             <th>Requirement ID</th>
+                            <th>Company</th>
                             <th>Department</th>
-                            <th>Created</th>
+                            <th>Title</th>
+                            <th>Skills</th>
+                            <th>BDE Name</th>
+                            <th>Client Budget</th>
+                            <th>Final Budget</th>
+                            <th>Created On</th>
                             <th>Created By</th>
                             <th>Candidate Count</th>
                             <th>Actions</th>
@@ -93,10 +97,14 @@
                 }
             },
             columns: [
-                { data: 'id', name: 'id' },
-                { data: 'company', name: 'company' },
                 { data: 'requirement_id', name: 'requirement_id' },
+                { data: 'company', name: 'company' },
                 { data: 'department', name: 'department' },
+                { data: 'title', name: 'title' },
+                { data: 'skills', name: 'skills' },
+                { data: 'bde_name', name: 'bde_name' },
+                { data: 'client_budget', name: 'client_budget' },
+                { data: 'final_budget', name: 'final_budget' },
                 { data: 'created_at', name: 'created_at' },
                 { data: 'created_by', name: 'created_by' },
                 { data: 'candidate_count', name: 'candidate_count' },
