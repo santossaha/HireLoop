@@ -118,6 +118,11 @@ class Vendor extends Model
         return $this->hasMany(VendorPayment::class);
     }
 
+    public function nda_documents()
+    {
+        return $this->hasMany(VendorNDADocument::class,'vendor_id');
+    }
+
     /**
      * Get the key skills for this vendor
      */

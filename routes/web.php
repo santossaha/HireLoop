@@ -295,6 +295,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/vendor/top-candidates/delete/{id}', [\App\Http\Controllers\VendorTopCandidateController::class, 'delete'])->name('vendor.top-candidates.delete');
     Route::get('/vendor/top-candidates/view/{id}', [\App\Http\Controllers\VendorTopCandidateController::class, 'view'])->name('vendor.top-candidates.view');
 
+//    Vendor Document Upload
+    Route::post('/vendor/store-nda-document', [\App\Http\Controllers\VendorController::class, 'storeNdaDocument'])->name('vendor.ndaDocument.store');
 });
 
 /*

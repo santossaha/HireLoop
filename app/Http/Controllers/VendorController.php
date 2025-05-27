@@ -7,11 +7,13 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Department;
 use App\Models\VendorInviteTemporaryToken;
+use App\Models\VendorNDADocument;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -543,6 +545,38 @@ class VendorController extends Controller
 
         return redirect()->back()
             ->with('success', 'Vendor registered successfully.');
+    }
+
+    public function storeNdaDocument(Request $request)
+    {
+//        try{
+            $request->validate([
+                'vendor_id' => 'required|string|max:255',
+                'nda_document' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            ]);
+//            print_r($request->file('nda_document')); exit();
+            $fileName = $request->file('nda_document')->getClientOriginalName();
+            // Store the resume file
+            $resumePath = $request->file('nda_document')->store('nda_documents');
+//    $img = $request->file('nda_document');
+//        $path = Storage::disk('public')->putFileAs(
+//            'nda_documents', $img, $fileName
+//        );
+
+            $ndaDocument = new VendorNDADocument();
+            $ndaDocument->vendor_id = $request->vendor_id;
+            $ndaDocument->document_name = $fileName;
+            $ndaDocument->nda_document = $resumePath;
+            $ndaDocument->save();
+
+            return redirect()->back()
+                ->with('success', 'Vendor NDA document uploaded successfully.');
+
+//        }
+//        catch (\Exception $e){
+//            return redirect()->back()
+//                ->with('error', 'Something went wrong.');
+//        }
     }
 
 

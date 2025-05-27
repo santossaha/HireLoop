@@ -12,10 +12,12 @@
             </a>
             <a href="{{ route('interviews.create', ['vendor_id' => $vendor->id]) }}" class="btn btn-info me-2">
                 <i class="fas fa-calendar-plus me-1"></i> Schedule Interview
+            </a>--}}
+            @can('view-vendor-nda-document')
+            <a href="#" class="btn btn-primary me-2" id="NdaDocuemtModal">
+                <i class="fas fa-file me-1"></i> NDA Documents
             </a>
-            <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-primary me-2">
-                <i class="fas fa-edit me-1"></i> Edit Vendor
-            </a> --}}
+            @endcan
             <a href="{{ route('vendors.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Back to Vendors
             </a>
@@ -500,6 +502,66 @@
         </div>
     </div>
 </div>
+@can('view-vendor-nda-document')
+<!-- Modal -->
+<div class="modal fade" id="NdaDocuemts" tabindex="-1" role="dialog" aria-labelledby="NdaDocuemtsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="NdaDocuemtsLabel">NDA Documents</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{route('vendor.ndaDocument.store')}}" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="vendor_id" value="{{ $vendor->id }}">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label>Upload Document</label>
+                            <input type="file" name="nda_document" class="form-control" required accept="application/pdf">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mt-4">
+                            <button class="btn btn-primary" type="submit">Upload</button>
+                        </div>
+                    </div>
+                </div>
+                </form>
+
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <h5>Uploaded Documents</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Document Name</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if(!empty($vendor->nda_documents))
+                                @foreach($vendor->nda_documents as $nda_document)
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$nda_document->document_name}}</td>
+                                        <td><a href="{{url('storage/'.$nda_document->nda_document)}}" target="_blank" class="btn btn-sm btn-info text-white" download><i class="fa fa-download"></i> </a></td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@endcan
+
 @endsection
 
 @section('scripts')
@@ -514,6 +576,10 @@
         // Update URL hash when tab is clicked
         $('.nav-tabs a').on('shown.bs.tab', function(e) {
             window.location.hash = e.target.hash;
+        });
+
+        $('#NdaDocuemtModal').click(function (){
+            $('#NdaDocuemts').modal('toggle');
         });
     });
 </script>

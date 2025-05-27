@@ -77,9 +77,12 @@
 
             <div class="row">
                 <div class="col-12">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobDescriptionModal">
-                        <i class="fas fa-file-alt"></i> Job Description
-                    </button>
+{{--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobDescriptionModal">--}}
+{{--                        <i class="fas fa-file-alt"></i> Job Description--}}
+{{--                    </button>--}}
+                    <div class="p-3 bg-light rounded">
+                        <textarea name="" id="" cols="100" rows="10" class="form-control" readonly>{!! $requirement->job_description !!}</textarea>
+                    </div>
                 </div>
             </div>
 
