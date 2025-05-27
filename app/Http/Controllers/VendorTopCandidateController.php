@@ -39,14 +39,27 @@ class VendorTopCandidateController extends Controller
 
             $data = [];
             foreach ($top_candidates as $i => $top_candidate) {
+
+                $skills = [];
+                if(!empty($top_candidate->requirement)){
+                    if(!empty($top_candidate->requirement->keySkills)){
+                        foreach ($top_candidate->requirement->keySkills as $keySkill) {
+                            $skills[] = $keySkill->name;
+                        }
+                    }
+                }
+
                 $data[] = [
                     'id' => $i+1,
                     'candidate_name' => !empty($top_candidate->candidate) ? $top_candidate->candidate->candidate_name : '-',
+                    'skills' => implode(', ',$skills),
+                    'client_budget' => !empty($top_candidate->requirement) ? $top_candidate->requirement->client_budget : 'N/A',
+                    'final_budget' => !empty($top_candidate->requirement) ? $top_candidate->requirement->final_budget : 'N/A',
                     'contact_info' => [
                         'email' => !empty($top_candidate->candidate) ? $top_candidate->candidate->email : 'N/A',
                         'phone' => !empty($top_candidate->candidate) ? $top_candidate->candidate->phone : 'N/A'
                     ],
-                    'requirement_id' => !empty($top_candidate->requirement) ? $top_candidate->requirement->requirement_id : 'N/A',
+//                    'requirement_id' => !empty($top_candidate->requirement) ? $top_candidate->requirement->requirement_id : 'N/A',
                     'interviewer' => !empty($top_candidate->interviewer) ? $top_candidate->interviewer->name : 'N/A',
                     'resume' => '<a href="'.asset('storage/' . $top_candidate->candidate->resume_path).'" class="btn btn-sm btn-primary" target="_blank"><i class="fas fa-download"></i> Download </a>',
                     'mock_feedback' => $top_candidate->mock_feedback,

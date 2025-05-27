@@ -45,7 +45,10 @@
                             <th>ID</th>
                             <th>Candidate Name</th>
                             <th>Contact Info</th>
-                            <th>Requirement ID</th>
+{{--                            <th>Requirement ID</th>--}}
+                            <th>Skills</th>
+                            <th>Client Budget</th>
+                            <th>Final Budget</th>
                             <th>Interviewer</th>
                             <th>Resume</th>
                             <th>Mock Feedback</th>
@@ -128,7 +131,10 @@
                                 <span class="d-block"><i class="fas fa-phone me-1"></i> ${data.phone}</span>`;
                             }
                         },
-                        { data: 'requirement_id', name: 'requirement_id' },
+                        // { data: 'requirement_id', name: 'requirement_id' },
+                        { data: 'skills', name: 'skills' },
+                        { data: 'client_budget', name: 'client_budget' },
+                        { data: 'final_budget', name: 'final_budget' },
                         { data: 'interviewer', name: 'interviewer' },
                         { data: 'resume', name: 'resume' },
                         { data: 'mock_feedback', name: 'mock_feedback' },
