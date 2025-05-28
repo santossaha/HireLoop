@@ -38,7 +38,7 @@ class CandidateSourcingController extends Controller
       
       
         if ($request->ajax()) {
-            $query = Requirement::query()->where('is_approved', 1)->orderBy('created_at', 'desc');
+            $query = Requirement::query()->where('is_approved', 1)->where('is_closed', 0)->orderBy('created_at', 'desc');
             
             // Search functionality
             if ($request->has('search') && !empty($request->search['value'])) {

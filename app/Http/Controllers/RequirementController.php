@@ -533,4 +533,16 @@ class RequirementController extends Controller
         return redirect()->route('requirements.show', $requirement)
             ->with('success', 'Requirement approved successfully.');
     }
+
+    public function closeRequirement($id)
+    {
+
+
+        Requirement::find($id)->update([
+            'is_closed' => true
+        ]);
+
+        return redirect()->route('requirements.show', $id)
+            ->with('success', 'Requirement closed successfully.');
+    }
 }

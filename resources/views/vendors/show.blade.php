@@ -15,7 +15,7 @@
             </a>--}}
             @can('view-vendor-nda-document')
             <a href="#" class="btn btn-primary me-2" id="NdaDocuemtModal">
-                <i class="fas fa-file me-1"></i> NDA Documents
+                <i class="fas fa-file me-1"></i> Documents
             </a>
             @endcan
             <a href="{{ route('vendors.index') }}" class="btn btn-secondary">
@@ -508,7 +508,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="NdaDocuemtsLabel">NDA Documents</h5>
+                <h5 class="modal-title" id="NdaDocuemtsLabel">Documents</h5>
             </div>
             <div class="modal-body">
                 <form method="POST" action="{{route('vendor.ndaDocument.store')}}" enctype="multipart/form-data">

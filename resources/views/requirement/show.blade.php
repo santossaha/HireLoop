@@ -17,7 +17,10 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Requirement Information</h6>
+            <h6 class="m-0 font-weight-bold text-primary pt-1">Requirement Information</h6>
+            @if($requirement->is_closed == 0)
+            <a href="#" class="btn btn-danger" style="float: right;margin-top: -1.5%" id="close-requirement-btn" data-id="{{ $requirement->id }}">Close Requirement</a>
+            @endif
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -80,7 +83,7 @@
 {{--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobDescriptionModal">--}}
 {{--                        <i class="fas fa-file-alt"></i> Job Description--}}
 {{--                    </button>--}}
-                    <div class="p-3 bg-light rounded">
+                    <div class="">
                         <label class="mb-2"><strong>Job Description</strong></label>
                         <textarea name="" id="" cols="100" rows="10" class="form-control" readonly>{!! $requirement->job_description !!}</textarea>
                     </div>
@@ -302,6 +305,17 @@
 
 @section('scripts')
 <script>
+
+    $(function (){
+
+        $('#close-requirement-btn').click(function (){
+            var id = $(this).data('id');
+
+            if(confirm('Are you sure want to close this requirement ?')){
+                window.location = '{{ url('requirement-close') }}/'+id;
+            }
+        });
+    });
     // function toggleDescription() {
     //     const shortDesc = document.getElementById('shortDescription');
     //     const fullDesc = document.getElementById('fullDescription');

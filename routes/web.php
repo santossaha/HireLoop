@@ -297,6 +297,9 @@ Route::middleware(['auth'])->group(function () {
 
 //    Vendor Document Upload
     Route::post('/vendor/store-nda-document', [\App\Http\Controllers\VendorController::class, 'storeNdaDocument'])->name('vendor.ndaDocument.store');
+
+//    Close requirement
+    Route::get('/requirement-close/{id}', [\App\Http\Controllers\RequirementController::class, 'closeRequirement'])->name('requirement.close');
 });
 
 /*
