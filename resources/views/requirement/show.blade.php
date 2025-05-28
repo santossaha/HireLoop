@@ -81,6 +81,7 @@
 {{--                        <i class="fas fa-file-alt"></i> Job Description--}}
 {{--                    </button>--}}
                     <div class="p-3 bg-light rounded">
+                        <label class="mb-2"><strong>Job Description</strong></label>
                         <textarea name="" id="" cols="100" rows="10" class="form-control" readonly>{!! $requirement->job_description !!}</textarea>
                     </div>
                 </div>
@@ -108,8 +109,8 @@
                     <thead>
                         <tr>
                             <th>Candidate Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
+{{--                            <th>Email</th>--}}
+{{--                            <th>Phone</th>--}}
                             <th>Budget</th>
                             <th>Vendors</th>
                             <th>Status</th>
@@ -123,8 +124,8 @@
                         @forelse($candidates as $candidate)
                         <tr>
                             <td>{{ $candidate->candidate_name }}</td>
-                            <td>{{ $candidate->email }}</td>
-                            <td>{{ $candidate->phone }}</td>
+{{--                            <td>{{ $candidate->email }}</td>--}}
+{{--                            <td>{{ $candidate->phone }}</td>--}}
                             <td>{{ number_format($candidate->budget, 2) }}</td>
                             <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
                             <td>
