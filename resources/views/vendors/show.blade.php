@@ -546,7 +546,7 @@
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$nda_document->document_name}}</td>
-                                        <td><a href="{{url('storage/'.$nda_document->nda_document)}}" target="_blank" class="btn btn-sm btn-info text-white" download><i class="fa fa-download"></i> </a></td>
+                                        <td><a href="{{url('public/storage/'.$nda_document->nda_document)}}" target="_blank" class="btn btn-sm btn-info text-white" download><i class="fa fa-download"></i> </a></td>
                                     </tr>
                                 @endforeach
                             @endif
