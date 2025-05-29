@@ -24,8 +24,8 @@
                         <label for="vendor_id" class="form-label">Vendor <span class="text-danger">*</span></label>
                         <select id="vendor_id" name="vendor_id" class="form-select @error('vendor_id') is-invalid @enderror" required>
                             {{-- <option value="">Select Vendor</option> --}}
-                                <option value="{{ $vendor->id }}">
-                                    {{ $vendor->contact_person }}
+                                <option value="{{ $uploadedBy->id }}">
+                                    {{ $uploadedBy->name }}
                                 </option>
                           
                         </select>

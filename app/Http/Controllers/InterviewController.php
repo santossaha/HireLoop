@@ -154,10 +154,11 @@ class InterviewController extends Controller
 
         $requirement = Requirement::where('id', $requirementId)->with('vendor:id,user_id,email')->first();
         $candidate = CandidateSourcing::where('id', $candidateId)->with('requirement:id,requirement_id')->first();
-        $vendor = Vendor::where('user_id', $candidate->uploaded_by)->first();
+        $uploadedBy = User::where('id', $candidate->uploaded_by)->first();
+      
         $interviewers = User::where('role', 'poc')->get();
 
-        return view('interview.create', compact('vendor', 'requirement', 'interviewers', 'candidate'));
+        return view('interview.create', compact('requirement', 'interviewers', 'candidate','uploadedBy'));
     }
 
     /**
