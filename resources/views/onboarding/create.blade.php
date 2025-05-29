@@ -75,8 +75,15 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="delivery_manager_name" class="form-label">Delivery Manager Name</label>
-                                <input type="text" class="form-control @error('delivery_manager_name') is-invalid @enderror" 
-                                    name="delivery_manager_name" value="{{ old('delivery_manager_name') }}" required>
+                                <select class="form-select @error('delivery_manager_name') is-invalid @enderror" 
+                                    name="delivery_manager_name" required>
+                                    <option value="">Select Delivery Manager</option>
+                                    @foreach($delivery_managers as $manager)
+                                        <option value="{{ $manager->name }}" {{ old('delivery_manager_name') == $manager->name ? 'selected' : '' }}>
+                                            {{ $manager->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 @error('delivery_manager_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

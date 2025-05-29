@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Interview;
 use App\Models\Onboarding;
@@ -13,8 +14,9 @@ class OnboardingController extends Controller
     public function create(Interview $interview)
     {
         $vendors = Vendor::all();
+        $delivery_managers = User::where('role', ['pm', 'dm'])->get();
         
-        return view('onboarding.create', compact('interview', 'vendors'));
+        return view('onboarding.create', compact('interview', 'vendors', 'delivery_managers'));
     }
 
     public function store(Request $request)
