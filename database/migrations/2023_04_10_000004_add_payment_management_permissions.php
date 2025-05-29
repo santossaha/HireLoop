@@ -22,6 +22,8 @@ return new class extends Migration
             ['name' => 'accounts', 'guard_name' => 'web'],
             ['name' => 'vendor', 'guard_name' => 'web'],
             ['name' => 'bde', 'guard_name' => 'web'],
+            ['name' => 'pm', 'guard_name' => 'web'],
+            ['name' => 'dm', 'guard_name' => 'web'],
         ];
 
         // Insert roles into database
@@ -446,6 +448,34 @@ return new class extends Migration
                     'view-attendance-reports',
                 ],
                 'vendor' => [
+                   'view-dashboard',
+                    
+                  // Candidate Sourcing:
+                    'view-candidate-sourcing', 
+                    'create-candidate-sourcing',
+                    'edit-candidate-sourcing',
+                    'delete-candidate-sourcing',
+                    'view-candidate-sourcing-details',
+                    'approve-candidate-sourcing',
+                    'reject-candidate-sourcing',
+                    'schedule-candidate-interview',
+                    'upload-candidate',
+                ],
+                'pm' => [
+                   'view-dashboard',
+                    
+                  // Candidate Sourcing:
+                    'view-candidate-sourcing', 
+                    'create-candidate-sourcing',
+                    'edit-candidate-sourcing',
+                    'delete-candidate-sourcing',
+                    'view-candidate-sourcing-details',
+                    'approve-candidate-sourcing',
+                    'reject-candidate-sourcing',
+                    'schedule-candidate-interview',
+                    'upload-candidate',
+                ],
+                'dm' => [
                    'view-dashboard',
                     
                   // Candidate Sourcing:

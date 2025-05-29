@@ -16,6 +16,7 @@ use App\Http\Controllers\VendorAttendanceController;
 use App\Http\Controllers\CandidateSourcingController;
 use App\Http\Controllers\InterviewScheduleController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OnboardingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -297,6 +298,13 @@ Route::middleware(['auth'])->group(function () {
 
 //    Vendor Document Upload
     Route::post('/vendor/store-nda-document', [\App\Http\Controllers\VendorController::class, 'storeNdaDocument'])->name('vendor.ndaDocument.store');
+
+    // Onboarding Routes
+    Route::get('interviews/{interview}/onboarding/create', [OnboardingController::class, 'create'])->name('onboardings.create');
+    Route::post('onboardings', [OnboardingController::class, 'store'])->name('onboardings.store');
+    Route::get('onboardings/{onboarding}', [OnboardingController::class, 'show'])->name('onboardings.show');
+    Route::get('onboardings/{onboarding}/edit', [OnboardingController::class, 'edit'])->name('onboardings.edit');
+    Route::put('onboardings/{onboarding}', [OnboardingController::class, 'update'])->name('onboardings.update');
 });
 
 /*
