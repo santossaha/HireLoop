@@ -13,14 +13,14 @@
                 <div class="card-body">
                     <form action="{{ route('onboardings.store') }}" method="POST" id="onboardingForm">
                         @csrf
-                        <input type="hidden" name="requirement_id" value="{{ $interview->requirement_id }}">
+                        <input type="hidden" name="requirement_id" value="{{ $interview->requirement_id?? ''}}">
                         <input type="hidden" name="vendor_id" value="{{ $interview->vendor_id }}">
                         <input type="hidden" name="candidate_id" value="{{ $interview->candidate_id }}">
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="requirement_id" class="form-label">Requirement ID</label>
-                                <input type="text" class="form-control" value="{{ $interview->requirement->requirement_id }}" >
+                                <input type="text" class="form-control" value="{{ $interview->requirement->requirement_id ?? ''}}" >
                             </div>
                             <div class="col-md-6">
                                 <label for="vendor_name" class="form-label">Vendor Name</label>
@@ -134,7 +134,7 @@
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                             <button type="submit" class="btn btn-primary">Create Onboarding</button>
-                            <a href="{{ route('interviews.show', $interview->id) }}" class="btn btn-secondary">Cancel</a>   
+                            <a href="{{ route('onboardings.index') }}" class="btn btn-secondary">Cancel</a>   
                         </div>  
                     </form>
                 </div>

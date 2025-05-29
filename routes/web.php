@@ -300,11 +300,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/vendor/store-nda-document', [\App\Http\Controllers\VendorController::class, 'storeNdaDocument'])->name('vendor.ndaDocument.store');
 
     // Onboarding Routes
-    Route::get('interviews/{interview}/onboarding/create', [OnboardingController::class, 'create'])->name('onboardings.create');
+    Route::get('onboardings', [OnboardingController::class, 'index'])->name('onboardings.index');
+    Route::get('onboarding/create/{interview?}', [OnboardingController::class, 'create'])->name('onboardings.create');
     Route::post('onboardings', [OnboardingController::class, 'store'])->name('onboardings.store');
     Route::get('onboardings/{onboarding}', [OnboardingController::class, 'show'])->name('onboardings.show');
     Route::get('onboardings/{onboarding}/edit', [OnboardingController::class, 'edit'])->name('onboardings.edit');
     Route::put('onboardings/{onboarding}', [OnboardingController::class, 'update'])->name('onboardings.update');
+    Route::delete('onboardings/{onboarding}', [OnboardingController::class, 'destroy'])->name('onboardings.destroy');
 });
 
 /*

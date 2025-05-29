@@ -212,8 +212,6 @@ class InterviewController extends Controller
     public function show(Interview $interview)
     {
         $interview->load(['vendor', 'requirement', 'candidate']);
-        //dd($interview);
-       
         
         return view('interview.show', compact('interview'));
     }
