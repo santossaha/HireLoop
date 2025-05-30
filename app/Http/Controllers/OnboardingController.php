@@ -32,11 +32,21 @@ class OnboardingController extends Controller
                     return $row->created_at->format('M d, Y  h:i a');
                 })
                 ->addColumn('actions', function ($row) {
-                    return [
-                        'show_url' => route('onboardings.show', $row->id),
-                        'edit_url' => route('onboardings.edit', $row->id),
-                        'delete_url' => route('onboardings.destroy', $row->id)
-                    ];
+                    $actions = [];
+                    
+                    if (auth()->user()->can('view-onboarding-details')) {
+                        $actions['show_url'] = route('onboardings.show', $row->id);
+                    }
+                    
+                    if (auth()->user()->can('edit-onboarding')) {
+                        $actions['edit_url'] = route('onboardings.edit', $row->id);
+                    }
+                    
+                    if (auth()->user()->can('delete-onboarding')) {
+                        $actions['delete_url'] = route('onboardings.destroy', $row->id);
+                    }
+                    
+                    return $actions;
                 })
                 ->rawColumns(['actions'])
                 ->make(true);

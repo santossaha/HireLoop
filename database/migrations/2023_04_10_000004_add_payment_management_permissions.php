@@ -153,9 +153,13 @@ return new class extends Migration
             'reject-candidate-sourcing',
             'schedule-candidate-interview',
             'upload-candidate',
-            
 
-           
+            //onboarding
+            'view-onboarding-list',
+            'create-onboarding',
+            'view-onboarding-details',
+            'edit-onboarding',
+            'delete-onboarding', 
  
         ];
 
@@ -286,6 +290,13 @@ return new class extends Migration
                     'edit-vendor-attendance',
                     'approve-vendor-attendance',
                     'view-attendance-reports',
+
+                    //onboarding
+                    'view-onboarding-list',
+                    'create-onboarding',
+                    'view-onboarding-details',
+                    'edit-onboarding',
+                    'delete-onboarding',
                 ],
                 'hod' => [
                          // Vendor Management:
@@ -391,6 +402,13 @@ return new class extends Migration
                     'edit-vendor-attendance',
                     'approve-vendor-attendance',
                     'view-attendance-reports',
+
+                    //onboarding
+                    'view-onboarding-list',
+                    'create-onboarding',
+                    'view-onboarding-details',
+                    'edit-onboarding',
+                    'delete-onboarding',
                 ],
                 'accounts' => [
                         // Vendor Management:
@@ -510,6 +528,13 @@ return new class extends Migration
                     'view-interview-details',
                     'submit-interview-feedback',
                     'view-interview-stats',
+
+                    //onboarding
+                    'view-onboarding-list',
+                    'create-onboarding',
+                    'view-onboarding-details',
+                    'edit-onboarding',
+                    'delete-onboarding',
                 ],
             ];
             
@@ -577,6 +602,13 @@ return new class extends Migration
             'edit-vendor-attendance',
             'approve-vendor-attendance',
             'view-attendance-reports',
+
+            //onboarding
+            'view-onboarding-list',
+            'create-onboarding',
+            'view-onboarding-details',
+            'edit-onboarding',
+            'delete-onboarding',
         ];
 
         // Check if permissions table exists

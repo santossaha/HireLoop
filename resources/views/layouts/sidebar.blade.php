@@ -67,12 +67,25 @@
                 </li>
                 @endcan
 
+                
+
+
                 @can('view-interviews')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('interviews.*') ? 'active' : '' }}" href="{{ route('interviews.index') }}">
                         <i class="fas fa-user-tie me-2"></i> Interviews
                     </a>
                 </li>
+
+                @can('view-onboarding-list')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('onboardings.*') ? 'active' : '' }}" href="{{ route('onboardings.index') }}">
+                        <i class="fas fa-user-plus me-2"></i> Onboarding
+                    </a>
+                </li>
+                @endcan
+
+
                 @endcan
 
                     @can('view-vendor-top-candidates')
