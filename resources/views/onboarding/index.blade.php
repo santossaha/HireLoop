@@ -87,17 +87,7 @@ $(document).ready(function() {
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
-                    return `
-                        <a href="${data.show_url}" class="btn btn-info btn-sm">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="${data.edit_url}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-url="${data.delete_url}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
+                    return `<div class="d-flex gap-1"><a href="${data.show_url}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a><a href="${data.edit_url}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a><button type="button" class="btn btn-danger btn-sm delete-btn" data-url="${data.delete_url}"><i class="fas fa-trash"></i></button></div>`;
                 }
             }
         ],

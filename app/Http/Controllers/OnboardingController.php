@@ -89,7 +89,9 @@ class OnboardingController extends Controller
 
     public function edit(Onboarding $onboarding)
     {
-        return view('onboarding.edit', compact('onboarding'));
+        $vendors = Vendor::all();
+        $delivery_managers = User::where('role', ['pm', 'dm'])->get();
+        return view('onboarding.edit', compact('onboarding', 'vendors', 'delivery_managers'));
     }
 
     public function update(Request $request, Onboarding $onboarding)
