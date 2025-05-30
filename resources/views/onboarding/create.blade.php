@@ -13,18 +13,18 @@
                 <div class="card-body">
                     <form action="{{ route('onboardings.store') }}" method="POST" id="onboardingForm">
                         @csrf
-                        <input type="hidden" name="requirement_id" value="{{ $interview->requirement_id?? ''}}">
-                        <input type="hidden" name="vendor_id" value="{{ $interview->vendor_id }}">
-                        <input type="hidden" name="candidate_id" value="{{ $interview->candidate_id }}">
+                        {{-- <input type="hidden" name="requirement_id" value="{{ $interview->requirement_id?? ''}}"> --}}
+                        {{-- <input type="hidden" name="vendor_id" value="{{ $interview->vendor_id }}">
+                        <input type="hidden" name="candidate_id" value="{{ $interview->candidate_id }}"> --}}
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="requirement_id" class="form-label">Requirement ID</label>
-                                <input type="text" class="form-control" value="{{ $interview->requirement->requirement_id ?? ''}}" >
+                                <input type="text" class="form-control" name="requirement_id" value="{{ $interview->requirement->requirement_id ?? ''}}" >
                             </div>
                             <div class="col-md-6">
                                 <label for="vendor_name" class="form-label">Vendor Name</label>
-                                <select class="form-control @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_name" required>
+                                <select class="form-control @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_name" >
                                     <option value="">Select Vendor</option>
                                     @foreach($vendors as $vendor)
                                         <option value="{{ $vendor->id }}" {{ $interview->vendor_id == $vendor->id ? 'selected' : '' }}>
@@ -41,7 +41,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="candidate_name" class="form-label">Candidate Name</label>
-                                <input type="text" class="form-control" value="{{ $interview->candidate->candidate_name ?? '' }}" >
+                                <input type="text" class="form-control" name="candidate_id" value="{{ $interview->candidate->candidate_name ?? '' }}" >
                             </div>
                             <div class="col-md-6">
                                 <label for="client_budget" class="form-label">Client Budget</label>

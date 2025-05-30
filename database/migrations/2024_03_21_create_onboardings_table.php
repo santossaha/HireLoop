@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('onboardings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('requirement_id')->nullable()->constrained('requirements')->onDelete('cascade');
-            $table->foreignId('vendor_id')->nullable()->constrained('vendors')->onDelete('cascade');
-            $table->foreignId('candidate_id')->nullable()->constrained('candidate_sourcings')->onDelete('cascade');
-            $table->decimal('client_budget', 10, 2);
-            $table->decimal('final_budget', 10, 2);
+            $table->string('requirement_id')->nullable();
+            $table->string('vendor_id')->nullable();
+            $table->string('candidate_id')->nullable();
+            $table->decimal('client_budget', 20, 2);
+            $table->decimal('final_budget', 20, 2);
             $table->string('timesheet_link')->nullable();
             $table->string('delivery_manager_name');
             $table->date('start_date');

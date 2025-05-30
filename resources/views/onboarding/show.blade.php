@@ -19,7 +19,7 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <th style="width: 200px;">Requirement ID</th>
-                                    <td>{{ $onboarding->requirement->requirement_id ?? 'N/A' }}</td>
+                                    <td>{{ $onboarding->requirement->requirement_id ?? $onboarding->requirement_id ??  'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Vendor Name</th>
@@ -27,15 +27,15 @@
                                 </tr>
                                 <tr>
                                     <th>Candidate Name</th>
-                                    <td>{{ $onboarding->candidate->candidate_name ?? 'N/A' }}</td>
+                                    <td>{{ $onboarding->candidate->candidate_name ?? $onboarding->candidate_id ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Client Budget</th>
-                                    <td>${{ number_format($onboarding->client_budget, 2) }}</td>
+                                    <td>{{ number_format($onboarding->client_budget, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <th>Final Budget</th>
-                                    <td>${{ number_format($onboarding->final_budget, 2) }}</td>
+                                    <td>{{ number_format($onboarding->final_budget, 2) }}</td>
                                 </tr>
                             </table>
                         </div>

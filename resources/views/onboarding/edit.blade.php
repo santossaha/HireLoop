@@ -14,17 +14,17 @@
                     <form action="{{ route('onboardings.update', $onboarding->id) }}" method="POST" id="onboardingEditForm">
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="requirement_id" value="{{ $onboarding->requirement_id }}">
-                        <input type="hidden" name="candidate_id" value="{{ $onboarding->candidate_id }}">
+                        {{-- <input type="hidden" name="requirement_id" value="{{ $onboarding->requirement_id }}">
+                        <input type="hidden" name="candidate_id" value="{{ $onboarding->candidate_id }}"> --}}
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="requirement_id" class="form-label">Requirement ID</label>
-                                <input type="text" class="form-control" value="{{ $onboarding->requirement->requirement_id ?? ''}}" readonly>
+                                <input type="text" class="form-control" name="requirement_id" value="{{ $onboarding->requirement->requirement_id ?? $onboarding->requirement_id ?? '' }}" >
                             </div>
                             <div class="col-md-6">
                                 <label for="vendor_id" class="form-label">Vendor Name</label>
-                                <select class="form-control @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_id" required>
+                                <select class="form-control @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_id" >
                                     <option value="">Select Vendor</option>
                                     @foreach($vendors as $vendor)
                                         <option value="{{ $vendor->id }}" {{ $onboarding->vendor_id == $vendor->id ? 'selected' : '' }}>
@@ -41,11 +41,11 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="candidate_name" class="form-label">Candidate Name</label>
-                                <input type="text" class="form-control" value="{{ $onboarding->candidate->candidate_name ?? '' }}" readonly>
+                                <input type="text" class="form-control" name="candidate_id" value="{{ $onboarding->candidate->candidate_name ?? $onboarding->candidate_id ?? ''  }}" >
                             </div>
                             <div class="col-md-6">
                                 <label for="client_budget" class="form-label">Client Budget</label>
-                                <input type="number" step="0.01" class="form-control @error('client_budget') is-invalid @enderror" name="client_budget" value="{{ old('client_budget', $onboarding->client_budget) }}" required>
+                                <input type="number" step="0.01" class="form-control @error('client_budget') is-invalid @enderror" name="client_budget" value="{{ old('client_budget', $onboarding->client_budget) }}" >
                                 @error('client_budget')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -55,7 +55,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="final_budget" class="form-label">Final Budget</label>
-                                <input type="number" step="0.01" class="form-control @error('final_budget') is-invalid @enderror" name="final_budget" value="{{ old('final_budget', $onboarding->final_budget) }}" required>
+                                <input type="number" step="0.01" class="form-control @error('final_budget') is-invalid @enderror" name="final_budget" value="{{ old('final_budget', $onboarding->final_budget) }}" >
                                 @error('final_budget')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

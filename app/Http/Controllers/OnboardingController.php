@@ -20,13 +20,13 @@ class OnboardingController extends Controller
 
             return DataTables::of($onboardings)
                 ->addColumn('requirement_id', function($row) {
-                    return $row->requirement->requirement_id ?? 'N/A';
+                    return $row->requirement->requirement_id ?? $row->requirement_id ?? 'N/A';
                 })
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor->company_name ?? 'N/A';
                 })
                 ->addColumn('candidate_name', function($row) {
-                    return $row->candidate->candidate_name ?? 'N/A';
+                    return $row->candidate->candidate_name ??  $row->candidate_id ?? 'N/A';
                 })
                 ->addColumn('start_date', function($row) {
                     return $row->created_at->format('M d, Y  h:i a');
@@ -55,10 +55,12 @@ class OnboardingController extends Controller
 
     public function store(Request $request)
     {
+
+       // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'requirement_id' => 'required|exists:requirements,id',
-            'vendor_id' => 'required|exists:users,id',
-            'candidate_id' => 'required|exists:candidate_sourcings,id',
+            //'requirement_id' => 'required',
+            //'vendor_id' => 'required',
+            //'candidate_id' => 'required',
             'client_budget' => 'required|numeric|min:0',
             'final_budget' => 'required|numeric|min:0',
             'timesheet_link' => 'nullable|url',
@@ -97,9 +99,9 @@ class OnboardingController extends Controller
     public function update(Request $request, Onboarding $onboarding)
     {
         $validator = Validator::make($request->all(), [
-            'requirement_id' => 'required|exists:requirements,id',
-            'vendor_id' => 'required|exists:vendors,id',
-            'candidate_id' => 'required|exists:candidate_sourcings,id',
+            'requirement_id' => 'required',
+            'vendor_id' => 'required',
+            'candidate_id' => 'required',
             'client_budget' => 'required|numeric|min:0',
             'final_budget' => 'required|numeric|min:0',
             'timesheet_link' => 'nullable|url',
