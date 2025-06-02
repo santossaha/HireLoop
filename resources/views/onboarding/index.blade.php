@@ -71,9 +71,24 @@ $(document).ready(function() {
         ajax: "{{ route('onboardings.index') }}",
         columns: [
             {data: 'id', name: 'id'},
-            {data: 'requirement_id', name: 'requirement_id'},
-            {data: 'vendor_name', name: 'vendor_name'},
-            {data: 'candidate_name', name: 'candidate_name'},
+            {
+                data: 'requirement_id',
+                name: 'requirement_id',
+                searchable: true,
+                orderable: true
+            },
+            {
+                data: 'vendor_name',
+                name: 'vendor_name',
+                searchable: true,
+                orderable: true
+            },
+            {
+                data: 'candidate_name',
+                name: 'candidate_name',
+                searchable: true,
+                orderable: true
+            },
             {data: 'delivery_manager_name', name: 'delivery_manager_name'},
             {data: 'start_date', name: 'start_date'},
             {data: 'project_type', name: 'project_type'},
@@ -89,7 +104,11 @@ $(document).ready(function() {
                 }
             }
         ],
-        order: [[0, 'desc']]
+        order: [[0, 'desc']],
+        search: {
+            smart: true,
+            caseInsensitive: true
+        }
     });
 
     // Handle delete button click

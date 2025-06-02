@@ -48,6 +48,29 @@ class OnboardingController extends Controller
                     
                     return $actions;
                 })
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && !empty($request->input('search.value'))) {
+                        $searchValue = $request->input('search.value');
+                        
+                        $query->where(function($q) use ($searchValue) {
+                            $q->where(function($subQuery) use ($searchValue) {
+                                $subQuery->whereHas('requirement', function($q) use ($searchValue) {
+                                    $q->where('requirement_id', 'like', "%{$searchValue}%");
+                                })
+                                ->orWhere('requirement_id', 'like', "%{$searchValue}%");
+                            })
+                            ->orWhereHas('vendor', function($q) use ($searchValue) {
+                                $q->where('company_name', 'like', "%{$searchValue}%");
+                            })
+                            ->orWhere(function($candidateQuery) use ($searchValue) {
+                                $candidateQuery->whereHas('candidate', function($q) use ($searchValue) {
+                                    $q->where('candidate_name', 'like', "%{$searchValue}%");
+                                })
+                                ->orWhere('candidate_id', 'like', "%{$searchValue}%");
+                            });
+                        });
+                    }
+                })
                 ->rawColumns(['actions'])
                 ->make(true);
         }
