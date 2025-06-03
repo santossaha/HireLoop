@@ -122,6 +122,19 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select @error('status') is-invalid @enderror" name="status" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Yet to Start" {{ old('status', $onboarding->status) == 'Yet to Start' ? 'selected' : '' }}>Yet to Start</option>
+                                    <option value="Running" {{ old('status', $onboarding->status) == 'Running' ? 'selected' : '' }}>Running</option>
+                                    <option value="Hold" {{ old('status', $onboarding->status) == 'Hold' ? 'selected' : '' }}>Hold</option>
+                                    <option value="Stopped" {{ old('status', $onboarding->status) == 'Stopped' ? 'selected' : '' }}>Stopped</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">

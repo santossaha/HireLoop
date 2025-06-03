@@ -31,6 +31,11 @@ class OnboardingController extends Controller
                 ->addColumn('start_date', function($row) {
                     return $row->created_at->format('M d, Y  h:i a');
                 })
+                ->addColumn('status', function($row) {
+                   return $this->getStatusBadge($row->status);
+                })
+                ->rawColumns(['status', 'actions'])
+
                 ->addColumn('actions', function ($row) {
                     $actions = [];
                     
@@ -71,11 +76,22 @@ class OnboardingController extends Controller
                         });
                     }
                 })
-                ->rawColumns(['actions'])
+                ->rawColumns(['actions', 'status'])
                 ->make(true);
         }
 
         return view('onboarding.index');
+    }
+
+    private function getStatusBadge($status)
+    {
+        $badges = [
+            'Yet to Start' => '<span class="badge bg-secondary">Yet to Start</span>',
+            'Running' => '<span class="badge bg-success">Running</span>',
+            'Hold' => '<span class="badge bg-warning">Hold</span>',
+            'Stopped' => '<span class="badge bg-danger">Stopped</span>'
+        ];
+        return $badges[$status] ?? '';
     }
 
     public function create(Interview $interview)
@@ -101,7 +117,8 @@ class OnboardingController extends Controller
             'start_date' => 'required|date',
             'billing_term' => 'required|string|max:255',
             'cycle_date' => 'required|date',
-            'project_type' => 'required|in:hourly,monthly'
+            'project_type' => 'required|in:hourly,monthly',
+            'status' => 'required|in:Yet to Start,Running,Hold,Stopped'
         ]);
 
         if ($validator->fails()) {
@@ -142,7 +159,8 @@ class OnboardingController extends Controller
             'start_date' => 'required|date',
             'billing_term' => 'required|string|max:255',
             'cycle_date' => 'required|date',
-            'project_type' => 'required|in:hourly,monthly'
+            'project_type' => 'required|in:hourly,monthly',
+            'status' => 'required|in:Yet to Start,Running,Hold,Stopped'
         ]);
 
         if ($validator->fails()) {

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('billing_term');
             $table->date('cycle_date');
             $table->enum('project_type', ['hourly', 'monthly']);
+            $table->enum('status', ['Yet to Start', 'Running', 'Hold', 'Stopped'])->default('Yet to Start');
             $table->timestamps();
         });
     }

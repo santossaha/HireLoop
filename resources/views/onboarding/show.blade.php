@@ -71,6 +71,10 @@
                                     <th>Project Type</th>
                                     <td>{{ ucfirst($onboarding->project_type) }}</td>
                                 </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td>{{ $onboarding->status }}</td>
+                                </tr>
                             </table>
                         </div>
                     </div>

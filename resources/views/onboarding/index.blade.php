@@ -27,6 +27,7 @@
                                     <th>Project Type</th>
                                     <th>Client Budget</th>
                                     <th>Final Budget</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -94,6 +95,7 @@ $(document).ready(function() {
             {data: 'project_type', name: 'project_type'},
             {data: 'client_budget', name: 'client_budget'},
             {data: 'final_budget', name: 'final_budget'},
+            {data: 'status', name: 'status'},
             {
                 data: 'actions',
                 name: 'actions',

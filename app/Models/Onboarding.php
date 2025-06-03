@@ -18,7 +18,8 @@ class Onboarding extends Model
         'start_date',
         'billing_term',
         'cycle_date',
-        'project_type'
+        'project_type',
+        'status'
     ];
 
     protected $casts = [

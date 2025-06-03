@@ -17,9 +17,11 @@
                 </a> --}}
                 
                 @if ($interview->status == 'completed' && $interview->result == 'pass')
-                <a href="{{ route('onboardings.create', $interview) }}" class="btn btn-primary">
-                    Go to Onboarding
-                </a>
+                    @if (!$checkOnboarding)
+                    <a href="{{ route('onboardings.create', $interview) }}" class="btn btn-primary">
+                        Go to Onboarding
+                    </a>
+                    @endif
                 @endif
 
                 <a href="{{ route('interviews.index') }}" class="btn btn-secondary">
