@@ -20,6 +20,8 @@ class RoleSeeder extends Seeder
             ['name' => 'poc', 'guard_name' => 'web'],
             ['name' => 'accounts', 'guard_name' => 'web'],
             ['name' => 'vendor', 'guard_name' => 'web'],
+            ['name' => 'pm', 'guard_name' => 'web'],
+            ['name' => 'dm', 'guard_name' => 'web'],
         ];
 
         // Insert roles into database

@@ -22,6 +22,8 @@ return new class extends Migration
             ['name' => 'accounts', 'guard_name' => 'web'],
             ['name' => 'vendor', 'guard_name' => 'web'],
             ['name' => 'bde', 'guard_name' => 'web'],
+            ['name' => 'pm', 'guard_name' => 'web'],
+            ['name' => 'dm', 'guard_name' => 'web'],
         ];
 
         // Insert roles into database
@@ -151,9 +153,13 @@ return new class extends Migration
             'reject-candidate-sourcing',
             'schedule-candidate-interview',
             'upload-candidate',
-            
 
-           
+            //onboarding
+            'view-onboarding-list',
+            'create-onboarding',
+            'view-onboarding-details',
+            'edit-onboarding',
+            'delete-onboarding', 
  
         ];
 
@@ -284,6 +290,13 @@ return new class extends Migration
                     'edit-vendor-attendance',
                     'approve-vendor-attendance',
                     'view-attendance-reports',
+
+                    //onboarding
+                    'view-onboarding-list',
+                    'create-onboarding',
+                    'view-onboarding-details',
+                    'edit-onboarding',
+                    'delete-onboarding',
                 ],
                 'hod' => [
                          // Vendor Management:
@@ -389,6 +402,13 @@ return new class extends Migration
                     'edit-vendor-attendance',
                     'approve-vendor-attendance',
                     'view-attendance-reports',
+
+                    //onboarding
+                    'view-onboarding-list',
+                    'create-onboarding',
+                    'view-onboarding-details',
+                    'edit-onboarding',
+                    'delete-onboarding',
                 ],
                 'accounts' => [
                         // Vendor Management:
@@ -459,6 +479,34 @@ return new class extends Migration
                     'schedule-candidate-interview',
                     'upload-candidate',
                 ],
+                'pm' => [
+                   'view-dashboard',
+                    
+                  // Candidate Sourcing:
+                    'view-candidate-sourcing', 
+                    'create-candidate-sourcing',
+                    'edit-candidate-sourcing',
+                    'delete-candidate-sourcing',
+                    'view-candidate-sourcing-details',
+                    'approve-candidate-sourcing',
+                    'reject-candidate-sourcing',
+                    'schedule-candidate-interview',
+                    'upload-candidate',
+                ],
+                'dm' => [
+                   'view-dashboard',
+                    
+                  // Candidate Sourcing:
+                    'view-candidate-sourcing', 
+                    'create-candidate-sourcing',
+                    'edit-candidate-sourcing',
+                    'delete-candidate-sourcing',
+                    'view-candidate-sourcing-details',
+                    'approve-candidate-sourcing',
+                    'reject-candidate-sourcing',
+                    'schedule-candidate-interview',
+                    'upload-candidate',
+                ],
                 'bde' => [
                     // Vendor Management:
 
@@ -480,6 +528,13 @@ return new class extends Migration
                     'view-interview-details',
                     'submit-interview-feedback',
                     'view-interview-stats',
+
+                    //onboarding
+                    'view-onboarding-list',
+                    'create-onboarding',
+                    'view-onboarding-details',
+                    'edit-onboarding',
+                    'delete-onboarding',
                 ],
             ];
             
@@ -547,6 +602,13 @@ return new class extends Migration
             'edit-vendor-attendance',
             'approve-vendor-attendance',
             'view-attendance-reports',
+
+            //onboarding
+            'view-onboarding-list',
+            'create-onboarding',
+            'view-onboarding-details',
+            'edit-onboarding',
+            'delete-onboarding',
         ];
 
         // Check if permissions table exists

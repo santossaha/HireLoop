@@ -15,6 +15,13 @@
                 {{-- <a href="{{ route('vendors.show', $interview->vendor_id) }}" class="btn btn-info me-2">
                     <i class="fas fa-user me-1"></i> View Vendor
                 </a> --}}
+                
+                @if ($interview->status == 'completed' && $interview->result == 'pass')
+                <a href="{{ route('onboardings.create', $interview) }}" class="btn btn-primary">
+                    Go to Onboarding
+                </a>
+                @endif
+
                 <a href="{{ route('interviews.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left me-1"></i> Back to Interviews
                 </a>

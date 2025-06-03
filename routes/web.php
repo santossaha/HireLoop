@@ -16,6 +16,7 @@ use App\Http\Controllers\VendorAttendanceController;
 use App\Http\Controllers\CandidateSourcingController;
 use App\Http\Controllers\InterviewScheduleController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OnboardingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -300,6 +301,27 @@ Route::middleware(['auth'])->group(function () {
 
 //    Close requirement
     Route::get('/requirement-close/{id}', [\App\Http\Controllers\RequirementController::class, 'closeRequirement'])->name('requirement.close');
+    // Onboarding Routes
+    Route::get('onboardings', [OnboardingController::class, 'index'])->name('onboardings.index')
+        ->middleware('permission:view-onboarding-list');
+
+    Route::get('onboarding/create/{interview?}', [OnboardingController::class, 'create'])->name('onboardings.create')
+        ->middleware('permission:create-onboarding');
+
+    Route::post('onboardings', [OnboardingController::class, 'store'])->name('onboardings.store')
+        ->middleware('permission:create-onboarding');
+
+    Route::get('onboardings/{onboarding}', [OnboardingController::class, 'show'])->name('onboardings.show')
+        ->middleware('permission:view-onboarding-details');
+
+    Route::get('onboardings/{onboarding}/edit', [OnboardingController::class, 'edit'])->name('onboardings.edit')
+        ->middleware('permission:edit-onboarding');
+
+    Route::put('onboardings/{onboarding}', [OnboardingController::class, 'update'])->name('onboardings.update')
+        ->middleware('permission:edit-onboarding');
+        
+    Route::delete('onboardings/{onboarding}', [OnboardingController::class, 'destroy'])->name('onboardings.destroy')
+        ->middleware('permission:delete-onboarding');
 });
 
 /*

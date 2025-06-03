@@ -15,15 +15,16 @@ class VendorFactory extends Factory
     public function definition()
     {
         // Create a user with vendor role first
+        $roleName = $this->faker->randomElement(['vendor', 'pm', 'dm']);
         $user = User::create([
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('password'),
-            'role' => 'vendor',
+            'role' => $roleName,
         ]);
 
-        // Assign vendor role and permissions
-        $role = Role::where('name', 'vendor')->first();
+        // Assign role and permissions
+        $role = Role::where('name', $roleName)->first();
         $user->assignRole($role);
         
         // Sync permissions based on the role
