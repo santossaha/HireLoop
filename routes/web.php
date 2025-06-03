@@ -322,6 +322,9 @@ Route::middleware(['auth'])->group(function () {
         
     Route::delete('onboardings/{onboarding}', [OnboardingController::class, 'destroy'])->name('onboardings.destroy')
         ->middleware('permission:delete-onboarding');
+
+    Route::post('/onboardings/{onboarding}/end-hiring', [OnboardingController::class, 'endHiring'])
+    ->name('onboardings.end-hiring');
 });
 
 /*

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Interview;
 use App\Models\Onboarding;
+use App\Models\EndReason;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -136,7 +137,8 @@ class OnboardingController extends Controller
 
     public function show(Onboarding $onboarding)
     {
-        return view('onboarding.show', compact('onboarding'));
+        $endReasons = EndReason::get();
+        return view('onboarding.show', compact('onboarding', 'endReasons'));
     }
 
     public function edit(Onboarding $onboarding)
@@ -180,5 +182,32 @@ class OnboardingController extends Controller
         $onboarding->delete();
         return redirect()->route('onboardings.index')
             ->with('success', 'Onboarding deleted successfully.');  
+    }
+
+    public function endHiring(Request $request, Onboarding $onboarding)
+    {
+        $validator = Validator::make($request->all(), [
+            'end_date' => 'required|date',
+            'end_reason_id' => 'required|exists:end_reasons,id',
+            'end_comments' => 'nullable|string|max:1000'
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        
+
+        $onboarding->update([
+            'end_date' => $request->end_date,
+            'end_reason_id' => $request->end_reason_id,
+            'end_comments' => $request->end_comments,
+            //'status' => 'Stopped'
+        ]);
+
+        return redirect()
+            ->route('onboardings.show', $onboarding->id)
+            ->with('success', 'Hiring ended successfully.');
     }
 } 

@@ -22,6 +22,9 @@ return new class extends Migration
             $table->date('cycle_date');
             $table->enum('project_type', ['hourly', 'monthly']);
             $table->enum('status', ['Yet to Start', 'Running', 'Hold', 'Stopped'])->default('Yet to Start');
+            $table->date('end_date')->nullable();
+            $table->text('end_comments')->nullable();
+            $table->foreignId('end_reason_id')->nullable()->constrained('end_reasons')->nullOnDelete();
             $table->timestamps();
         });
     }

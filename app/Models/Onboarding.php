@@ -19,12 +19,16 @@ class Onboarding extends Model
         'billing_term',
         'cycle_date',
         'project_type',
-        'status'
+        'status',
+        'end_date',
+        'end_comments',
+        'end_reason_id'
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'cycle_date' => 'date',
+        'end_date' => 'date',
         'client_budget' => 'decimal:2',
         'final_budget' => 'decimal:2'
     ];
@@ -42,5 +46,10 @@ class Onboarding extends Model
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(CandidateSourcing::class, 'candidate_id');
+    }
+
+    public function endReason()
+    {
+        return $this->belongsTo(EndReason::class);
     }
 } 

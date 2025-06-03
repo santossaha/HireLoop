@@ -161,5 +161,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             InterviewSeeder::class,
         ]);
+
+        // Seed EndReasons
+        $this->call([
+            EndReasonSeeder::class,
+        ]);
     }
 }
