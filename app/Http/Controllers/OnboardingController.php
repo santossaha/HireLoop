@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Interview;
 use App\Models\Onboarding;
+use Illuminate\Support\Facades\Auth;
 use App\Models\EndReason;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +19,43 @@ class OnboardingController extends Controller
         if ($request->ajax()) {
             $onboardings = Onboarding::with(['requirement', 'vendor', 'candidate'])
                 ->select('onboardings.*');
+
+            // Apply date range filter
+            if ($request->has('start_date') && $request->has('end_date')) {
+                $startDate = $request->start_date;
+                $endDate = $request->end_date;
+               // dd($startDate, $endDate);
+                if (!empty($startDate) && !empty($endDate)) {
+                    $onboardings->whereBetween('onboardings.start_date', [
+                        $startDate . ' 00:00:00',
+                        $endDate . ' 23:59:59'
+                    ]);
+                }
+            }
+
+            // Apply status filter
+            if ($request->has('status') && !empty($request->status)) {
+                $onboardings->where('onboardings.status', $request->status);
+            }
+
+            // Add global search
+            if ($request->has('search') && !empty($request->input('search.value'))) {
+                $searchValue = $request->input('search.value');
+                $onboardings->where(function($query) use ($searchValue) {
+                    $query->where('onboardings.delivery_manager_name', 'like', "%{$searchValue}%")
+                          ->orWhere('onboardings.project_type', 'like', "%{$searchValue}%")
+                          ->orWhere('onboardings.client_budget', 'like', "%{$searchValue}%")
+                          ->orWhere('onboardings.final_budget', 'like', "%{$searchValue}%")
+                          ->orWhere('onboardings.status', 'like', "%{$searchValue}%")
+                          ->orWhere('onboardings.requirement_id', 'like', "%{$searchValue}%")
+                          ->orWhere('onboardings.candidate_id', 'like', "%{$searchValue}%")
+                          
+                          ->orWhereHas('vendor', function($q) use ($searchValue) {
+                              $q->where('company_name', 'like', "%{$searchValue}%");
+                          });
+                          
+                });
+            }
 
             return DataTables::of($onboardings)
                 ->addColumn('requirement_id', function($row) {
@@ -40,43 +78,21 @@ class OnboardingController extends Controller
                 ->addColumn('actions', function ($row) {
                     $actions = [];
                     
-                    if (auth()->user()->can('view-onboarding-details')) {
+                    if (Auth::user()->can('view-onboarding-details')) {
                         $actions['show_url'] = route('onboardings.show', $row->id);
                     }
                     
-                    if (auth()->user()->can('edit-onboarding')) {
+                    if (Auth::user()->can('edit-onboarding')) {
                         $actions['edit_url'] = route('onboardings.edit', $row->id);
                     }
                     
-                    if (auth()->user()->can('delete-onboarding')) {
+                    if (Auth::user()->can('delete-onboarding')) {
                         $actions['delete_url'] = route('onboardings.destroy', $row->id);
                     }
                     
                     return $actions;
                 })
-                ->filter(function ($query) use ($request) {
-                    if ($request->has('search') && !empty($request->input('search.value'))) {
-                        $searchValue = $request->input('search.value');
-                        
-                        $query->where(function($q) use ($searchValue) {
-                            $q->where(function($subQuery) use ($searchValue) {
-                                $subQuery->whereHas('requirement', function($q) use ($searchValue) {
-                                    $q->where('requirement_id', 'like', "%{$searchValue}%");
-                                })
-                                ->orWhere('requirement_id', 'like', "%{$searchValue}%");
-                            })
-                            ->orWhereHas('vendor', function($q) use ($searchValue) {
-                                $q->where('company_name', 'like', "%{$searchValue}%");
-                            })
-                            ->orWhere(function($candidateQuery) use ($searchValue) {
-                                $candidateQuery->whereHas('candidate', function($q) use ($searchValue) {
-                                    $q->where('candidate_name', 'like', "%{$searchValue}%");
-                                })
-                                ->orWhere('candidate_id', 'like', "%{$searchValue}%");
-                            });
-                        });
-                    }
-                })
+                
                 ->rawColumns(['actions', 'status'])
                 ->make(true);
         }
