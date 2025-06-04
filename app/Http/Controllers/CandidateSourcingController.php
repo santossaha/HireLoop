@@ -79,7 +79,7 @@ class CandidateSourcingController extends Controller
                 }
                 $data[] = [
                     'id' => $requirement->id,
-                    'requirement_id' => $requirement->id,
+                    'requirement_id' => $requirement->requirement_id,
                     'title' => $requirement->title,
                     'company' => $requirement->company->name,
                     'skills' => $skills,
