@@ -7,11 +7,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">Onboarding List</h6>
-                    <a href="{{ route('onboardings.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Create New Onboarding
-                    </a>
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Onboarding Filter</h6>
                 </div>
                 <div class="card-body">
                     <!-- Filters -->
@@ -42,6 +39,19 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+            
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Onboarding List</h6>
+                    <a href="{{ route('onboardings.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Create New Onboarding
+                    </a>
+                </div>
+
+                <div class="card-body">
+                   
 
                     <div class="table-responsive">
                         <table class="table table-bordered" id="onboardingTable" width="100%" cellspacing="0">
