@@ -16,7 +16,7 @@
                 <table class="table table-bordered" id="requirementsTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+{{--                            <th>ID</th>--}}
                             <th>Requirement ID</th>
 {{--                            <th>Company</th>--}}
                             <th>Title</th>
@@ -51,7 +51,7 @@
                 }
             },
             columns: [
-                { data: 'id', name: 'id' },
+                // { data: 'id', name: 'id' },
                 { data: 'requirement_id', name: 'requirement_id' },
                 // { data: 'company', name: 'company' },
                 { data: 'title', name: 'title' },
