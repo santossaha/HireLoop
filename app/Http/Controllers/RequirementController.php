@@ -25,13 +25,18 @@ class RequirementController extends Controller
     /**
      * Display a listing of the requirements
      */
-    public function getTypeBadge($status) : string
+    public function getTypeBadge($status,$is_closed) : string
     {
+        $text = '';
         if($status){
-            return '<span class="badge bg-success">Applied</span> <span class="badge bg-secondary">'.$status.' Resume</span>';
+            $text = '<span class="badge bg-success">Applied</span> <span class="badge bg-secondary">'.$status.' Resume</span>';
         }else{
-            return '<span class="badge bg-info">Not Applied</span>';
+            $text = '<span class="badge bg-info">Not Applied</span>';
         }
+        if($is_closed == 1){
+            $text.= '<span class="badge bg-danger">Closed</span>';
+        }
+        return $text;
     }
 
     public function index(Request $request)
@@ -106,11 +111,11 @@ class RequirementController extends Controller
                     'client_budget' => $requirement->client_budget,
                     'final_budget' => $requirement->final_budget,
                     'company' => $requirement->company->name,
-                    'requirement_id' => $requirement->requirement_id,
+                    'requirement_id' => '<a href="'.route('requirements.show', $requirement->id).'" class="text-underline text-black">'.$requirement->requirement_id.'</a>',
                     'department' => $requirement->department->name ?? 'N/A',
                     'created_by' => $requirement->createBy->name ?? 'N/A',
                     'created_at' => $requirement->created_at->format('M d, Y  h:i a'),
-                    'candidate_count' => $this->getTypeBadge($userResumeCount > 0 ? $userResumeCount : 0),
+                    'candidate_count' => $this->getTypeBadge($userResumeCount > 0 ? $userResumeCount : 0,$requirement->is_closed),
                     'actions' => view('requirement.partials.actions', compact('requirement'))->render()
                 ];
             }
