@@ -129,7 +129,17 @@
                             <td>{{ $candidate->candidate_name }}</td>
 {{--                            <td>{{ $candidate->email }}</td>--}}
 {{--                            <td>{{ $candidate->phone }}</td>--}}
-                            <td>{{ number_format($candidate->budget, 2) }}</td>
+                            @if($candidate->budget < $requirement->final_budget)
+                                <td><b class="text-success">{{ number_format($candidate->budget, 2) }}</b></td>
+                            @elseif($candidate->budget == $requirement->final_budget)
+                                <td><b class="text-secondary">{{ number_format($candidate->budget, 2) }}</b></td>
+                            @elseif($candidate->budget > $requirement->final_budget)
+                                <td><b class="text-danger">{{ number_format($candidate->budget, 2) }}</b></td>
+                            @else
+                                <td>{{ number_format($candidate->budget, 2) }}</td>
+                            @endif
+
+
                             <td>{{ $candidate->uploadedBy->name ?? 'N/A' }}</td>
                             <td>
                                 {{-- <span class="badge bg-{{ $candidate->status === 'pending' ? 'warning' : ($candidate->status === 'approved' ? 'success' : 'danger') }}">

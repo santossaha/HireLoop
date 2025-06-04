@@ -131,7 +131,10 @@ class RequirementController extends Controller
             ]);
         }
 
-        return view('requirement.index');
+        $open_requirement_count = Requirement::where('is_closed',0)->count();
+        $closed_requirement_count = Requirement::where('is_closed',1)->count();
+
+        return view('requirement.index',compact('open_requirement_count','closed_requirement_count'));
     }
 
     /**
