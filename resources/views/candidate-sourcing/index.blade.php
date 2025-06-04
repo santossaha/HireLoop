@@ -17,11 +17,14 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Company</th>
                             <th>Requirement ID</th>
+{{--                            <th>Company</th>--}}
+                            <th>Title</th>
+                            <th>Skills</th>
                             <th>Department</th>
+{{--                            <th>Department</th>--}}
+                            <th>Created Date</th>
                             <th>Created By</th>
-                            <th>Created</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -49,11 +52,13 @@
             },
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'company', name: 'company' },
                 { data: 'requirement_id', name: 'requirement_id' },
+                // { data: 'company', name: 'company' },
+                { data: 'title', name: 'title' },
+                { data: 'skills', name: 'skills' },
                 { data: 'department', name: 'department' },
-                { data: 'created_by', name: 'created_by' },
                 { data: 'created_at', name: 'created_at' },
+                { data: 'created_by', name: 'created_by' },
                 { data: 'status', name: 'status' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
