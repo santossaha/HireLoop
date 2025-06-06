@@ -5,15 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Interview;
+use App\Models\Onboarding;
 use App\Models\Requirement;
 use Illuminate\Http\Request;
-use App\Models\CandidateSourcing;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use App\Mail\MockInterviewScheduled;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\InterviewFeedback;
+use App\Models\CandidateSourcing;
 use Illuminate\Support\Facades\Log;
+use App\Mail\MockInterviewScheduled;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class InterviewController extends Controller
 {
@@ -211,9 +212,13 @@ class InterviewController extends Controller
      */
     public function show(Interview $interview)
     {
-        $interview->load(['vendor', 'requirement', 'candidate']);
         
-        return view('interview.show', compact('interview'));
+        $interview->load(['vendor', 'requirement', 'candidate']);
+        $checkOnboarding = null;
+        if($interview->requirement->requirement_id){
+            $checkOnboarding = Onboarding::where('requirement_id', $interview->requirement->requirement_id)->first();
+        }
+        return view('interview.show', compact('interview', 'checkOnboarding'));
     }
 
     /**
