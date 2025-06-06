@@ -79,7 +79,7 @@ class CandidateSourcingController extends Controller
                 }
                 $data[] = [
                     'id' => $requirement->id,
-                    'requirement_id' => '<a href="'.route('requirements.show', $requirement->id).'" class="text-underline text-black">'.$requirement->requirement_id.'</a>',
+                    'requirement_id' => '<a href="'.route('candidate-sourcing.show', $requirement->id).'" class="text-underline text-black">'.$requirement->requirement_id.'</a>',
                     'title' => $requirement->title,
                     'company' => $requirement->company->name,
                     'skills' => $skills,
