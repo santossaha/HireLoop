@@ -23,40 +23,7 @@
     
     <!-- Custom CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>
-        footer {    position: fixed;
-        bottom: 0;
-        width: 100%;
-        }
-        .sidebar {
-    height: 100vh;
-    width: 240px;
-    min-width: 240px;
-    max-width: 240px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    overflow-y: auto;
-    transition: all 0.3s ease;
-}
-.content-wrapper {
-    margin-left: 240px;
-    transition: margin-left 0.3s ease;
-}
-.content-wrapper.ms-0 {
-    margin-left: 0;
-}
-.content-wrapper.ms-240 {
-    margin-left: 240px;
-}
-/* Key Skills Select2 Fix */
-.select2-container--default .select2-selection--multiple {
-    max-height: 120px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-    </style>
+
     
     @yield('styles')
 </head>
@@ -112,9 +79,9 @@
                                         <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
-                                        <li><hr class="dropdown-divider"></li>
+                                        {{-- <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li> --}}
+                                        {{-- <li><hr class="dropdown-divider"></li> --}}
                                         <li>
                                             <form method="POST" action="{{ route('logout') }}">
                                                 @csrf
