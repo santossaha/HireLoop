@@ -1,10 +1,10 @@
 <div class="btn-group" role="group">
-    <a href="{{ route('vendors.show', $vendor->id) }}" class="btn btn-info btn-sm" title="View Details">
+    <a href="{{ route('vendors.show', encrypt_id($vendor->id)) }}" class="btn btn-info btn-sm" title="View Details">
         <i class="fas fa-eye"></i>
     </a>
     {{-- @if(auth()->user()->isAdmin() || auth()->user()->isHod() || 
         (auth()->user()->isPoc() && $vendor->internal_poc_id == auth()->id())) --}}
-    <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-primary btn-sm" title="Edit Vendor">
+    <a href="{{ route('vendors.edit', encrypt_id($vendor->id)) }}" class="btn btn-primary btn-sm" title="Edit Vendor">
         <i class="fas fa-edit"></i>
     </a>
     {{-- @endif --}}

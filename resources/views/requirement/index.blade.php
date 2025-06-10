@@ -53,7 +53,7 @@
         </div>
         <div class="card-body">
             <form id="filterForm" class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="vendor_id" class="form-label">Vendor</label>
                     <select class="form-select" id="company_id" name="company_id">
                         <option value="">All Comapnay</option>
@@ -62,13 +62,21 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="department_id" class="form-label">Department</label>
                     <select class="form-select" id="department_id" name="department_id">
                         <option value="">All Departments</option>
                         @foreach(App\Models\Department::orderBy('name')->get() as $department)
                             <option value="{{ $department->id }}">{{ $department->name }}</option>
                         @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="is_closed" class="form-label">Status</label>
+                    <select class="form-select" id="is_closed" name="is_closed">
+                        <option value="">Select Status</option>
+                        <option value="99">Open</option>
+                        <option value="1">Closed</option>
                     </select>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
@@ -130,6 +138,7 @@
                 data: function(d) {
                     d.company_id = $('#company_id').val();
                     d.department_id = $('#department_id').val();
+                    d.is_closed = $('#is_closed').val();
                 }
             },
             columns: [
