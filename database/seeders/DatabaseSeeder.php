@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Department;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -140,6 +141,9 @@ class DatabaseSeeder extends Seeder
             ]
             );
         $user5->assignRole('bde');
+
+         // Seed Permisson Group
+         $this->call(PermissionGrouping::class);
 
         // Seed Companies
         $this->call(CompanySeeder::class);
