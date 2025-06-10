@@ -23,32 +23,7 @@
     
     <!-- Custom CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>
-        footer {    position: fixed;
-        bottom: 0;
-        width: 100%;
-        }
-        .sidebar {
-    height: 100vh;
-    width: 240px;
-    min-width: 240px;
-    max-width: 240px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    overflow-y: auto;
-}
-.content-wrapper {
-    margin-left: 240px;
-}
-/* Key Skills Select2 Fix */
-.select2-container--default .select2-selection--multiple {
-    max-height: 120px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-    </style>
+
     
     @yield('styles')
 </head>
@@ -104,9 +79,9 @@
                                         <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
-                                        <li><hr class="dropdown-divider"></li>
+                                        {{-- <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li> --}}
+                                        {{-- <li><hr class="dropdown-divider"></li> --}}
                                         <li>
                                             <form method="POST" action="{{ route('logout') }}">
                                                 @csrf
@@ -194,70 +169,85 @@
 
     <script>
         let notificationUrl  = "{{ url('notifications/latest') }}";
-    function loadNotifications() {
-      
-        fetch(notificationUrl)
-            .then(response => response.json())
-            .then(notifications => {
-                const notificationList = document.querySelector('.notification-list');
-                const badge = document.querySelector('.notification-badge');
-                
-                if (notifications.length > 0) {
-                    badge.style.display = 'inline';
-                    badge.textContent = notifications.length;
+        
+        // Sidebar Toggle Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const contentWrapper = document.querySelector('.content-wrapper');
+            
+            if (sidebarToggle && sidebar && contentWrapper) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('d-none');
+                    contentWrapper.classList.toggle('ms-0');
+                    contentWrapper.classList.toggle('ms-240');
+                });
+            }
+        });
+
+        function loadNotifications() {
+            fetch(notificationUrl)
+                .then(response => response.json())
+                .then(notifications => {
+                    const notificationList = document.querySelector('.notification-list');
+                    const badge = document.querySelector('.notification-badge');
                     
-                    notificationList.innerHTML = notifications.map(notification => `
-                        <a class="dropdown-item notification-item ${notification.read_at ? 'read' : ''}" 
-                           href="#" onclick="markAsRead('${notification.id}')">
-                            <div class="d-flex flex-column">
-                                <div class="notification-title fw-bold">${notification.data.title || 'New Notification'}</div>
-                                <div class="notification-message">${notification.data.message || notification.data.job_description || 'New requirement has been created'}</div>
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <small class="text-muted">${new Date(notification.created_at).toLocaleString()}</small>
-                                    ${notification.data.redirect_url ? `
-                                        <a href="${notification.data.redirect_url}" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    ` : ''}
+                    if (notifications.length > 0) {
+                        badge.style.display = 'inline';
+                        badge.textContent = notifications.length;
+                        
+                        notificationList.innerHTML = notifications.map(notification => `
+                            <a class="dropdown-item notification-item ${notification.read_at ? 'read' : ''}" 
+                               href="#" onclick="markAsRead('${notification.id}')">
+                                <div class="d-flex flex-column">
+                                    <div class="notification-title fw-bold">${notification.data.title || 'New Notification'}</div>
+                                    <div class="notification-message">${notification.data.message || notification.data.job_description || 'New requirement has been created'}</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted">${new Date(notification.created_at).toLocaleString()}</small>
+                                        ${notification.data.redirect_url ? `
+                                            <a href="${notification.data.redirect_url}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        ` : ''}
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    `).join('');
-                } else {
-                    badge.style.display = 'none';
-                    notificationList.innerHTML = '<div class="dropdown-item text-center">No new notifications</div>';
+                            </a>
+                        `).join('');
+                    } else {
+                        badge.style.display = 'none';
+                        notificationList.innerHTML = '<div class="dropdown-item text-center">No new notifications</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading notifications:', error);
+                });
+        }
+
+        function markAsRead(id) {
+            fetch(`/notifications/${id}/mark-as-read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    loadNotifications(); // Reload notifications after marking as read
                 }
             })
             .catch(error => {
-                console.error('Error loading notifications:', error);
+                console.error('Error marking notification as read:', error);
             });
-    }
+        }
 
-    function markAsRead(id) {
-        fetch(`/notifications/${id}/mark-as-read`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                loadNotifications(); // Reload notifications after marking as read
-            }
-        })
-        .catch(error => {
-            console.error('Error marking notification as read:', error);
-        });
-    }
+        // Load notifications every 5 seconds
+        setInterval(loadNotifications, 10000);
 
-    // Load notifications every 5 seconds
-    setInterval(loadNotifications, 10000);
-
-    // Initial load
-    document.addEventListener('DOMContentLoaded', loadNotifications);
+        // Initial load
+        document.addEventListener('DOMContentLoaded', loadNotifications);
     </script>
     
     @yield('scripts')

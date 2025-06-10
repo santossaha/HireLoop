@@ -1,0 +1,121 @@
+
+.sidebar {
+    background: linear-gradient(180deg, #1e1e2d 0%, #2d2d3f 100%);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-header {
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    padding: 1.2rem 1.5rem;
+}
+
+.sidebar-header h5 {
+    color: #ffd700;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 1rem 1.5rem;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    font-weight: 500;
+    position: relative;
+    margin: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar .nav-link:hover {
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.05);
+    border-left: 3px solid rgba(255, 215, 0, 0.5);
+}
+
+.sidebar .nav-link.active {
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.08);
+    border-left: 3px solid #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+}
+
+.sidebar .nav-section {
+    margin-top: 2rem;
+}
+
+.sidebar-heading {
+    color: rgba(255, 215, 0, 0.7);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+}
+
+.sidebar .nav-link i {
+    width: 24px;
+    text-align: center;
+    margin-right: 12px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover i,
+.sidebar .nav-link.active i {
+    color: #ffd700;
+    transform: scale(1.1);
+}
+
+/* Add subtle animation for active state */
+.sidebar .nav-link.active::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: linear-gradient(to bottom, #ffd700, transparent);
+}
+
+
+
+
+
+
+footer {    position: fixed;
+    bottom: 0;
+    width: 100%;
+    }
+    .sidebar {
+height: 100vh;
+width: 240px;
+min-width: 240px;
+max-width: 240px;
+position: fixed;
+left: 0;
+top: 0;
+z-index: 100;
+overflow-y: auto;
+transition: all 0.3s ease;
+}
+.content-wrapper {
+margin-left: 240px;
+transition: margin-left 0.3s ease;
+}
+.content-wrapper.ms-0 {
+margin-left: 0;
+}
+.content-wrapper.ms-240 {
+margin-left: 240px;
+}
+/* Key Skills Select2 Fix */
+.select2-container--default .select2-selection--multiple {
+max-height: 120px;
+overflow-y: auto;
+overflow-x: hidden;
+}

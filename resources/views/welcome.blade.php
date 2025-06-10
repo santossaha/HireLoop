@@ -7,39 +7,86 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(180deg, #1e1e2d 0%, #2d2d3f 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
+            font-family: Arial, sans-serif;
+            color: #ccc;
         }
         .hero-section {
             padding: 4rem 0;
+            color: #fff;
+        }
+        .hero-section h1 {
+            color: #ffd700;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .hero-section p.lead {
+            color: rgba(255, 255, 255, 0.8);
         }
         .card {
+            background-color: #2a2a3a;
             border: none;
-            border-radius: 1rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
         }
         .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #4e73df;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
+            transition: transform 0.3s ease;
+        }
+        .card:hover .card-icon {
+            transform: scale(1.1);
+        }
+        .card-title {
+            color: #ffd700;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .card-text {
+            color: rgba(255, 255, 255, 0.7);
         }
         .btn-primary {
-            background-color: #4e73df;
-            border-color: #4e73df;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            background-color: #ffd700;
+            border-color: #ffd700;
+            color: #1e1e2d;
+            font-weight: 700;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+        }
+        .btn-primary:hover {
+            background-color: #e6c200;
+            border-color: #e6c200;
+            color: #1e1e2d;
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+            transform: translateY(-2px);
         }
         .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            background-color: #3b3b4d;
+            border-color: #3b3b4d;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-secondary:hover {
+            background-color: #4a4a5a;
+            border-color: #4a4a5a;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
         }
     </style>
 </head>
