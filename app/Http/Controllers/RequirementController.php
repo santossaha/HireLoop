@@ -57,6 +57,14 @@ class RequirementController extends Controller
                 $query->where('company_id', $request->company_id);
             }
 
+            if ($request->has('is_closed') && !empty($request->is_closed)) {
+                $is_closed = $request->is_closed;
+                if($is_closed == "1")
+                    $query->where('is_closed', 1);
+                else
+                    $query->where('is_closed', '!=',1);
+            }
+
             if ($request->has('department_id') && !empty($request->department_id)) {
                 $query->where('department_id', $request->department_id);
             }

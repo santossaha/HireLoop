@@ -252,9 +252,10 @@ class VendorController extends Controller
     /**
      * Display the specified vendor.
      */
-    public function show(Vendor $vendor)
+    public function show($vendor)
     {
-
+        $decryptedId = decrypt_id($vendor);
+        $vendor = Vendor::findOrFail($decryptedId);
         $this->authorize('view', $vendor);
 
 
@@ -264,8 +265,10 @@ class VendorController extends Controller
     /**
      * Show the form for editing the specified vendor.
      */
-    public function edit(Vendor $vendor)
+    public function edit($vendor)
     {
+        $decryptedId = decrypt_id($vendor);
+        $vendor = Vendor::findOrFail($decryptedId);
         $this->authorize('update', $vendor);
         
         $internalPocs = User::whereIn('role', [ 'poc', 'hod', 'bde'])->get();
