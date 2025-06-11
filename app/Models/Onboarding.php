@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Onboarding extends Model
 {
@@ -51,6 +52,11 @@ class Onboarding extends Model
     public function endReason()
     {
         return $this->belongsTo(EndReason::class);
+    }
+
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
     }
 
     public function getWorkingDays()

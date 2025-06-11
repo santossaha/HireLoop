@@ -87,6 +87,9 @@
                     <a href="{{ route('onboardings.edit', $onboarding->id) }}" class="btn btn-warning">
                         <i class="fas fa-edit"></i> Edit
                     </a>
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#leaveModal">
+                        <i class="fas fa-calendar-alt"></i> Apply Leave
+                    </button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#endHiringModal">
                         <i class="fas fa-stop-circle"></i> End Hiring
                     </button>
@@ -99,6 +102,93 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leave Modal -->
+<div class="modal fade" id="leaveModal" tabindex="-1" aria-labelledby="leaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaveModalLabel">Apply Leave</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('onboardings.leaves.store', $onboarding->id) }}" method="POST" id="leaveForm">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="from_date" class="form-label">From Date</label>
+                                <input type="date" class="form-control @error('from_date') is-invalid @enderror" 
+                                    id="from_date" name="from_date" required>
+                                @error('from_date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="to_date" class="form-label">To Date</label>
+                                <input type="date" class="form-control @error('to_date') is-invalid @enderror" 
+                                    id="to_date" name="to_date" required>
+                                @error('to_date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Reason</label>
+                        <textarea class="form-control @error('reason') is-invalid @enderror" 
+                            id="reason" name="reason" rows="3" required></textarea>
+                        @error('reason')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3" id="halfDayContainer" style="display: none;">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_half_day" name="is_half_day" value="1">
+                            <label class="form-check-label" for="is_half_day">
+                                Half Day Leave
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6>Leave History</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Reason</th>
+                                        <th>Days</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($onboarding->leaves as $leave)
+                                    <tr>
+                                        <td>{{ $leave->from_date->format('d M Y') }}</td>
+                                        <td>{{ $leave->to_date->format('d M Y') }}</td>
+                                        <td>{{ $leave->reason }}</td>
+                                        <td>{{ $leave->total_days }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Apply Leave</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -156,4 +246,45 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fromDateInput = document.getElementById('from_date');
+    const toDateInput = document.getElementById('to_date');
+    const halfDayContainer = document.getElementById('halfDayContainer');
+    const isHalfDayCheckbox = document.getElementById('is_half_day');
+
+    // Set minimum date for from_date to today
+    fromDateInput.min = new Date().toISOString().split('T')[0];
+
+    fromDateInput.addEventListener('change', function() {
+        // Set minimum date for to_date to from_date
+        toDateInput.min = this.value;
+        
+        // If to_date is before from_date, reset it
+        if (toDateInput.value && toDateInput.value < this.value) {
+            toDateInput.value = this.value;
+        }
+        
+        checkDates();
+    });
+
+    toDateInput.addEventListener('change', function() {
+        checkDates();
+    });
+
+    function checkDates() {
+        if (fromDateInput.value && toDateInput.value) {
+            if (fromDateInput.value === toDateInput.value) {
+                halfDayContainer.style.display = 'block';
+            } else {
+                halfDayContainer.style.display = 'none';
+                isHalfDayCheckbox.checked = false;
+            }
+        }
+    }
+});
+</script>
 @endsection 

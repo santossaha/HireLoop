@@ -17,6 +17,7 @@ use App\Http\Controllers\CandidateSourcingController;
 use App\Http\Controllers\InterviewScheduleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\LeaveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -325,6 +326,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/onboardings/{onboarding}/end-hiring', [OnboardingController::class, 'endHiring'])
     ->name('onboardings.end-hiring');
+
+    // Leave Management Routes
+    Route::post('/onboardings/{onboarding}/leaves', [LeaveController::class, 'store'])
+    ->name('onboardings.leaves.store');
 });
 
 /*
