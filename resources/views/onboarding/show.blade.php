@@ -37,6 +37,10 @@
                                     <th>Final Budget</th>
                                     <td>{{ number_format($onboarding->final_budget, 2) }}</td>
                                 </tr>
+                                <tr>
+                                    <th>Working Days</th>
+                                    <td>{{ $onboarding->getWorkingDays() }} days</td>
+                                </tr>
                             </table>
                         </div>
                         <div class="col-md-6">

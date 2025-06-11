@@ -52,4 +52,28 @@ class Onboarding extends Model
     {
         return $this->belongsTo(EndReason::class);
     }
+
+    public function getWorkingDays()
+    {
+        $startDate = $this->start_date;
+        $endDate = $this->end_date ?? now();    
+       
+        
+        $workingDays = 0;
+        $currentDate = $startDate->copy();
+        
+        while ($currentDate <= $endDate) {
+            // Skip weekends (Saturday = 6, Sunday = 0)
+            if ($currentDate->dayOfWeek !== 0 && $currentDate->dayOfWeek !== 6) {
+                $workingDays++;
+            }
+            $currentDate->addDay();
+        }
+        
+        // Subtract leaves (for now hardcoded to 0 as requested)
+        $leaves = 0;
+        $workingDays -= $leaves;
+        
+        return max(0, $workingDays);
+    }
 } 
