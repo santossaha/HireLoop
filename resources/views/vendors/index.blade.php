@@ -97,25 +97,7 @@
                     }
                 },
                 { data: 'internal_poc' },
-                // {
-                //     data: 'status',
-                //     render: function(data) {
-                //         let badgeClass = 'bg-secondary';
-                //         if (data === 'approved') badgeClass = 'bg-success';
-                //         else if (data === 'pending') badgeClass = 'bg-warning';
-                //         else if (data === 'rejected') badgeClass = 'bg-danger';
-
-                //         return `<span class="badge ${badgeClass}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
-                //     }
-                // },
-                // {
-                //     data: 'client_ready',
-                //     render: function(data) {
-                //         return data ?
-                //             '<span class="badge bg-success">Ready</span>' :
-                //             '<span class="badge bg-secondary">Not Ready</span>';
-                //     }
-                // },
+                
                 {
                     data: 'actions',
                     orderable: false,
@@ -134,9 +116,7 @@
                 infoFiltered: "(filtered from _MAX_ total entries)"
             },
             initComplete: function() {
-                // Hide the default search box
-               // $('.dataTables_filter').hide();
-                // Hide length menu
+               
                 $('.dataTables_length').hide();
             }
         });

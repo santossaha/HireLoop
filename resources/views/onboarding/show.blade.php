@@ -87,9 +87,9 @@
                     <a href="{{ route('onboardings.edit', $onboarding->id) }}" class="btn btn-warning">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#leaveModal">
+                    {{-- <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#leaveModal">
                         <i class="fas fa-calendar-alt"></i> Apply Leave
-                    </button>
+                    </button> --}}
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#endHiringModal">
                         <i class="fas fa-stop-circle"></i> End Hiring
                     </button>
