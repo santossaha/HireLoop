@@ -1,4 +1,3 @@
-
 <div class="sidebar bg-dark text-white" id="sidebar">
     <div class="sidebar-header p-3 border-bottom">
         <h5 class="mb-0">Vendor MS</h5>
@@ -68,15 +67,13 @@
                 </li>
                 @endcan
 
-                
-
-
                 @can('view-interviews')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('interviews.*') ? 'active' : '' }}" href="{{ route('interviews.index') }}">
                         <i class="fas fa-user-tie me-2"></i> Interviews
                     </a>
                 </li>
+                @endcan
 
                 @can('view-onboarding-list')
                 <li class="nav-item">
@@ -86,16 +83,13 @@
                 </li>
                 @endcan
 
-
+                @can('view-vendor-top-candidates')
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('vendor.top-candidates.*') ? 'active' : '' }}" href="{{ route('vendor.top-candidates.index') }}">
+                            <i class="fas fa-users me-2"></i> Vendor Top Candidates
+                        </a>
+                    </li>
                 @endcan
-
-                    @can('view-vendor-top-candidates')
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('vendor.top-candidates.*') ? 'active' : '' }}" href="{{ route('vendor.top-candidates.index') }}">
-                                <i class="fas fa-users me-2"></i> Vendor Top Candidates
-                            </a>
-                        </li>
-                    @endcan
                 
                 @can('view-client-payments')
                 <li class="nav-section mt-2">
@@ -173,28 +167,7 @@
                     </a>
                 </li>
                 @endcan
-                
-                {{-- @if(auth()->user()->can('view departments') || auth()->user()->can('view settings'))
-                <li class="nav-section mt-2">
-                    <span class="sidebar-heading px-3 py-2 d-block">Administration</span>
-                </li>
-                @endif --}}
-
-                {{-- @can('view departments')
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-building me-2"></i> Departments
-                    </a>
-                </li>
-                @endcan --}}
-
-                {{-- @can('view settings')
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-cog me-2"></i> Settings
-                    </a>
-                </li>
-                @endcan --}}
+               
             </ul>
         </nav>
     </div>

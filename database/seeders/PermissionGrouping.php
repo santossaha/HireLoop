@@ -21,6 +21,12 @@ class PermissionGrouping extends Seeder
         // Truncate the permissions table
         Permission::truncate();
         
+        // Truncate the role_has_permissions table
+        DB::table('role_has_permissions')->truncate();
+        
+        // Truncate the model_has_permissions table
+        DB::table('model_has_permissions')->truncate();
+        
         // Re-enable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
         
@@ -358,6 +364,10 @@ class PermissionGrouping extends Seeder
             'view-onboarding-details',
             'edit-onboarding',
             'delete-onboarding', 
+
+            //vendor-top-candidates 
+            'view-vendor-nda-document',
+            'view-vendor-top-candidates',
  
         ];
 
