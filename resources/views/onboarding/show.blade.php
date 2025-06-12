@@ -142,8 +142,8 @@
 
                     <div class="mb-3">
                         <label for="reason" class="form-label">Reason</label>
-                        <textarea class="form-control @error('reason') is-invalid @enderror" 
-                            id="reason" name="reason" rows="3" required></textarea>
+                        <input type="text" class="form-control @error('reason') is-invalid @enderror" 
+                            id="reason" name="reason" required>
                         @error('reason')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -168,6 +168,7 @@
                                         <th>To Date</th>
                                         <th>Reason</th>
                                         <th>Days</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -177,6 +178,13 @@
                                         <td>{{ $leave->to_date->format('d M Y') }}</td>
                                         <td>{{ $leave->reason }}</td>
                                         <td>{{ $leave->total_days }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm delete-leave" 
+                                                data-onboarding-id="{{ $onboarding->id }}" 
+                                                data-leave-id="{{ $leave->id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -246,6 +254,25 @@
         </div>
     </div>
 </div>
+
+<!-- Leave Delete Modal -->
+<div class="modal fade" id="deleteLeaveModal" tabindex="-1" aria-labelledby="deleteLeaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteLeaveModalLabel">Delete Leave</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this leave?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteLeave">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -285,6 +312,53 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
+    // Delete Leave functionality
+    const deleteButtons = document.querySelectorAll('.delete-leave');
+    const deleteLeaveModal = new bootstrap.Modal(document.getElementById('deleteLeaveModal'));
+    let currentLeaveId = null;
+    let currentOnboardingId = null;
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            currentLeaveId = this.dataset.leaveId;
+            currentOnboardingId = this.dataset.onboardingId;
+            deleteLeaveModal.show();
+        });
+    });
+
+    document.getElementById('confirmDeleteLeave').addEventListener('click', function() {
+        if (currentLeaveId && currentOnboardingId) {
+            // Send AJAX request
+            fetch(`/onboardings/${currentOnboardingId}/leaves/${currentLeaveId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the row from the table
+                    const row = document.querySelector(`[data-leave-id="${currentLeaveId}"]`).closest('tr');
+                    row.remove();
+                    // Show success message
+                   // alert('Leave deleted successfully');
+                } else {
+                    alert(data.message || 'Error deleting leave');
+                }
+                // Hide the modal
+                deleteLeaveModal.hide();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting leave');
+                deleteLeaveModal.hide();
+            });
+        }
+    });
 });
 </script>
 @endsection 

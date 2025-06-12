@@ -330,6 +330,9 @@ Route::middleware(['auth'])->group(function () {
     // Leave Management Routes
     Route::post('/onboardings/{onboarding}/leaves', [LeaveController::class, 'store'])
     ->name('onboardings.leaves.store');
+
+    Route::delete('/onboardings/{onboarding}/leaves/{leave}', [LeaveController::class, 'destroy'])
+    ->name('onboardings.leaves.destroy');
 });
 
 /*

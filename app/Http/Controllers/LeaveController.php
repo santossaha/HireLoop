@@ -50,4 +50,22 @@ class LeaveController extends Controller
             ->route('onboardings.show', $onboarding->id)
             ->with('success', 'Leave applied successfully.');
     }
+
+    public function destroy(Onboarding $onboarding, Leave $leave)
+    {
+        // Check if the leave belongs to the onboarding
+        if ($leave->onboarding_id !== $onboarding->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid leave record.'
+            ], 400);
+        }
+
+        $leave->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Leave deleted successfully.'
+        ]);
+    }
 } 
