@@ -317,19 +317,34 @@ document.addEventListener('DOMContentLoaded', function() {
             if (fromDateInput.value === toDateInput.value) {
                 halfDayContainer.style.display = 'block';
                 document.getElementById('totalDaysDisplay').style.display = 'block';
-                document.getElementById('totalDays').textContent = isHalfDayCheckbox.checked ? '0.5' : '1';
+                // Check if the selected date is a weekend
+                const selectedDate = new Date(fromDateInput.value);
+                const dayOfWeek = selectedDate.getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) { // 0 is Sunday, 6 is Saturday
+                    document.getElementById('totalDays').textContent = '0';
+                } else {
+                    document.getElementById('totalDays').textContent = isHalfDayCheckbox.checked ? '0.5' : '1';
+                }
             } else {
                 halfDayContainer.style.display = 'none';
                 isHalfDayCheckbox.checked = false;
                 
-                // Calculate days between dates
+                // Calculate days between dates excluding weekends
                 const start = new Date(fromDateInput.value);
                 const end = new Date(toDateInput.value);
-                const diffTime = Math.abs(end - start);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end dates
+                let count = 0;
+                const curDate = new Date(start.getTime());
+                
+                while (curDate <= end) {
+                    const dayOfWeek = curDate.getDay();
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Skip Sunday (0) and Saturday (6)
+                        count++;
+                    }
+                    curDate.setDate(curDate.getDate() + 1);
+                }
                 
                 document.getElementById('totalDaysDisplay').style.display = 'block';
-                document.getElementById('totalDays').textContent = diffDays;
+                document.getElementById('totalDays').textContent = count;
             }
         } else {
             document.getElementById('totalDaysDisplay').style.display = 'none';
@@ -339,7 +354,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listener for half day checkbox
     isHalfDayCheckbox.addEventListener('change', function() {
         if (fromDateInput.value === toDateInput.value) {
-            document.getElementById('totalDays').textContent = this.checked ? '0.5' : '1';
+            const selectedDate = new Date(fromDateInput.value);
+            const dayOfWeek = selectedDate.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) { // 0 is Sunday, 6 is Saturday
+                document.getElementById('totalDays').textContent = '0';
+            } else {
+                document.getElementById('totalDays').textContent = this.checked ? '0.5' : '1';
+            }
         }
     });
 
