@@ -38,8 +38,12 @@
                                     <td>{{ number_format($onboarding->final_budget, 2) }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Working Days</th>
+                                    <th>Total Days Worked</th>
                                     <td>{{ $onboarding->getWorkingDays() }} days</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Leaves</th>
+                                    <td>{{ $onboarding->getTotalLeaves() }} days</td>
                                 </tr>
                             </table>
                         </div>
@@ -87,9 +91,9 @@
                     <a href="{{ route('onboardings.edit', $onboarding->id) }}" class="btn btn-warning">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    {{-- <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#leaveModal">
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#leaveModal">
                         <i class="fas fa-calendar-alt"></i> Apply Leave
-                    </button> --}}
+                    </button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#endHiringModal">
                         <i class="fas fa-stop-circle"></i> End Hiring
                     </button>
@@ -137,6 +141,12 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div id="totalDaysDisplay" class="alert alert-info" style="display: none;">
+                            Total Leave Days: <span id="totalDays">0</span>
                         </div>
                     </div>
 
@@ -306,12 +316,32 @@ document.addEventListener('DOMContentLoaded', function() {
         if (fromDateInput.value && toDateInput.value) {
             if (fromDateInput.value === toDateInput.value) {
                 halfDayContainer.style.display = 'block';
+                document.getElementById('totalDaysDisplay').style.display = 'block';
+                document.getElementById('totalDays').textContent = isHalfDayCheckbox.checked ? '0.5' : '1';
             } else {
                 halfDayContainer.style.display = 'none';
                 isHalfDayCheckbox.checked = false;
+                
+                // Calculate days between dates
+                const start = new Date(fromDateInput.value);
+                const end = new Date(toDateInput.value);
+                const diffTime = Math.abs(end - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end dates
+                
+                document.getElementById('totalDaysDisplay').style.display = 'block';
+                document.getElementById('totalDays').textContent = diffDays;
             }
+        } else {
+            document.getElementById('totalDaysDisplay').style.display = 'none';
         }
     }
+
+    // Add event listener for half day checkbox
+    isHalfDayCheckbox.addEventListener('change', function() {
+        if (fromDateInput.value === toDateInput.value) {
+            document.getElementById('totalDays').textContent = this.checked ? '0.5' : '1';
+        }
+    });
 
     // Delete Leave functionality
     const deleteButtons = document.querySelectorAll('.delete-leave');

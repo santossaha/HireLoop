@@ -76,10 +76,15 @@ class Onboarding extends Model
             $currentDate->addDay();
         }
         
-        // Subtract leaves (for now hardcoded to 0 as requested)
-        $leaves = 0;
-        $workingDays -= $leaves;
+        // Calculate total leaves
+        $totalLeaves = $this->leaves()->sum('total_days');
+        $workingDays -= $totalLeaves;
         
         return max(0, $workingDays);
+    }
+
+    public function getTotalLeaves()
+    {
+        return $this->leaves()->sum('total_days');
     }
 } 
