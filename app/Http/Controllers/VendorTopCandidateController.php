@@ -63,7 +63,7 @@ class VendorTopCandidateController extends Controller
                     'interviewer' => !empty($top_candidate->interviewer) ? $top_candidate->interviewer->name : 'N/A',
                     'resume' => '<a href="'.asset('storage/' . $top_candidate->candidate->resume_path).'" class="btn btn-sm btn-primary" target="_blank"><i class="fas fa-download"></i> Download </a>',
                     'mock_feedback' => $top_candidate->mock_feedback,
-                    'actions' => '<a href="#" onclick="deleteCandidate('.$top_candidate->id.')" class="btn btn-danger">Delete</a>
+                    'actions' => '<a href="#" onclick="deleteCandidate('.$top_candidate->id.')" class="btn btn-danger mb-2">Delete</a>
 <a href="'.route('interviews.show',$top_candidate->id).'" class="btn btn-info"><i class="fa fa-eye"></i></a>'
                 ];
             }

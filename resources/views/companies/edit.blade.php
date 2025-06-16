@@ -30,7 +30,7 @@
                     <input type="text" class="form-control" id="name" name="name" value="{{ $company->name }}" required>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mt-2">
                     <label for="detail">Detail</label>
                     <textarea class="form-control" id="detail" name="detail" rows="3">{{ $company->detail }}</textarea>
                 </div>

@@ -38,7 +38,7 @@
                 @can('company-list')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('companies.*') ? 'active' : '' }}" href="{{ route('companies.index') }}">
-                        <i class="fas fa-building me-2"></i> Companies
+                        <i class="fas fa-building me-2"></i> &nbsp;Companies
                     </a>
                 </li>
                 @endcan
@@ -78,7 +78,7 @@
                 @can('view-onboarding-list')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('onboardings.*') ? 'active' : '' }}" href="{{ route('onboardings.index') }}">
-                        <i class="fas fa-user-plus me-2"></i> Onboarding
+                        <i class="fas fa-user-plus me-2"></i>Onboarding
                     </a>
                 </li>
                 @endcan
@@ -116,7 +116,7 @@
                 @can('view-invoices')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('invoices.*') ? 'active' : '' }}" href="{{ route('invoices.index') }}">
-                        <i class="fas fa-file-invoice me-2"></i> Invoices
+                        <i class="fas fa-file-invoice me-2"></i> &nbsp;Invoices
                     </a>
                 </li>
                 @endcan

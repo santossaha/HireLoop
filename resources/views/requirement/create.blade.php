@@ -1,5 +1,11 @@
 @extends('layouts.app')
-
+@section('styles')
+    <style>
+        .select2-container .select2-search--inline .select2-search__field{
+            height: 21px !important;
+        }
+    </style>
+@endsection
 @section('title', 'Add New Requirement')
 
 @section('content')
@@ -150,7 +156,7 @@
 <script>
     $(document).ready(function() {
         $('.select2').select2({
-            placeholder: 'Select key skills',
+            placeholder: 'Select Key Skills',
             allowClear: true,
             width: '100%'
         });
