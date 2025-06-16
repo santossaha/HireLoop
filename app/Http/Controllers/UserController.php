@@ -30,6 +30,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|exists:roles,id',
+        ],[
+            'password.confirmed' => 'Password and Confirm Password does not matched.'
         ]);
 
         $user = User::create([

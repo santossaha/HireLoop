@@ -3,6 +3,11 @@
 @section('title', 'Vendor Management')
 
 @section('content')
+    <style>
+        .btn-outline-warning:hover{
+            color: #fff;
+        }
+    </style>
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Vendor Management</h1>
