@@ -11,60 +11,9 @@
         </a>
     </div> --}}
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Interviews Filter</h6>
-        </div>
-        <div class="card-body">
-            <form id="filterForm" class="row g-3">
-                <div class="col-md-3">
-                    <label for="vendor_id" class="form-label">Vendor</label>
-                    <select class="form-select" id="vendor_id" name="vendor_id">
-                        <option value="">All Vendors</option>
-                        @foreach(App\Models\Vendor::orderBy('company_name')->get() as $vendor)
-                            <option value="{{ $vendor->id }}">{{ $vendor->company_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label for="type" class="form-label">Interview Type</label>
-                    <select class="form-select" id="type" name="type">
-                        <option value="">All Types</option>
-                        <option value="mock">Mock</option>
-                        <option value="internal">Internal</option>
-                        <option value="client">Client</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
-                        <option value="">All Status</option>
-                        <option value="scheduled">Scheduled</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label for="result" class="form-label">Result</label>
-                    <select class="form-select" id="result" name="result">
-                        <option value="">All Results</option>
-                        <option value="pass">Pass</option>
-                        <option value="fail">Fail</option>
-                    </select>
-                </div>
-                <div class="col-md-3 d-flex align-items-end">
-                    <button type="button" id="applyFilter" class="btn btn-primary me-2">
-                        <i class="fas fa-filter me-1"></i> Filter
-                    </button>
-                    <button type="button" id="resetFilter" class="btn btn-secondary">
-                        <i class="fas fa-redo me-1"></i> Reset
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <div class="row mb-4">
+
+    <div class="row mb-3">
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
@@ -131,6 +80,59 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Interviews Filter</h6>
+        </div>
+        <div class="card-body">
+            <form id="filterForm" class="row g-3">
+                <div class="col-md-3">
+                    <label for="vendor_id" class="form-label">Vendor</label>
+                    <select class="form-select" id="vendor_id" name="vendor_id">
+                        <option value="">All Vendors</option>
+                        @foreach(App\Models\Vendor::orderBy('company_name')->get() as $vendor)
+                            <option value="{{ $vendor->id }}">{{ $vendor->company_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="type" class="form-label">Interview Type</label>
+                    <select class="form-select" id="type" name="type">
+                        <option value="">All Types</option>
+                        <option value="mock">Mock</option>
+                        <option value="internal">Internal</option>
+                        <option value="client">Client</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All Status</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="result" class="form-label">Result</label>
+                    <select class="form-select" id="result" name="result">
+                        <option value="">All Results</option>
+                        <option value="pass">Pass</option>
+                        <option value="fail">Fail</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="button" id="applyFilter" class="btn btn-primary me-2">
+                        <i class="fas fa-filter me-1"></i> Filter
+                    </button>
+                    <button type="button" id="resetFilter" class="btn btn-secondary">
+                        <i class="fas fa-redo me-1"></i> Reset
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
