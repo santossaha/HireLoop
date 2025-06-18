@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentLeaveId && currentOnboardingId) {
             // Send AJAX request
             fetch(`/onboardings/${currentOnboardingId}/leaves/${currentLeaveId}`, {
-                method: 'DELETE',
+                method: 'GET',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                     'Accept': 'application/json',

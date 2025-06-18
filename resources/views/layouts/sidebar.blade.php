@@ -83,7 +83,7 @@
                 </li>
                 @endcan
 
-                @can('gggjkcxffdfdkvflmaassd')
+                @can('view-vendor-top-candidates')
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('vendor.top-candidates.*') ? 'active' : '' }}" href="{{ route('vendor.top-candidates.index') }}">
                             <i class="fas fa-users me-2"></i> Vendor Top Candidates
@@ -96,6 +96,14 @@
                     <span class="sidebar-heading px-3 py-2 d-block">Payment Management</span>
                 </li>
                 @endcan
+
+                {{-- @can('view-client-payments') --}}
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('billing.*') ? 'active' : '' }}" href="{{ route('billing.index') }}">
+                        <i class="fas fa-hand-holding-usd me-2"></i> Vendor Payments
+                    </a>
+                </li>
+                {{-- @endcan --}}
 
                 @can('view-client-payments')
                 <li class="nav-item">
@@ -121,13 +129,7 @@
                 </li>
                 @endcan
 
-                @can('view-client-payments')
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('vendor-payments.*') ? 'active' : '' }}" href="{{ route('vendor-payments.index') }}">
-                        <i class="fas fa-hand-holding-usd me-2"></i> Vendor Payments
-                    </a>
-                </li>
-                @endcan
+               
                 
                 @can('view-vendor-payments', 'export-vendor-payments','view-invoice-summary','view-vendor-attendance-summary')
                 <li class="nav-section mt-2">
