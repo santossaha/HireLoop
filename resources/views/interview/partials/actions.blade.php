@@ -1,10 +1,10 @@
 <div class="btn-group" role="group">
-    <a href="{{ route('interviews.show', $interview->id) }}" class="btn btn-info btn-sm">
+    <a href="{{ route('interviews.show', encrypt_id($interview->id)) }}" class="btn btn-info btn-sm">
         <i class="fas fa-eye"></i>
     </a>
     
     @if($interview->status != 'completed')
-        <a href="{{ route('interviews.edit', $interview->id) }}" class="btn btn-primary btn-sm">
+        <a href="{{ route('interviews.edit', encrypt_id($interview->id)) }}" class="btn btn-primary btn-sm">
             <i class="fas fa-edit"></i>
         </a>
         

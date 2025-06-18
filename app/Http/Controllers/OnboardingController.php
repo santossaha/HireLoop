@@ -79,11 +79,11 @@ class OnboardingController extends Controller
                     $actions = [];
                     
                     if (Auth::user()->can('view-onboarding-details')) {
-                        $actions['show_url'] = route('onboardings.show', $row->id);
+                        $actions['show_url'] = route('onboardings.show', encrypt_id($row->id));
                     }
                     
                     if (Auth::user()->can('edit-onboarding')) {
-                        $actions['edit_url'] = route('onboardings.edit', $row->id);
+                        $actions['edit_url'] = route('onboardings.edit', encrypt_id($row->id));
                     }
                     
                     if (Auth::user()->can('delete-onboarding')) {
@@ -151,14 +151,18 @@ class OnboardingController extends Controller
             ->with('success', 'Onboarding created successfully.');
     }
 
-    public function show(Onboarding $onboarding)
+    public function show($onboarding)
     {
+        $decryptedId = decrypt_id($onboarding);
+        $onboarding = Onboarding::findOrFail($decryptedId);
         $endReasons = EndReason::get();
         return view('onboarding.show', compact('onboarding', 'endReasons'));
     }
 
-    public function edit(Onboarding $onboarding)
+    public function edit($onboarding)
     {
+        $decryptedId = decrypt_id($onboarding);
+        $onboarding = Onboarding::findOrFail($decryptedId);
         $vendors = Vendor::all();
         $delivery_managers = User::where('role', ['pm', 'dm'])->get();
         return view('onboarding.edit', compact('onboarding', 'vendors', 'delivery_managers'));

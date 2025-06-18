@@ -59,8 +59,10 @@ class UserController extends Controller
             ->with('success', 'User created successfully');
     }
 
-    public function edit(User $user)
+    public function edit($user)
     {
+        $decryptedId = decrypt_id($user);
+        $user = User::findOrFail($decryptedId);
         $roles = Role::with('permissions')->get();
         $userRole = $user->roles->first();
         

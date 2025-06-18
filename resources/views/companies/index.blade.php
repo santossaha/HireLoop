@@ -38,7 +38,7 @@
                             <td>
                             
                                 @can('company-edit')
-                                <a class="btn btn-primary btn-sm" href="{{ route('companies.edit',$company->id) }}">
+                                <a class="btn btn-primary btn-sm" href="{{ route('companies.edit',encrypt_id($company->id)) }}">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                                 @endcan

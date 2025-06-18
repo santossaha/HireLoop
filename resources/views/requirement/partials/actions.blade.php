@@ -1,9 +1,9 @@
 <div class="btn-group" role="group">
-    <a href="{{ route('requirements.show', $requirement->id) }}" class="btn btn-info btn-sm">
+    <a href="{{ route('requirements.show', encrypt_id($requirement->id)) }}" class="btn btn-info btn-sm">
         <i class="fas fa-eye"></i>
     </a>
     
-    <a href="{{ route('requirements.edit', $requirement->id) }}" class="btn btn-primary btn-sm">
+    <a href="{{ route('requirements.edit', encrypt_id($requirement->id)) }}" class="btn btn-primary btn-sm">
         <i class="fas fa-edit"></i>
     </a>
     

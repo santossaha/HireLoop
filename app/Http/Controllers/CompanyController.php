@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -39,13 +40,17 @@ class CompanyController extends Controller
             ->with('success', 'Company created successfully.');
     }
 
-    public function show(Company $company)
+    public function show($company)
     {
+        $decryptedId = decrypt_id($company);
+        $company = Company::findOrFail($decryptedId);
         return view('companies.show', compact('company'));
     }
 
-    public function edit(Company $company)
+    public function edit($company)
     {
+        $decryptedId = decrypt_id($company);
+        $company = Company::findOrFail($decryptedId);
         return view('companies.edit', compact('company'));
     }
 

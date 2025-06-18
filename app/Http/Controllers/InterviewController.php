@@ -210,9 +210,11 @@ class InterviewController extends Controller
     /**
      * Display the specified interview
      */
-    public function show(Interview $interview)
+    public function show($interview)
     {
-        
+        $decryptedId = decrypt_id($interview);
+        $interview = Interview::findOrFail($decryptedId);
+
         $interview->load(['vendor', 'requirement', 'candidate']);
         $checkOnboarding = null;
         if($interview->requirement->requirement_id){
@@ -224,8 +226,10 @@ class InterviewController extends Controller
     /**
      * Show the form for editing the specified interview
      */
-    public function edit(Interview $interview)
+    public function edit($interview)
     {
+        $decryptedId = decrypt_id($interview);
+        $interview = Interview::findOrFail($decryptedId);
 
         $requirement = Requirement::where('id', $interview->requirement_id)->with('vendor:id,user_id,email')->first();
         $vendor = Vendor::where('id', $interview->vendor_id)->first();

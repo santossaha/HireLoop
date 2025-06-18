@@ -265,8 +265,10 @@ class RequirementController extends Controller
     /**
      * Display the specified requirement
      */
-    public function show(Requirement $requirement)
+    public function show($requirement)
     {
+        $decryptedId = decrypt_id($requirement);
+        $requirement = Requirement::findOrFail($decryptedId);
         $candidates = CandidateSourcing::with(['requirement', 'requirement.vendor', 'interviews'])
                     ->where('requirement_id', $requirement->id)
                     ->orderBy('created_at', 'desc')
@@ -280,8 +282,10 @@ class RequirementController extends Controller
     /**
      * Show the form for editing the specified requirement
      */
-    public function edit(Requirement $requirement)
+    public function edit($requirement)
     {
+        $decryptedId = decrypt_id($requirement);
+        $requirement = Requirement::findOrFail($decryptedId);
         // Prevent editing if already approved
         if ($requirement->isApproved()) {
             return redirect()->route('requirements.show', $requirement->id)
