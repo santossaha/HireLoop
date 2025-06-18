@@ -18,6 +18,7 @@ use App\Http\Controllers\InterviewScheduleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\BillingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -333,6 +334,20 @@ Route::middleware(['auth'])->group(function () {
 
     Route::delete('/onboardings/{onboarding}/leaves/{leave}', [LeaveController::class, 'destroy'])
     ->name('onboardings.leaves.destroy');
+
+    // Billing Routes
+    Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
+        //->middleware('permission:view-billing');
+    Route::get('/billing/{billing}', [BillingController::class, 'show'])->name('billing.show');
+        //->middleware('permission:view-billing-details');
+    Route::patch('/billing/{billing}/approve', [BillingController::class, 'approve'])->name('billing.approve');
+        //->middleware('permission:approve-billing');
+    Route::patch('/billing/{billing}/reject', [BillingController::class, 'reject'])->name('billing.reject');
+        //->middleware('permission:reject-billing');
+    Route::patch('/billing/{billing}/mark-as-paid', [BillingController::class, 'markAsPaid'])->name('billing.mark-as-paid');
+        //->middleware('permission:mark-billing-paid');
+    Route::get('/billing/export', [BillingController::class, 'export'])->name('billing.export');
+        //->middleware('permission:export-billing');
 });
 
 /*
