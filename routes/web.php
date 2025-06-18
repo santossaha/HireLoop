@@ -332,7 +332,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/onboardings/{onboarding}/leaves', [LeaveController::class, 'store'])
     ->name('onboardings.leaves.store');
 
-    Route::delete('/onboardings/{onboarding}/leaves/{leave}', [LeaveController::class, 'destroy'])
+    Route::get('/onboardings/{onboarding}/leaves/{leave}', [LeaveController::class, 'destroy'])
     ->name('onboardings.leaves.destroy');
 
     // Billing Routes
