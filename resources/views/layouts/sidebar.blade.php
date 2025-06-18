@@ -98,11 +98,11 @@
                 @endcan
 
                 {{-- @can('view-client-payments') --}}
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('billing.*') ? 'active' : '' }}" href="{{ route('billing.index') }}">
                         <i class="fas fa-hand-holding-usd me-2"></i> Vendor Payments
                     </a>
-                </li>
+                </li> --}}
                 {{-- @endcan --}}
 
                 @can('view-client-payments')
