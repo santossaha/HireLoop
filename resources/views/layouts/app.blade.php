@@ -373,6 +373,28 @@
 
         // Initial load
         document.addEventListener('DOMContentLoaded', loadNotifications);
+
+
+        $(function (){
+            $('input[type="number"]').keyup(function(e)
+            {
+                if (/\D/g.test(this.value))
+                {
+                    // Filter non-digits from input value.
+                    this.value = this.value.replace(/\D/g, '');
+                }
+            });
+            $('input[type="number"]').change(function(e)
+            {
+                if (/\D/g.test(this.value))
+                {
+                    // Filter non-digits from input value.
+                    this.value = this.value.replace(/\D/g, '');
+                }
+            });
+        });
+
+
     </script>
     
     @yield('scripts')

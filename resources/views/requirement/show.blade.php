@@ -21,6 +21,7 @@
             @if($requirement->is_closed == 0)
             <a href="#" class="btn btn-danger" style="float: right;margin-top: -1.5%" id="close-requirement-btn" data-id="{{ $requirement->id }}">Close Requirement</a>
             @endif
+            <a href="#" class="btn btn-info text-white" style="float: right;margin-top: -1.5%">Chat</a>
         </div>
         <div class="card-body">
             <div class="row mb-4">

@@ -98,7 +98,7 @@
                 </div> --}}
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                    <a href="{{ route('interviews.show', $interview->id) }}" class="btn btn-secondary me-md-2">Cancel</a>
+                    <a href="{{ route('interviews.index') }}" class="btn btn-secondary me-md-2">Cancel</a>
                     <button type="submit" class="btn btn-primary">Update Interview</button>
                 </div>
             </form>

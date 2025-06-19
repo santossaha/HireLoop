@@ -109,7 +109,7 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="final_budget" class="form-label">Final Budget</label>
+                        <label for="final_budget" class="form-label">Final Budget<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="final_budget" name="final_budget" value="{{ $requirement->final_budget }}" readonly>
                     </div>
                 </div>

@@ -89,7 +89,7 @@
                             <input type="url" class="form-control" id="website" name="website" value="{{ old('website') }}" maxlength="50">
                         </div>
 
-                        <div class="individual_vendor" style="display: none">
+                        <div class="individual_vendor" style="{{ old('vendor_type') == 'individual' ? 'display: block' : 'display: none' }}">
                             <div class="mb-3">
                                 <label for="year_of_experience" class="form-label">Year of Experience</label>
                                 <input type="number" min="0" class="form-control" id="year_of_experience" name="year_of_experience" value="{{ old('year_of_experience') }}" maxlength="10">

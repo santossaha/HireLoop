@@ -133,6 +133,7 @@
         var table = $('#requirementsTable').DataTable({
             processing: true,
             serverSide: true,
+            searching:false,
             ajax: {
                 url: "{{ route('requirements.index') }}",
                 data: function(d) {
