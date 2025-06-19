@@ -74,10 +74,10 @@ class BillingController extends Controller
         return redirect()->back()->with('success', 'Billing marked as paid successfully!');
     }
 
-    public function generateMonthlyBilling()
+    public function generateMonthlyBilling($month = null, $year = null)
     {
-        $currentMonth = now()->month;
-        $currentYear = now()->year;
+        $month = $month ?? now()->month;
+        $year = $year ?? now()->year;
 
         // Get all active onboardings
         $onboardings = Onboarding::where('status','!=','Stopped')
@@ -90,8 +90,8 @@ class BillingController extends Controller
         foreach ($onboardings as $onboarding) {
             // Check if billing already exists for this month
             $existingBilling = Billing::where('onboarding_id', $onboarding->id)
-                ->where('month', $currentMonth)
-                ->where('year', $currentYear)
+                ->where('month', $month)
+                ->where('year', $year)
                 ->first();
 
             if ($existingBilling) {
@@ -105,7 +105,7 @@ class BillingController extends Controller
             Log::info("Candidate Name: " . ($onboarding->candidate->candidate_name ?? 'NULL'));
 
             // Calculate billing details
-            $billingData = $this->calculateBillingData($onboarding, $currentMonth, $currentYear);
+            $billingData = $this->calculateBillingData($onboarding, $month, $year);
 
             if ($billingData) {
                 Billing::create($billingData);
