@@ -97,6 +97,14 @@
                 </li>
                 @endcan
 
+                {{-- @can('view-client-payments') --}}
+                {{-- <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('billing.*') ? 'active' : '' }}" href="{{ route('billing.index') }}">
+                        <i class="fas fa-hand-holding-usd me-2"></i> Vendor Payments
+                    </a>
+                </li> --}}
+                {{-- @endcan --}}
+
                 @can('view-client-payments')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('client-payments.*') ? 'active' : '' }}" href="{{ route('client-payments.index') }}">
@@ -121,13 +129,7 @@
                 </li>
                 @endcan
 
-                @can('view-client-payments')
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('vendor-payments.*') ? 'active' : '' }}" href="{{ route('vendor-payments.index') }}">
-                        <i class="fas fa-hand-holding-usd me-2"></i> Vendor Payments
-                    </a>
-                </li>
-                @endcan
+               
                 
                 @can('view-vendor-payments', 'export-vendor-payments','view-invoice-summary','view-vendor-attendance-summary')
                 <li class="nav-section mt-2">

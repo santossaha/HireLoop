@@ -145,6 +145,9 @@ class DatabaseSeeder extends Seeder
          // Seed Permisson Group
          $this->call(PermissionGrouping::class);
 
+        // Seed Billing Permissions
+       // $this->call(BillingPermissionSeeder::class);
+
         // Seed Companies
         $this->call(CompanySeeder::class);
 

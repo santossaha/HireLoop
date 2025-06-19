@@ -145,6 +145,15 @@ class PermissionGrouping extends Seeder
             'delete-onboarding',
         ];
 
+        $billing_permissions = [
+            'view-billing',
+            'view-billing-details',
+            'approve-billing',
+            'reject-billing',
+            'mark-billing-paid',
+            'export-billing',
+        ];
+
         foreach ($permissions as $name) {
             DB::table('permissions')->insert([
                 'name' => $name,
@@ -227,6 +236,16 @@ class PermissionGrouping extends Seeder
             ]);
         }
         foreach ($onboarding_permissions as $group_name => $name) {
+            DB::table('permissions')->insert([
+                'name' => $name,
+                'guard_name' => 'web',
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'group_name' => 'onboarding',
+            ]);
+        }
+
+        foreach ($billing_permissions as $group_name => $name) {
             DB::table('permissions')->insert([
                 'name' => $name,
                 'guard_name' => 'web',
@@ -369,6 +388,13 @@ class PermissionGrouping extends Seeder
             'view-vendor-nda-document',
             'view-vendor-top-candidates',
  
+            //billing 
+            'view-billing',
+            'view-billing-details',
+            'approve-billing',
+            'reject-billing',
+            'mark-billing-paid',
+            'export-billing',
         ];
 
 
@@ -503,6 +529,14 @@ class PermissionGrouping extends Seeder
                 'view-onboarding-details',
                 'edit-onboarding',
                 'delete-onboarding',
+
+                //Billing
+                'view-billing',
+                'view-billing-details',
+                'approve-billing',
+                'reject-billing',
+                'mark-billing-paid',
+                'export-billing',
             ],
             'hod' => [
                         // Vendor Management:
