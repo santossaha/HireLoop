@@ -172,7 +172,7 @@ class BillingController extends Controller
         $gstAmount = ($monthlySalaryWithoutGst * self::GST_PERCENTAGE) / 100;
 
         // Calculate monthly salary after GST deduction
-        $monthlySalary = $monthlySalaryWithoutGst - $gstAmount;
+        $monthlySalary = $monthlySalaryWithoutGst + $gstAmount;
 
         return [
             'onboarding_id' => $onboarding->id,

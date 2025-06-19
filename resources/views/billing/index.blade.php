@@ -56,8 +56,8 @@
                                     <th>Leave Days</th>
                                     <th>Net Days</th>
                                     <th>Total Salary</th>
-                                    <th>Pay Salary</th>
                                     <th>GST Amount</th>
+                                    <th>Pay Salary</th>
                                     {{-- <th>Status</th>
                                     <th>Actions</th> --}}
                                 </tr>
@@ -87,9 +87,9 @@
                                     {{-- <td>{{ $billing->total_working_days }}</td> --}}
                                     <td>{{ $billing->total_leave_days }}</td>
                                     <td>{{ $billing->net_working_days }}</td>
-                                    <td>{{ $billing->final_budget }}</td>
-                                    <td>{{ $billing->formatted_monthly_salary }}</td>
+                                    <td>{{ $billing->monthly_salary_without_gst }}</td>
                                     <td>{{ $billing->gst_amount }}</td>
+                                    <td>{{ $billing->formatted_monthly_salary }}</td>
                                     {{-- <td>
                                         <span class="badge {{ $billing->status_badge }}">
                                             {{ ucfirst($billing->status) }}
