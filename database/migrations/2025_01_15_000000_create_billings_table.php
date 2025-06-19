@@ -63,6 +63,10 @@ return new class extends Migration
             $table->index('requirement_id');
             $table->index('vendor_name');
             $table->index('candidate_name');
+
+            $table->decimal('monthly_salary_without_gst', 20, 2)->nullable();
+            $table->unsignedTinyInteger('gst_percentage')->default(18);
+            $table->decimal('gst_amount', 12, 2)->nullable();
         });
     }
 

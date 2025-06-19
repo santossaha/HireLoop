@@ -51,13 +51,13 @@
                                     <th>Requirement ID</th>
                                     <th>Vendor</th>
                                     <th>Candidate Name</th>
-                                    <th>Month</th>
-                                    <th>Year</th>
-                                    <th>Working Days</th>
+                                    <th>Month Year</th>
+                                    {{-- <th>Working Days</th> --}}
                                     <th>Leave Days</th>
                                     <th>Net Days</th>
-                                    <th>Per Day Salary</th>
-                                    <th>Monthly Salary</th>
+                                    <th>Total Salary</th>
+                                    <th>Pay Salary</th>
+                                    <th>GST Amount</th>
                                     {{-- <th>Status</th>
                                     <th>Actions</th> --}}
                                 </tr>
@@ -82,18 +82,19 @@
                                             <small class="text-muted">{{ $billing->candidate_email }}</small>
                                         @endif
                                     </td>
-                                    <td>{{ $billing->month_name }}</td>
-                                    <td>{{ $billing->year }}</td>
-                                    <td>{{ $billing->total_working_days }}</td>
+                                    <td>{{ $billing->month_name }} {{ $billing->year }}</td>
+                                    
+                                    {{-- <td>{{ $billing->total_working_days }}</td> --}}
                                     <td>{{ $billing->total_leave_days }}</td>
                                     <td>{{ $billing->net_working_days }}</td>
-                                    <td>{{ $billing->formatted_per_day_salary }}</td>
+                                    <td>{{ $billing->final_budget }}</td>
                                     <td>{{ $billing->formatted_monthly_salary }}</td>
-                                    <td>
+                                    <td>{{ $billing->gst_amount }}</td>
+                                    {{-- <td>
                                         <span class="badge {{ $billing->status_badge }}">
                                             {{ ucfirst($billing->status) }}
                                         </span>
-                                    </td>
+                                    </td> --}}
                                     {{-- <td>
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('billing.show', $billing->id) }}" 

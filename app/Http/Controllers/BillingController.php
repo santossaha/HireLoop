@@ -12,6 +12,11 @@ use Carbon\Carbon;
 
 class BillingController extends Controller
 {
+    /**
+     * GST percentage to be deducted from monthly salary
+     */
+    const GST_PERCENTAGE = 18; // 18%
+
     public function index(Request $request)
     {
         $selectedMonth = $request->get('month', now()->format('Y-m'));
@@ -80,7 +85,7 @@ class BillingController extends Controller
         $year = $year ?? now()->year;
 
         // Get all active onboardings
-        $onboardings = Onboarding::where('status','!=','Stopped')
+        $onboardings = Onboarding::where('status','Running')
             ->whereNotNull('final_budget')
             ->with(['requirement', 'vendor', 'candidate'])
             ->get();
@@ -124,46 +129,50 @@ class BillingController extends Controller
         $monthStart = Carbon::create($year, $month, 1)->startOfMonth();
         $monthEnd = $monthStart->copy()->endOfMonth();
 
-        // Adjust start date if onboarding started mid-month
-        $effectiveStartDate = $onboarding->start_date->isAfter($monthStart) 
-            ? $onboarding->start_date 
-            : $monthStart;
-
-        // Adjust end date if onboarding ended mid-month or is still active
-        $effectiveEndDate = $onboarding->end_date 
-            ? min($onboarding->end_date, $monthEnd)
-            : $monthEnd;
-
         // Calculate working days (Monday to Friday)
         $totalWorkingDays = 0;
-        $currentDate = $effectiveStartDate->copy();
-
-        while ($currentDate <= $effectiveEndDate) {
+        $currentDate = $monthStart->copy();
+        while ($currentDate <= $monthEnd) {
             if ($currentDate->dayOfWeek !== 0 && $currentDate->dayOfWeek !== 6) {
                 $totalWorkingDays++;
             }
             $currentDate->addDay();
         }
 
+        // Calculate effective working days for this onboarding
+        $effectiveStartDate = $onboarding->start_date->isAfter($monthStart) 
+            ? $onboarding->start_date 
+            : $monthStart;
+        $effectiveEndDate = $onboarding->end_date 
+            ? min($onboarding->end_date, $monthEnd)
+            : $monthEnd;
+
+        // Calculate working days for this onboarding in the month
+        $onboardingWorkingDays = 0;
+        $currentDate = $effectiveStartDate->copy();
+        while ($currentDate <= $effectiveEndDate) {
+            if ($currentDate->dayOfWeek !== 0 && $currentDate->dayOfWeek !== 6) {
+                $onboardingWorkingDays++;
+            }
+            $currentDate->addDay();
+        }
+
         // Calculate leaves for this month
-        $leaves = $onboarding->leaves()
-            // ->where(function($query) use ($monthStart, $monthEnd) {
-            //     $query->whereBetween('from_date', [$monthStart, $monthEnd])
-            //           ->orWhereBetween('to_date', [$monthStart, $monthEnd])
-            //           ->orWhere(function($q) use ($monthStart, $monthEnd) {
-            //               $q->where('from_date', '<=', $monthStart)
-            //                 ->where('to_date', '>=', $monthEnd);
-            //           });
-            // })
-            ->sum('total_days');
+        $leaves = $onboarding->leaves()->sum('total_days');
 
-        $netWorkingDays = max(0, $totalWorkingDays - $leaves);
+        $netWorkingDays = max(0, $onboardingWorkingDays - $leaves);
 
-        // Calculate per day salary
-        $perDaySalary = $onboarding->final_budget / 22; // Assuming 22 working days per month
+        // Calculate per day salary based on actual working days in the month
+        $perDaySalary = $onboarding->final_budget / ($totalWorkingDays > 0 ? $totalWorkingDays : 1);
 
-        // Calculate monthly salary
-        $monthlySalary = $netWorkingDays * $perDaySalary;
+        // Calculate monthly salary before GST
+        $monthlySalaryWithoutGst = $netWorkingDays * $perDaySalary;
+
+        // Calculate GST amount
+        $gstAmount = ($monthlySalaryWithoutGst * self::GST_PERCENTAGE) / 100;
+
+        // Calculate monthly salary after GST deduction
+        $monthlySalary = $monthlySalaryWithoutGst - $gstAmount;
 
         return [
             'onboarding_id' => $onboarding->id,
@@ -183,6 +192,9 @@ class BillingController extends Controller
             'total_leave_days' => $leaves,
             'net_working_days' => $netWorkingDays,
             'per_day_salary' => $perDaySalary,
+            'monthly_salary_without_gst' => $monthlySalaryWithoutGst,
+            'gst_percentage' => self::GST_PERCENTAGE,
+            'gst_amount' => $gstAmount,
             'monthly_salary' => $monthlySalary,
             'status' => Billing::STATUS_PENDING
         ];
