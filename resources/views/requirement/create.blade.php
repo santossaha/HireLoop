@@ -112,7 +112,7 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="final_budget" class="form-label">Final Budget</label>
+                        <label for="final_budget" class="form-label">Final Budget<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="final_budget" name="final_budget" readonly>
                     </div>
                 </div>
@@ -155,6 +155,16 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
+
+        $("button[type=reset]").click(function (){
+            $('.select2').select2({
+                placeholder: 'Select Key Skills',
+                allowClear: true,
+                width: '100%'
+            });
+            $('form')[0].reset();
+        });
+
         $('.select2').select2({
             placeholder: 'Select Key Skills',
             allowClear: true,

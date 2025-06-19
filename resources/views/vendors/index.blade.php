@@ -138,6 +138,10 @@
             $(this).addClass('active');
             table.ajax.reload();
         });
+
+        $('.close-modal').click(function (){
+            $('#vendorInvite').modal('hide');
+        });
     });
 </script>
 @endsection

@@ -140,9 +140,9 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">All Interviews</h6>
             
-            <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-primary" data-status="scheduled">Upcoming</button>
-                <button type="button" class="btn btn-sm btn-outline-success" data-status="completed">Completed</button>
+            <div class="filtr btn-group">
+                <button type="button" class="btn btn-sm btn-outline-primary up_btn" data-status="scheduled">Upcoming</button>
+                <button type="button" class="btn btn-sm btn-outline-success ct_btn" data-status="completed">Completed</button>
             </div>
         </div>
         <div class="card-body">
@@ -209,16 +209,25 @@ $(document).ready(function() {
         $('#filterForm select').val('');
         table.ajax.reload();
         updateStatistics();
+        $('.up_btn').removeClass('btn-primary');
+        $('.up_btn').addClass('btn-outline-primary');
+        $('.ct_btn').removeClass('btn-success');
+        $('.ct_btn').addClass('btn-outline-success');
     });
 
     // Status filter buttons click handler
-    $('.btn-group button').click(function() {
-        $('.btn-group button').removeClass('btn-primary btn-success').addClass('btn-outline-primary btn-outline-success');
-        $(this).removeClass('btn-outline-primary btn-outline-success');
+    $('.filtr.btn-group button').click(function() {
+        $('.filtr button').removeClass('btn-primary btn-success');
+        // .addClass('btn-outline-primary btn-outline-success');
+        // $(this).removeClass('btn-outline-primary btn-outline-success');
         if ($(this).data('status') === 'scheduled') {
-            $(this).addClass('btn-primary');
+            $('.up_btn').addClass('btn-primary');
+            $('.up_btn').removeClass('btn-outline-primary');
+            $('.ct_btn').addClass('btn-outline-success');
         } else {
-            $(this).addClass('btn-success');
+            $('.ct_btn').addClass('btn-success');
+            $('.ct_btn').removeClass('btn-outline-success');
+            $('.up_btn').addClass('btn-outline-primary');
         }
         $('#status').val($(this).data('status'));
         table.ajax.reload();
