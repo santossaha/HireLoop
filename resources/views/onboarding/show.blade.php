@@ -380,36 +380,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('confirmDeleteLeave').addEventListener('click', function() {
         if (currentLeaveId && currentOnboardingId) {
-            // Send AJAX request
-            fetch(`/onboardings/${currentOnboardingId}/leaves/${currentLeaveId}`, {
-                method: 'GET',
+            var url = deleteLeaveUrl
+                .replace('__ONBOARDING_ID__', currentOnboardingId)
+                .replace('__LEAVE_ID__', currentLeaveId);
+            $.ajax({
+                url: url,
+                type: 'GET',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
+                },
+                success: function(data) {
+                    if (data.success) {
+                        // Remove the row from the table
+                        const row = document.querySelector(`[data-leave-id="${currentLeaveId}"]`).closest('tr');
+                        row.remove();
+                        // Show success message
+                        // alert('Leave deleted successfully');
+                    } else {
+                        alert(data.message || 'Error deleting leave');
+                    }
+                    // Hide the modal
+                    deleteLeaveModal.hide();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('Error deleting leave');
+                    deleteLeaveModal.hide();
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Remove the row from the table
-                    const row = document.querySelector(`[data-leave-id="${currentLeaveId}"]`).closest('tr');
-                    row.remove();
-                    // Show success message
-                   // alert('Leave deleted successfully');
-                } else {
-                    alert(data.message || 'Error deleting leave');
-                }
-                // Hide the modal
-                deleteLeaveModal.hide();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error deleting leave');
-                deleteLeaveModal.hide();
             });
         }
     });
 });
+
+var deleteLeaveUrl = "{{ route('onboardings.leaves.destroy', ['onboarding' => '__ONBOARDING_ID__', 'leave' => '__LEAVE_ID__']) }}";
 </script>
 @endsection 
