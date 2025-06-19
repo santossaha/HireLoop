@@ -11,6 +11,7 @@ class LeaveController extends Controller
 {
     public function store(Request $request, Onboarding $onboarding)
     {
+       
         $request->validate([
             'from_date' => 'required|date',
             'to_date' => 'required|date|after_or_equal:from_date',
@@ -20,6 +21,7 @@ class LeaveController extends Controller
 
         $fromDate = Carbon::parse($request->from_date);
         $toDate = Carbon::parse($request->to_date);
+       
         
         // Calculate total days
         $totalDays = 0;
@@ -37,6 +39,7 @@ class LeaveController extends Controller
             }
             $currentDate->addDay();
         }
+        
 
         $leave = $onboarding->leaves()->create([
             'from_date' => $request->from_date,
@@ -45,9 +48,10 @@ class LeaveController extends Controller
             'is_half_day' => $request->boolean('is_half_day'),
             'total_days' => $totalDays
         ]);
+      
 
         return redirect()
-            ->route('onboardings.show', $onboarding->id)
+            ->route('onboardings.show', encrypt_id($onboarding->id))
             ->with('success', 'Leave applied successfully.');
     }
 

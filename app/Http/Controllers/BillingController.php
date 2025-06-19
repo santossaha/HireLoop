@@ -147,14 +147,14 @@ class BillingController extends Controller
 
         // Calculate leaves for this month
         $leaves = $onboarding->leaves()
-            ->where(function($query) use ($monthStart, $monthEnd) {
-                $query->whereBetween('from_date', [$monthStart, $monthEnd])
-                      ->orWhereBetween('to_date', [$monthStart, $monthEnd])
-                      ->orWhere(function($q) use ($monthStart, $monthEnd) {
-                          $q->where('from_date', '<=', $monthStart)
-                            ->where('to_date', '>=', $monthEnd);
-                      });
-            })
+            // ->where(function($query) use ($monthStart, $monthEnd) {
+            //     $query->whereBetween('from_date', [$monthStart, $monthEnd])
+            //           ->orWhereBetween('to_date', [$monthStart, $monthEnd])
+            //           ->orWhere(function($q) use ($monthStart, $monthEnd) {
+            //               $q->where('from_date', '<=', $monthStart)
+            //                 ->where('to_date', '>=', $monthEnd);
+            //           });
+            // })
             ->sum('total_days');
 
         $netWorkingDays = max(0, $totalWorkingDays - $leaves);
