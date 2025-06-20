@@ -611,7 +611,7 @@
                             </span>
                         </div>
 
-                        <a href="{{ route('vendors.show', $interview->vendor_id) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('vendors.show', encrypt_id($interview->vendor_id)) }}" class="btn btn-info btn-sm">
                             <i class="fas fa-user me-1"></i> View Full Profile
                         </a>
                     </div>
