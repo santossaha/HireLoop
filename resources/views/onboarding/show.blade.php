@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('onboardings.edit', $onboarding->id) }}" class="btn btn-warning">
+                    <a href="{{ route('onboardings.edit', encrypt_id($onboarding->id)) }}" class="btn btn-warning">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                     <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#leaveModal">
