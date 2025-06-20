@@ -94,7 +94,7 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="phone" class="form-label founder_number_label"> Contact Number</label>
-                                <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                                <input type="number" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="company_email" class="form-label founder_email_label"> Email</label>
@@ -134,7 +134,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="account_owner_name" class="form-label">Account Number</label>
-                                <input type="text" class="form-control" id="account_number" name="account_number" value="{{ old('account_number') }}" maxlength="70">
+                                <input type="number" class="form-control" id="account_number" name="account_number" value="{{ old('account_number') }}" maxlength="70">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="website" class="form-label">Bank Name</label>
