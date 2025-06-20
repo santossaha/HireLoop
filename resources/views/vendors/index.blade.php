@@ -110,6 +110,7 @@
                 }
             ],
             order: [[0, 'desc']],
+            ordering: false,
             pageLength: 10,
             dom: 'rtip',
             language: {
@@ -129,6 +130,15 @@
         // Custom search input handler
         $('.dataTables_filter input').on('keyup', function() {
             console.log(this.value);
+            table.search(this.value).draw();
+        });
+        $('.dataTables_filter input').on('change', function() {
+            console.log('click',this.value);
+            table.search(this.value).draw();
+        });
+        $('.dataTables_filter input').on('search', function() {
+
+            console.log('click',this.value);
             table.search(this.value).draw();
         });
 

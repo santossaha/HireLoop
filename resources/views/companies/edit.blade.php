@@ -11,16 +11,16 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+{{--            @if ($errors->any())--}}
+{{--            <div class="alert alert-danger">--}}
+{{--                <strong>Whoops!</strong> There were some problems with your input.<br><br>--}}
+{{--                <ul>--}}
+{{--                    @foreach ($errors->all() as $error)--}}
+{{--                    <li>{{ $error }}</li>--}}
+{{--                    @endforeach--}}
+{{--                </ul>--}}
+{{--            </div>--}}
+{{--            @endif--}}
 
             <form action="{{ route('companies.update',$company->id) }}" method="POST">
                 @csrf

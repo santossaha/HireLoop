@@ -84,6 +84,13 @@ class UserController extends Controller
             'email' => $request->email,
         ]);
 
+        if ($request->filled('password') || $request->filled('password_confirmation')) {
+            if($request->password != $request->password_confirmation){
+                return redirect()->back()
+                    ->with('error', 'Password not matched.');
+            }
+        }
+
         if ($request->filled('password')) {
             $user->update([
                 'password' => Hash::make($request->password),
