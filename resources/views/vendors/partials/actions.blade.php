@@ -1,5 +1,5 @@
 <div class="btn-group" role="group">
-    <a href="{{ route('vendors.show', encrypt_id($vendor->id)) }}" class="btn btn-info btn-sm" title="View Details">
+    <a href="{{ route('vendors.show', encrypt_id($vendor->id)) }}" class="btn btn-info btn-sm text-white" title="View Details">
         <i class="fas fa-eye"></i>
     </a>
     {{-- @if(auth()->user()->isAdmin() || auth()->user()->isHod() || 

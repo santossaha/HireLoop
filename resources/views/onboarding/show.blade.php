@@ -6,12 +6,16 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Onboarding Details</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('onboardings.index') }}" class="btn btn-primary btn-sm">
+                    <h3 class="card-title">Onboarding Details
+                        <a href="{{ route('onboardings.index') }}" class="btn btn-primary btn-sm mt-2" style="float: right;">
                             <i class="fas fa-arrow-left"></i> Back to List
                         </a>
-                    </div>
+                    </h3>
+{{--                    <div class="card-tools">--}}
+{{--                        <a href="{{ route('onboardings.index') }}" class="btn btn-primary btn-sm">--}}
+{{--                            <i class="fas fa-arrow-left"></i> Back to List--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
                 </div>
                 <div class="card-body">
                     <div class="row">
