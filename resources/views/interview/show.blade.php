@@ -57,7 +57,7 @@
                             <div class="col-md-6">
                                 <h5 class="font-weight-bold">Vendor</h5>
                                 <p>
-                                    <a href="{{ route('vendors.show', $interview->vendor_id) }}">
+                                    <a href="{{ route('vendors.show', encrypt_id($interview->vendor_id)) }}">
                                         {{ $interview->vendor->company_name }}
                                     </a>
                                     ({{ ucfirst($interview->vendor->vendor_type) }})
@@ -67,7 +67,7 @@
                                 <h5 class="font-weight-bold">Requirement</h5>
                                 <p>
                                     @if ($interview->requirement)
-                                        <a href="{{ route('requirements.show', $interview->requirement_id) }}">
+                                        <a href="{{ route('requirements.show', encrypt_id($interview->requirement_id)) }}">
                                             {{ $interview->requirement->requirement_id }}
                                         </a>
                                     @else
