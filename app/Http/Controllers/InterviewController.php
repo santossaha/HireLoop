@@ -286,7 +286,7 @@ class InterviewController extends Controller
             }
         }
         
-        return redirect()->route('interviews.show', $interview->id)
+        return redirect()->route('interviews.show', encrypt_id($interview->id))
             ->with('success', 'Interview updated successfully.');
     }
 
@@ -369,7 +369,7 @@ class InterviewController extends Controller
             Log::error('Failed to send interview feedback email: ' . $e->getMessage());
         }
         
-        return redirect()->route('interviews.show', $interview->id)
+        return redirect()->route('interviews.show', encrypt_id($interview->id))
             ->with('success', 'Interview feedback submitted successfully.');
     }
 

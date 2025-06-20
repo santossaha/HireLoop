@@ -46,7 +46,8 @@
                             <div class="col-md-6">
                                 <label for="client_budget" class="form-label">Client Budget</label>
                                 <input type="number" step="0.01" class="form-control @error('client_budget') is-invalid @enderror" 
-                                    name="client_budget" value="{{ $interview->requirement->client_budget ?? '' }}" >
+                                    name="client_budget" value="{{ $interview->requirement->client_budget ?? '' }}"  @if ($interview->requirement->client_budget) readonly
+                                         @endif>
                                 @error('client_budget')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -57,7 +58,7 @@
                             <div class="col-md-6">
                                 <label for="final_budget" class="form-label">Final Budget</label>
                                 <input type="number" step="0.01" class="form-control @error('final_budget') is-invalid @enderror" 
-                                    name="final_budget" value="{{ $interview->requirement->final_budget ?? '' }}" >
+                                    name="final_budget" value="{{ $interview->requirement->final_budget ?? '' }}"  @if ( $interview->requirement->final_budget) readonly  @endif>
                                 @error('final_budget')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
