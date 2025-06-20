@@ -62,9 +62,11 @@
                     <div class="col-md-6">
                         <label for="candidate_id" class="form-label">Candidate <span class="text-danger">*</span></label>
                         <select id="candidate_id" name="candidate_id" class="form-select @error('candidate_id') is-invalid @enderror" required>
+                            @if(!empty($candidate))
                                 <option value="{{ $candidate->id }}" >
                                     {{ $candidate->candidate_name }} {{ $candidate->email ? '(' . $candidate->email . ')' : '' }}
                                 </option>
+                                @endif
                         </select>
                         @error('candidate_id')
                             <div class="invalid-feedback">{{ $message }}</div>
