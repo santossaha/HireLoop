@@ -60,7 +60,10 @@ class VendorController extends Controller
                         ->orWhere('phone', 'like', "%{$search}%")
                         ->orWhereHas('user', function($q) use ($search) {
                             $q->where('name', 'like', "%{$search}%");
+                        })->orWhereHas('internalPoc', function($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
                         });
+
                 });
             }
 

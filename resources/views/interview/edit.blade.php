@@ -68,7 +68,7 @@
                                 </option>
                                 @endif
                         </select>
-                        @error('candidate_id')
+                        @error('candid ate_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

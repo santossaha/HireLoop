@@ -29,7 +29,7 @@
                 <div class="d-flex align-items-center">
                     {{-- <h6 class="m-0 font-weight-bold text-primary me-3">Vendors</h6> --}}
                     <div class="dataTables_filter">
-                        <input type="search" class="form-control" placeholder="Search by Name, Technology, POC, Email" aria-controls="vendorsTable">
+                        <input type="search" class="form-control" placeholder="Search by Name, POC, Email" aria-controls="vendorsTable">
                     </div>
                 </div>
                 <div class="btn-group">
