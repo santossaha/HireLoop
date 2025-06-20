@@ -160,14 +160,12 @@ class DatabaseSeeder extends Seeder
         
 
         // Seed Requirements
-        $this->call(RequirementSeeder::class);
+      // $this->call(RequirementSeeder::class);
 
       
 
         // Seed interviews
-        $this->call([
-            InterviewSeeder::class,
-        ]);
+        // $this->call([ InterviewSeeder::class ]);
 
         // Seed EndReasons
         $this->call([
