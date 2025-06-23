@@ -195,7 +195,7 @@
                     @endif
 
                     <!-- Action Buttons -->
-                    <div class="row mt-3">
+                    {{-- <div class="row mt-3">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
@@ -225,7 +225,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
