@@ -283,7 +283,7 @@
                 @endif
 
                 @if($candidate->interviews)
-                <a href="{{ route('interviews.show', ['interview' => $candidate->interviews->id]) }}" class="btn btn-primary">View Interview</a>
+                <a href="{{ route('interviews.show', ['interview' => encrypt_id($candidate->interviews->id)]) }}" class="btn btn-primary">View Interview</a>
                 @endif
 
             </div>
