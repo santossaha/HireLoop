@@ -4,8 +4,8 @@
 
 @section('content')
     <style>
-        .btn-outline-warning:hover{
-            color: #fff;
+        .btn-outline-warning:hover, .btn-outline-warning.active{
+            color: #fff !important;
         }
     </style>
 <div class="container-fluid">

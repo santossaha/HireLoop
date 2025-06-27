@@ -74,7 +74,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label founder_number_label"> Contact Number</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                            <input type="number" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="company_email" class="form-label founder_email_label"> Email</label>
@@ -229,5 +229,24 @@
             $('.individual_vendor').hide();
         }
     }
+
+    $(function (){
+        $('input[type="number"]').keyup(function(e)
+        {
+            if (/\D/g.test(this.value))
+            {
+                // Filter non-digits from input value.
+                this.value = this.value.replace(/\D/g, '');
+            }
+        });
+        $('input[type="number"]').change(function(e)
+        {
+            if (/\D/g.test(this.value))
+            {
+                // Filter non-digits from input value.
+                this.value = this.value.replace(/\D/g, '');
+            }
+        });
+    });
 </script>
 @endsection

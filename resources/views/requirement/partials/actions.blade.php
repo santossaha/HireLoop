@@ -1,5 +1,5 @@
 <div class="btn-group" role="group">
-    <a href="{{ route('requirements.show', encrypt_id($requirement->id)) }}" class="btn btn-info btn-sm">
+    <a href="{{ route('requirements.show', encrypt_id($requirement->id)) }}" class="btn btn-info btn-sm text-white">
         <i class="fas fa-eye"></i>
     </a>
     

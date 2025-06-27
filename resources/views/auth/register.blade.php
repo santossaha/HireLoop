@@ -194,7 +194,7 @@
                                 
                                 <div class="col-md-6 mb-3">
                                     <label for="contact_number" class="form-label">Contact Number</label>
-                                    <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ old('contact_number') }}" required>
+                                    <input type="number" class="form-control" id="contact_number" name="contact_number" value="{{ old('contact_number') }}" required>
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
@@ -264,5 +264,26 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(function (){
+        $('input[type="number"]').keyup(function(e)
+        {
+            if (/\D/g.test(this.value))
+            {
+                // Filter non-digits from input value.
+                this.value = this.value.replace(/\D/g, '');
+            }
+        });
+        $('input[type="number"]').change(function(e)
+        {
+            if (/\D/g.test(this.value))
+            {
+                // Filter non-digits from input value.
+                this.value = this.value.replace(/\D/g, '');
+            }
+        });
+    });
+</script>
 </body>
 </html>

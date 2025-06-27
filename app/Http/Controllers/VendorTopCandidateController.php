@@ -64,7 +64,7 @@ class VendorTopCandidateController extends Controller
                     'resume' => '<a href="'.asset('storage/' . $top_candidate->candidate->resume_path).'" class="btn btn-sm btn-primary" target="_blank"><i class="fas fa-download"></i> Download </a>',
                     'mock_feedback' => $top_candidate->mock_feedback,
                     'actions' => '<a href="#" onclick="deleteCandidate('.$top_candidate->id.')" class="btn btn-danger mb-2"><i class="fa fa-trash"></i> </a>
-<a href="'.route('interviews.show',$top_candidate->id).'" class="btn btn-info"><i class="fa fa-eye"></i></a>'
+<a href="'.route('interviews.show',encrypt_id($top_candidate->id)).'" class="btn btn-info text-white mb-2"><i class="fa fa-eye"></i></a>'
                 ];
             }
 

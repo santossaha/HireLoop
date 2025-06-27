@@ -40,7 +40,7 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            <a href="{{ route('users.edit', encrypt_id($user->id)) }}" class="btn btn-sm btn-info">Edit</a>
+                                            <a href="{{ route('users.edit', encrypt_id($user->id)) }}" class="btn btn-sm btn-info text-white">Edit</a>
                                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
