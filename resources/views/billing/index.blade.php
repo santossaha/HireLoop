@@ -2,6 +2,21 @@
 
 @section('title', 'Billing Management')
 
+@push('styles')
+<style>
+.badge {
+    font-size: 0.8em;
+}
+.btn-group .btn {
+    margin-right: 2px;
+}
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+</style>
+@endpush 
+
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -19,22 +34,7 @@
                     <!-- Month Filter -->
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            {{-- <form method="GET" action="{{ route('billing.index') }}" class="form-inline">
-                                <div class="input-group">
-                                    <select name="month" class="form-control" onchange="this.form.submit()">
-                                        @foreach($months as $value => $label)
-                                            <option value="{{ $value }}" {{ $selectedMonth == $value ? 'selected' : '' }}>
-                                                {{ $label }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-filter"></i> Filter
-                                        </button>
-                                    </div>
-                                </div>
-                            </form> --}}
+                           
                         </div>
                         <div class="col-md-8 text-right">
                             <span class="text-muted">
@@ -52,7 +52,6 @@
                                     <th>Vendor</th>
                                     <th>Candidate Name</th>
                                     <th>Month Year</th>
-                                    {{-- <th>Working Days</th> --}}
                                     <th>Leave Days</th>
                                     <th>Net Days</th>
                                     <th>Total Salary</th>
@@ -101,30 +100,35 @@
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             
-                                            @if($billing->status === 'pending')
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-success" 
-                                                        onclick="approveBilling({{ $billing->id }})"
-                                                        title="Approve">
+                                           @if($billing->status === 'pending')
+                                                <a href="javascript:void(0);" 
+                                                   class="btn btn-sm btn-success action-btn" 
+                                                   data-action="approve" 
+                                                   data-id="{{ $billing->id }}"
+                                                   title="Approve">
                                                     <i class="fas fa-check"></i>
-                                                </button>
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-danger" 
-                                                        onclick="rejectBilling({{ $billing->id }})"
-                                                        title="Reject">
+                                                </a>
+                                                <a href="javascript:void(0);" 
+                                                   class="btn btn-sm btn-danger action-btn" 
+                                                   data-action="reject" 
+                                                   data-id="{{ $billing->id }}"
+                                                   title="Reject">
                                                     <i class="fas fa-times"></i>
-                                                </button>
+                                                </a>
                                             @endif
                                             
                                             @if($billing->status === 'approved')
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-primary" 
-                                                        onclick="markAsPaid({{ $billing->id }})"
-                                                        title="Mark as Paid">
+                                                <a href="javascript:void(0);" 
+                                                   class="btn btn-sm btn-primary action-btn" 
+                                                   data-action="mark-as-paid" 
+                                                   data-id="{{ $billing->id }}"
+                                                   title="Mark as Paid">
                                                     <i class="fas fa-money-bill"></i>
-                                                </button>
+                                                </a>
                                             @endif
                                         </div>
+
+
                                     </td>
                                 </tr>
                                 @empty
@@ -141,36 +145,38 @@
     </div>
 </div>
 
-<!-- Reject Modal -->
-<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog">
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
+      <form id="actionForm" method="POST">
+        @csrf
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Reject Billing</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+          <div class="modal-header">
+            <h5 class="modal-title" id="actionModalLabel">Confirm Action</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="actionModalMessage"></p>
+            <div id="remarksGroup" class="form-group" style="display:none;">
+              <label for="remarks">Rejection Remarks</label>
+              <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
             </div>
-            <form id="rejectForm" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="remarks">Rejection Remarks</label>
-                        <textarea class="form-control" id="remarks" name="remarks" rows="3" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Reject</button>
-                </div>
-            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" id="actionModalConfirmBtn">Yes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            
+          </div>
         </div>
+      </form>
     </div>
-</div>
+  </div>
+
 
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script>
 $(document).ready(function() {
     $('#billingTable').DataTable({
@@ -178,45 +184,81 @@ $(document).ready(function() {
         "order": [[0, "desc"]],
         "responsive": true,
         "language": {
-            "search": "Search:",
-            "lengthMenu": "Show _MENU_ entries per page",
             "info": "Showing _START_ to _END_ of _TOTAL_ entries",
             "infoEmpty": "Showing 0 to 0 of 0 entries",
             "infoFiltered": "(filtered from _MAX_ total entries)"
-        }
+        },
+        "dom": 'ltip' // Remove the search box and entries per page ("f" = filter input, "l" = length menu)
     });
 });
 
-function approveBilling(billingId) {
-    if (confirm('Are you sure you want to approve this billing?')) {
-        window.location.href = `/billing/${billingId}/approve`;
-    }
-}
+$(document).on('click', '.action-btn', function() {
+    
+    var action = $(this).data('action');
+    var billingId = $(this).data('id');
+    var modal = $('#actionModal');
+    var remarksGroup = $('#remarksGroup');
+    var remarks = $('#remarks');
+    var form = $('#actionForm');
+    var message = '';
+    remarksGroup.hide();
+    remarks.val('');
 
-function rejectBilling(billingId) {
-    $('#rejectForm').attr('action', `/billing/${billingId}/reject`);
-    $('#rejectModal').modal('show');
-}
-
-function markAsPaid(billingId) {
-    if (confirm('Are you sure you want to mark this billing as paid?')) {
-        window.location.href = `/billing/${billingId}/mark-as-paid`;
+    if (action === 'approve') {
+        message = 'Are you sure you want to approve this billing?';
+        form.data('action', 'approve');
+    } else if (action === 'reject') {
+        message = 'Are you sure you want to reject this billing? Please provide remarks.';
+        remarksGroup.show();
+        form.data('action', 'reject');
+    } else if (action === 'mark-as-paid') {
+        message = 'Are you sure you want to mark this billing as paid?';
+        form.data('action', 'mark-as-paid');
     }
-}
+    form.data('id', billingId);
+    $('#actionModalMessage').text(message);
+    modal.modal('show');
+});
+
+// Handle form submit
+$('#actionForm').submit(function(e) {
+    console.log('clicked');
+    e.preventDefault();
+    var action = $(this).data('action');
+    var billingId = $(this).data('id');
+    var url = '';
+    var data = {_token: $('meta[name="csrf-token"]').attr('content')};
+
+
+    if (action === 'approve') {
+        url = '/billing/' + billingId + '/approve';
+        data._method = 'PATCH';
+    } else if (action === 'reject') {
+        url = '/billing/' + billingId + '/reject';
+        data._method = 'PATCH';
+        data.remarks = $('#remarks').val();
+    } else if (action === 'mark-as-paid') {
+        url = '/billing/' + billingId + '/mark-as-paid';
+        data._method = 'PATCH';
+    }
+
+    console.log(url);   
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        success: function(response) {
+            $('#actionModal').modal('hide');
+            // Option 1: Reload the page
+            location.reload();
+            // Option 2: Update the row/status in the table (advanced)
+        },
+        error: function(xhr) {
+            alert('An error occurred. Please try again.');
+        }
+    });
+});
 </script>
-@endpush
+@endsection 
 
-@push('styles')
-<style>
-.badge {
-    font-size: 0.8em;
-}
-.btn-group .btn {
-    margin-right: 2px;
-}
-.table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-}
-</style>
-@endpush 

@@ -346,6 +346,8 @@ Route::middleware(['auth'])->group(function () {
         //->middleware('permission:reject-billing');
     Route::patch('/billing/{billing}/mark-as-paid', [BillingController::class, 'markAsPaid'])->name('billing.mark-as-paid');
         //->middleware('permission:mark-billing-paid');
+
+
   
 });
 

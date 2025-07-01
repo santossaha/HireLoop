@@ -6,13 +6,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
+            <a href="{{ route('billing.index') }}" class="btn btn-secondary d-inline-flex align-items-center px-3 py-2 mb-2" style="font-size: 1rem; border-radius: 0.375rem;">
+                <i class="fas fa-arrow-left me-2" style="font-size: 1.1em;"></i> Back to List
+            </a>
             <div class="card">
+                
                 <div class="card-header">
+                    
                     <h3 class="card-title">Billing Details</h3>
                     <div class="card-tools">
-                        <a href="{{ route('billing.index') }}" class="btn btn-sm btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Back to List
-                        </a>
+                       
                     </div>
                 </div>
                 <div class="card-body">
@@ -131,7 +134,7 @@
                     </div>
 
                     <!-- Approval Information -->
-                    @if($billing->status !== 'pending')
+                    @if($billing->status !== 'pending' && $billing->status !== 'rejected')
                     <div class="row mt-3">
                         <div class="col-12">
                             <div class="card">
@@ -194,38 +197,7 @@
                     </div>
                     @endif
 
-                    <!-- Action Buttons -->
-                    {{-- <div class="row mt-3">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5>Actions</h5>
-                                    <div class="btn-group" role="group">
-                                        @if($billing->status === 'pending')
-                                            <button type="button" 
-                                                    class="btn btn-success" 
-                                                    onclick="approveBilling({{ $billing->id }})">
-                                                <i class="fas fa-check"></i> Approve
-                                            </button>
-                                            <button type="button" 
-                                                    class="btn btn-danger" 
-                                                    onclick="rejectBilling({{ $billing->id }})">
-                                                <i class="fas fa-times"></i> Reject
-                                            </button>
-                                        @endif
-                                        
-                                        @if($billing->status === 'approved')
-                                            <button type="button" 
-                                                    class="btn btn-primary" 
-                                                    onclick="markAsPaid({{ $billing->id }})">
-                                                <i class="fas fa-money-bill"></i> Mark as Paid
-                                            </button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
+                  
                 </div>
             </div>
         </div>
