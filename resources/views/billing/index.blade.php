@@ -58,7 +58,7 @@
                                     <th>Total Salary</th>
                                     <th>GST Amount</th>
                                     <th>Pay Salary</th>
-                                    {{-- <th>Status</th> --}}
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -90,11 +90,9 @@
                                     <td>{{ $billing->monthly_salary_without_gst }}</td>
                                     <td>{{ $billing->gst_amount }}</td>
                                     <td>{{ $billing->formatted_monthly_salary }}</td>
-                                    {{-- <td>
-                                        <span class="badge {{ $billing->status_badge }}">
-                                            {{ ucfirst($billing->status) }}
-                                        </span>
-                                    </td> --}}
+                                    <td>
+                                        <span class="badge {{ get_status_badge_class($billing->status) }}">{{ ucfirst($billing->status) }}</span>
+                                    </td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('billing.show', $billing->id) }}" 
@@ -103,7 +101,7 @@
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             
-                                            {{-- @if($billing->status === 'pending')
+                                            @if($billing->status === 'pending')
                                                 <button type="button" 
                                                         class="btn btn-sm btn-success" 
                                                         onclick="approveBilling({{ $billing->id }})"
@@ -116,16 +114,16 @@
                                                         title="Reject">
                                                     <i class="fas fa-times"></i>
                                                 </button>
-                                            @endif --}}
+                                            @endif
                                             
-                                            {{-- @if($billing->status === 'approved')
+                                            @if($billing->status === 'approved')
                                                 <button type="button" 
                                                         class="btn btn-sm btn-primary" 
                                                         onclick="markAsPaid({{ $billing->id }})"
                                                         title="Mark as Paid">
                                                     <i class="fas fa-money-bill"></i>
                                                 </button>
-                                            @endif --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

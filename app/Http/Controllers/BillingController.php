@@ -19,14 +19,21 @@ class BillingController extends Controller
 
     public function index(Request $request)
     {
-        $selectedMonth = $request->get('month', now()->format('Y-m'));
+        $billings = null;
+        $selectedMonth = $request->get('month');
         $month = Carbon::parse($selectedMonth)->month;
         $year = Carbon::parse($selectedMonth)->year;
 
-        $billings = Billing::where('month', $month)
+        if($selectedMonth == null){
+            $billings = Billing::orderBy('created_at', 'desc')
+            ->get();
+        }else{
+            $billings = Billing::where('month', $month)
             ->where('year', $year)
             ->orderBy('created_at', 'desc')
             ->get();
+        }
+
 
         $months = $this->getAvailableMonths();
 
