@@ -43,7 +43,36 @@ class RequirementController extends Controller
     {
        
         if ($request->ajax()) {
-            $query = Requirement::query()->orderBy('created_at', 'desc');
+            $query = Requirement::query();
+
+            // Handle ordering from DataTables
+            $columns = [
+                0 => 'requirement_id',
+                1 => 'company_id', // ya join karke companies.name
+                2 => 'department_id', // ya join karke departments.name
+                3 => 'title',
+                4 => '', // skills (custom, skip)
+                5 => 'bde_name',
+                6 => 'client_budget',
+                7 => 'final_budget',
+                8 => 'created_at',
+                9 => '', // created_by (custom, skip)
+                10 => '', // candidate_count (custom, skip)
+                11 => '', // actions (skip)
+            ];
+
+            if($request->has('order')){
+                $orderCol = $request->order[0]['column'];
+                $orderDir = $request->order[0]['dir'];
+                $orderBy = $columns[$orderCol] ?? 'created_at';
+                if($orderBy){
+                    $query->orderBy($orderBy,$orderDir);
+                }else{
+                    $query->orderBy('created_at', 'desc');
+                }
+            }
+
+
             
             // Filter by create_by only if user is a vendor
             if (Auth::user()->hasRole('bde')) {

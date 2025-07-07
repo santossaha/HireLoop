@@ -133,7 +133,7 @@
         var table = $('#requirementsTable').DataTable({
             processing: true,
             serverSide: true,
-            searching:false,
+            searching:true,
             ajax: {
                 url: "{{ route('requirements.index') }}",
                 data: function(d) {
@@ -143,20 +143,20 @@
                 }
             },
             columns: [
-                { data: 'requirement_id', name: 'requirement_id' },
-                { data: 'company', name: 'company' },
-                { data: 'department', name: 'department' },
-                { data: 'title', name: 'title' },
-                { data: 'skills', name: 'skills' },
-                { data: 'bde_name', name: 'bde_name' },
-                { data: 'client_budget', name: 'client_budget' },
-                { data: 'final_budget', name: 'final_budget' },
-                { data: 'created_at', name: 'created_at' },
-                { data: 'created_by', name: 'created_by' },
-                { data: 'candidate_count', name: 'candidate_count' },
+                { data: 'requirement_id', name: 'requirements.requirement_id' },
+                { data: 'company', name: 'companies.name' },
+                { data: 'department', name: 'departments.name' },
+                { data: 'title', name: 'requirements.title' },
+                { data: 'skills', name: 'requirements.skills', orderable: false, searchable: false},
+                { data: 'bde_name', name: 'requirements.bde_name' },
+                { data: 'client_budget', name: 'requirements.client_budget' },
+                { data: 'final_budget', name: 'requirements.final_budget' },
+                { data: 'created_at', name: 'requirements.created_at', orderable: false, searchable: false},
+                { data: 'created_by', name: 'users.name', orderable: false, searchable: false },
+                { data: 'candidate_count', name: 'candidate_count', orderable: false, searchable: false },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
-            order: [[0, 'desc']],
+            order: [[3, 'desc']],
             pageLength: 10,
             language: {
                 search: "_INPUT_",
@@ -175,24 +175,7 @@
             table.ajax.reload();
         });
 
-        // Update pending counts
-        // function updatePendingCounts() {
-        //     $.ajax({
-        //         url: "{{ route('requirements.pending-counts') }}",
-        //         type: 'GET',
-        //         success: function(response) {
-        //             if (response.pending_hod) {
-        //                 $('#pendingHodCount').text(response.pending_hod + ' pending your approval');
-        //             }
-        //             if (response.pending_founder) {
-        //                 $('#pendingFounderCount').text(response.pending_founder + ' pending your approval');
-        //             }
-        //         }
-        //     });
-        // }
-
-        // Initial update of pending counts
-       // updatePendingCounts();
+       
     });
 </script>
 @endsection
