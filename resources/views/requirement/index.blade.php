@@ -151,9 +151,9 @@
                 { data: 'bde_name', name: 'requirements.bde_name' },
                 { data: 'client_budget', name: 'requirements.client_budget' },
                 { data: 'final_budget', name: 'requirements.final_budget' },
-                { data: 'created_at', name: 'requirements.created_at', orderable: false, searchable: false},
-                { data: 'created_by', name: 'users.name', orderable: false, searchable: false },
-                { data: 'candidate_count', name: 'candidate_count', orderable: false, searchable: false },
+                { data: 'created_at', name: 'requirements.created_at'},
+                { data: 'created_by', name: 'users.name' },
+                { data: 'candidate_count', name: 'candidate_count', orderable: false, searchable: false},
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
             order: [[3, 'desc']],

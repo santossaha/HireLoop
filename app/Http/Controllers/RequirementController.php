@@ -44,19 +44,30 @@ class RequirementController extends Controller
        
         if ($request->ajax()) {
             $query = Requirement::query();
+            //   $query = Interview::query()
+            //         ->leftJoin('vendors', 'interviews.vendor_id', '=', 'vendors.id')
+            //         ->leftJoin('requirements', 'interviews.requirement_id', '=', 'requirements.id')
+            //         ->leftJoin('candidate_sourcings', 'interviews.candidate_id', '=', 'candidate_sourcings.id')
+            //         ->with(['vendor', 'requirement', 'interviewer', 'candidate']);
+
+            $query = Requirement::query()
+                    ->leftJoin('companies', 'requirements.company_id', '=', 'companies.id')
+                    ->leftJoin('departments', 'requirements.requirement_id', '=', 'departments.id')
+                    ->leftJoin('users', 'requirements.create_by', '=', 'users.id')
+                    ->with(['company', 'department', 'createBy']);
 
             // Handle ordering from DataTables
             $columns = [
-                0 => 'requirement_id',
-                1 => 'company_id', // ya join karke companies.name
-                2 => 'department_id', // ya join karke departments.name
-                3 => 'title',
+                0 => 'requirements.requirement_id',
+                1 => 'companies.name', // company name for sorting/filtering
+                2 => 'departments.name', // department name for sorting/filtering
+                3 => 'requirements.title',
                 4 => '', // skills (custom, skip)
-                5 => 'bde_name',
-                6 => 'client_budget',
-                7 => 'final_budget',
-                8 => 'created_at',
-                9 => '', // created_by (custom, skip)
+                5 => 'requirements.bde_name',
+                6 => 'requirements.client_budget',
+                7 => 'requirements.final_budget',
+                8 => 'requirements.created_at',
+                9 => 'users.name', // created_by (user name)
                 10 => '', // candidate_count (custom, skip)
                 11 => '', // actions (skip)
             ];
