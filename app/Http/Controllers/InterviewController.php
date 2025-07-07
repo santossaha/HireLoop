@@ -24,8 +24,38 @@ class InterviewController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Interview::query()->with(['vendor', 'requirement', 'interviewer', 'candidate'])->orderBy('created_at', 'desc');
+            //$query = Interview::query()->with(['vendor', 'requirement', 'interviewer', 'candidate'])->orderBy('created_at', 'desc');
+            $columns = [
+                0 => 'id',
+                1 => 'vendors.contact_person',
+                2 => 'requirements.requirement_id',
+                3 => 'scheduled_at',
+                4 => 'candidate_sourcings.candidate_name',
+                5 => 'type',
+                6 => 'status',
+                7 => 'result',
+                8 => '', 
+            ];
 
+            $query = Interview::query()
+                    ->leftJoin('vendors', 'interviews.vendor_id', '=', 'vendors.id')
+                    ->leftJoin('requirements', 'interviews.requirement_id', '=', 'requirements.id')
+                    ->leftJoin('candidate_sourcings', 'interviews.candidate_id', '=', 'candidate_sourcings.id')
+                    ->with(['vendor', 'requirement', 'interviewer', 'candidate']);
+
+                 if ($request->has('order')) {
+                    $orderCol = $request->order[0]['column'];
+                    $orderDir = $request->order[0]['dir'];
+                    $orderBy = $columns[$orderCol] ?? 'interviews.created_at';
+                    if ($orderBy) {
+                        $query->orderBy($orderBy, $orderDir);
+                    } else {
+                        $query->orderBy('interviews.created_at', 'desc');
+                    }
+                } else {
+                    $query->orderBy('interviews.created_at', 'desc');
+                }
+            $query->select('interviews.*'); 
             // Filter by vendor_id only if user is a vendor
             if (Auth::user()->hasRole('bde')) {
                 $query->withWhereHas('requirement', function($query) {

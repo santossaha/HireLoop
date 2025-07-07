@@ -196,7 +196,7 @@ $(document).ready(function() {
             { data: 'actions', orderable: false, searchable: false }
         ],
         // order: [[3, 'asc']] // Sort by scheduled_at by default
-        ordering:false,
+        ordering:true,
     });
 
     // Apply filter button click handler
